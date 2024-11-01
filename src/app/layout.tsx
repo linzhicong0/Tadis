@@ -28,9 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark rounded-t-lg">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex h-screen w-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex h-screen w-screen rounded-t-lg`}
       >
         <WindowTitleBar>
         <SidebarProvider>
