@@ -31,14 +31,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
-        <WindowTitleBar>
         <SidebarProvider>
-          <AppSidebar />
-          <main className="mt-8 w-full">
+          <WindowTitleBar>
+            <AppSidebar />
+            <main className="mt-8 w-full">
               {children}
-          </main>
+            </main>
+          </WindowTitleBar>
         </SidebarProvider>
-        </WindowTitleBar>
       </body>
     </html>
   );
