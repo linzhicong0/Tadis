@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import SideNav from "./components/sidenav";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/app-sidebar";
 import WindowTitleBar from "./components/window-titlebar";
 
@@ -30,14 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark rounded-t-lg">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex h-screen w-screen rounded-t-lg`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <WindowTitleBar>
         <SidebarProvider>
           <AppSidebar />
-          <main >
-            <SidebarTrigger />
-            {children}
+          <main className="mt-8 w-full">
+              {children}
           </main>
         </SidebarProvider>
         </WindowTitleBar>

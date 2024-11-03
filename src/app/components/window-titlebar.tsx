@@ -1,11 +1,8 @@
 'use client';
-import { Window } from '@tauri-apps/api/window'
 import CloseButton from './close-button';
 import MinButton from './min-button';
 import MaxButton from './max-button';
 export default function WindowTitleBar({ children }: { children: React.ReactNode }) {
-    const handleMaximize = () => Window.getCurrent().toggleMaximize();
-    const handleClose = () => Window.getCurrent().close();
 
     return (
         <div className="flex flex-row">
