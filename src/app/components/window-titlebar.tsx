@@ -3,8 +3,7 @@ import CloseButton from './close-button';
 import MinButton from './min-button';
 import MaxButton from './max-button';
 import SidebarCollapseButton from './sidebar-collapse-button';
-export default function WindowTitleBar({ children }: { children: React.ReactNode }) {
-
+export default function WindowTitleBar() {
     return (
         <div className="flex flex-row">
             <div data-tauri-drag-region
@@ -19,7 +18,6 @@ export default function WindowTitleBar({ children }: { children: React.ReactNode
                     <SidebarCollapseButton />
                 </div>
             </div>
-            {children}
         </div>
 
     );
