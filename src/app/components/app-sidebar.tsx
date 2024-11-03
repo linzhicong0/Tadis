@@ -7,10 +7,9 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-    SidebarTrigger,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
-import {Database, Server, Settings2} from "lucide-react";
+import { Database, Server, Settings2 } from "lucide-react";
 
 const items = [
     {
@@ -45,7 +44,7 @@ export function AppSidebar() {
                                     <SidebarMenuButton asChild>
                                         <Link href={item.url}>
                                             <item.icon />
-                                        <span>{item.title}</span>
+                                            <span>{item.title}</span>
                                         </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
