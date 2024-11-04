@@ -1,10 +1,7 @@
 import { Minus } from 'lucide-react';
-import { Window } from '@tauri-apps/api/window'
 
 
-export default function MinButton() {
-
-    const handleMinimize = () => Window.getCurrent().minimize();
+export default function MinButton({ handleMinimize }: { handleMinimize: () => void }) {
 
     return (
       <button 
