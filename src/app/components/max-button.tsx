@@ -1,8 +1,6 @@
 import { MoveDiagonal2 } from 'lucide-react';
-import { Window } from '@tauri-apps/api/window'
 
-export default function MaxButton() {
-    const handleMaximize = () => Window.getCurrent().toggleMaximize();
+export default function MaxButton({ handleMaximize }: { handleMaximize: () => void }) {
     return (
       <button 
         className="w-[12px] h-[12px] rounded-full bg-[#28C840] relative "
