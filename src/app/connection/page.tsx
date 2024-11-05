@@ -86,7 +86,7 @@ export default function Connection() {
         }
     };
 
-    const handleCancel = () => {
+    const handleClose = () => {
             setFormData({
                 name: '',
                 host: '127.0.0.1',
@@ -127,7 +127,7 @@ export default function Connection() {
                 onContinue={() => setError(null)}
             />
 
-            <CustomDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
+            <CustomDialog isOpen={isDialogOpen} onClose={handleClose}>
                 <div className="text-white px-4 select-none">
                     <h2 className="text-2xl font-normal mb-4">Create Connection</h2>
                     <form className="space-y-5">
@@ -214,7 +214,7 @@ export default function Connection() {
                             <Button
                                 type="button"
                                 variant="secondary"
-                                onClick={handleCancel}
+                                onClick={handleClose}
                                 className="bg-[#2c2c2c] hover:bg-[#3c3c3c] text-white px-4"
                             >
                                 Cancel
