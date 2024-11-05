@@ -8,11 +8,11 @@ const SAVE_CONFIG_COMMAND_NAME = 'save_config';
 
 export const connectionCommands = {
 
-  loadConfig: async (): Promise<ConnectionConfig> => {
-    return invoke<ConnectionConfig>(LOAD_CONFIG_COMMAND_NAME);
+  loadConfig: async (): Promise<ConnectionConfig[]> => {
+    return invoke<ConnectionConfig[]>(LOAD_CONFIG_COMMAND_NAME);
   },
 
-  saveConfig: async (config: ConnectionConfig): Promise<void> => {
+  saveConfig: async (config: ConnectionConfig[]): Promise<void> => {
     return invoke(SAVE_CONFIG_COMMAND_NAME, { config });
   }
 

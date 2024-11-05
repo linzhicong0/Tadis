@@ -20,36 +20,37 @@ interface ConnectionGridProps {
     onAddNew: () => void;
 }
 
-let connections: Connection[] = [
-    { id: '1', name: 'Connection 1', address: '192.168.1.1', status: 'Connected' },
-    { id: '2', name: 'Connection 2', address: '192.168.1.2', status: 'Disconnected' },
-    { id: '3', name: 'Connection 3', address: '192.168.1.3', status: 'Disconnected' },
-];
-
 export default function Connection() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [connections, setConnections] = useState<Connection[]>([]);
     const [formData, setFormData] = useState({
         name: '',
-        host: '',
-        port: '',
+        host: '127.0.0.1',
+        port: '6379',
         username: '',
         password: ''
     });
 
     useEffect(() => {
         connectionCommands.loadConfig()
-            .then((value) => {
-                console.log('Config loaded successfully:', value);
+            .then((configs) => {
+                const loadedConnections = configs.map((config: any) => ({
+                    id: config.name,
+                    name: config.name,
+                    address: `${config.host}:${config.port}`,
+                    status: 'Disconnected'
+                }));
+                setConnections(loadedConnections);
+                console.log('Config loaded successfully:', configs);
             })
             .catch((error) => {
                 console.error('Error loading config:', error);
             });
-
-
     }, []);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
+        console.log('Input changed:', name, value);
         setFormData(prev => ({
             ...prev,
             [name]: value
@@ -57,20 +58,28 @@ export default function Connection() {
     };
 
     const handleSave = async () => {
+        console.log('Saving form data:', formData);
         try {
-            await connectionCommands.saveConfig({
+            await connectionCommands.saveConfig([{
                 name: formData.name,
                 host: formData.host,
                 port: Number(formData.port),
                 username: formData.username,
                 password: formData.password
-            });
+            }]);
+            
+            setConnections(prev => [...prev, {
+                id: formData.name,
+                name: formData.name,
+                address: `${formData.host}:${formData.port}`,
+                status: 'Disconnected'
+            }]);
+
             setIsDialogOpen(false);
-            // Reset form
             setFormData({
                 name: '',
-                host: '',
-                port: '',
+                host: '127.0.0.1',
+                port: '6379',
                 username: '',
                 password: ''
             });
