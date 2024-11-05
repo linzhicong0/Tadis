@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserIcon, KeyIcon } from "lucide-react";
 import { connectionCommands } from "@/services/connection-commands";
+import { AlertDialog, AlertDialogAction, AlertDialogFooter, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import CustomAlertDialog from "../components/custom-alert-dialog";
 
 interface Connection {
     id: string;
@@ -15,13 +17,9 @@ interface Connection {
     status: string;
 }
 
-interface ConnectionGridProps {
-    connections: Connection[];
-    onAddNew: () => void;
-}
-
 export default function Connection() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const [connections, setConnections] = useState<Connection[]>([]);
     const [formData, setFormData] = useState({
         name: '',
@@ -58,7 +56,6 @@ export default function Connection() {
     };
 
     const handleSave = async () => {
-        console.log('Saving form data:', formData);
         try {
             await connectionCommands.saveConfig([{
                 name: formData.name,
@@ -67,7 +64,7 @@ export default function Connection() {
                 username: formData.username,
                 password: formData.password
             }]);
-            
+
             setConnections(prev => [...prev, {
                 id: formData.name,
                 name: formData.name,
@@ -84,7 +81,8 @@ export default function Connection() {
                 password: ''
             });
         } catch (error) {
-            console.error('Error saving config:', error);
+            console.log(error);
+            setError(error as string);
         }
     };
 
@@ -110,6 +108,13 @@ export default function Connection() {
                     <PlusIcon className="w-12 h-12 text-gray-400" />
                 </button>
             </div>
+
+            <CustomAlertDialog open={!!error}
+                title="Error saving connection"
+                description={error as string}
+                onCancel={() => setError(null)}
+                onContinue={() => setError(null)}
+            />
 
             <CustomDialog isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)}>
                 <div className="text-white px-4 select-none">

@@ -86,3 +86,10 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+@layer components {
+  .bg-dialog-default {
+    @apply bg-[#1c1c1c]/90;
+  }
+}
