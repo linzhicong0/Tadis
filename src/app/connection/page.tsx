@@ -86,6 +86,17 @@ export default function Connection() {
         }
     };
 
+    const handleCancel = () => {
+            setFormData({
+                name: '',
+                host: '127.0.0.1',
+                port: '6379',
+                username: '',
+                password: ''
+            });
+        setIsDialogOpen(false);
+    };
+
     return (
         <div>
             <div className="grid auto-rows-[200px] grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 p-4">
@@ -203,7 +214,7 @@ export default function Connection() {
                             <Button
                                 type="button"
                                 variant="secondary"
-                                onClick={() => setIsDialogOpen(false)}
+                                onClick={handleCancel}
                                 className="bg-[#2c2c2c] hover:bg-[#3c3c3c] text-white px-4"
                             >
                                 Cancel
