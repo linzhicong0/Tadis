@@ -39,7 +39,7 @@ pub struct ConnectionConfig {
 struct ConnectionConfigStore(Mutex<Option<ConnectionConfig>>);
 
 #[tauri::command]
-fn save_config(app_handle: tauri::AppHandle, config: ConnectionConfig) -> Result<(), String> {
+fn save_config(app_handle: tauri::AppHandle, config: Vec<ConnectionConfig>) -> Result<(), String> {
     println!("Saving config: {:?}", config);
     let store = app_handle
         .store("config.json")
