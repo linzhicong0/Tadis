@@ -1,5 +1,5 @@
 mod commands;
-
+mod models;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -7,6 +7,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
           commands::connection::save_config,
           commands::connection::load_config,
+          commands::connection::delete_connection_config,
         ])
         .setup(|app| {
             if cfg!(debug_assertions) {

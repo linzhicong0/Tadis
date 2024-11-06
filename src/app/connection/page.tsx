@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserIcon, KeyIcon } from "lucide-react";
 import { connectionCommands } from "@/services/connection-commands";
-import { AlertDialog, AlertDialogAction, AlertDialogFooter, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import CustomAlertDialog from "../components/custom-alert-dialog";
 
 interface Connection {
@@ -97,6 +96,16 @@ export default function Connection() {
         setIsDialogOpen(false);
     };
 
+    const handleDelete = async (connectionName: string) => {
+        try {
+           connectionCommands.deleteConfig(connectionName);
+            setConnections(prev => prev.filter(conn => conn.name !== connectionName));
+        } catch (error) {
+            console.error('Error deleting connection:', error);
+            setError('Failed to delete connection');
+        }
+    };
+
     return (
         <div>
             <div className="grid auto-rows-[200px] grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 p-4">
@@ -108,7 +117,7 @@ export default function Connection() {
                         status={connection.status}
                         onPlay={() => console.log('Play', connection.id)}
                         onSettings={() => console.log('Settings', connection.id)}
-                        onDelete={() => console.log('Delete', connection.id)}
+                        onDelete={() => handleDelete(connection.name)}
                     />
                 ))}
 
