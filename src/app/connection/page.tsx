@@ -86,19 +86,19 @@ export default function Connection() {
     };
 
     const handleClose = () => {
-            setFormData({
-                name: '',
-                host: '127.0.0.1',
-                port: '6379',
-                username: '',
-                password: ''
-            });
+        setFormData({
+            name: '',
+            host: '127.0.0.1',
+            port: '6379',
+            username: '',
+            password: ''
+        });
         setIsDialogOpen(false);
     };
 
     const handleDelete = async (connectionName: string) => {
         try {
-           connectionCommands.deleteConfig(connectionName);
+            connectionCommands.deleteConfig(connectionName);
             setConnections(prev => prev.filter(conn => conn.name !== connectionName));
         } catch (error) {
             console.error('Error deleting connection:', error);
@@ -136,108 +136,105 @@ export default function Connection() {
                 onContinue={() => setError(null)}
             />
 
-            <CustomDialog isOpen={isDialogOpen} onClose={handleClose}>
-                <div className="text-white px-4 select-none">
-                    <h2 className="text-2xl font-normal mb-4">Create Connection</h2>
-                    <form className="space-y-5">
-                        <div className="space-y-2">
-                            <label className="text-base">Connection Name</label>
+            <CustomDialog isOpen={isDialogOpen} onClose={handleClose} title={"Create Connection"}>
+                <form className="space-y-5">
+                    <div className="space-y-2">
+                        <label className="text-base">Connection Name</label>
+                        <div className="relative">
+                            <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2  w-5 h-5" />
+                            <Input
+                                name="name"
+                                value={formData.name}
+                                onChange={handleInputChange}
+                                placeholder="connection name"
+                                className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex gap-4">
+                        <div className="flex-1 space-y-2">
+                            <label className="text-base">Host</label>
                             <div className="relative">
-                                <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2  w-5 h-5" />
+                                <Server className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
                                 <Input
-                                    name="name"
-                                    value={formData.name}
+                                    name="host"
+                                    value={formData.host}
                                     onChange={handleInputChange}
-                                    placeholder="connection name"
+                                    placeholder="127.0.0.1"
                                     className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex gap-4">
-                            <div className="flex-1 space-y-2">
-                                <label className="text-base">Host</label>
-                                <div className="relative">
-                                    <Server className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                                    <Input
-                                        name="host"
-                                        value={formData.host}
-                                        onChange={handleInputChange}
-                                        placeholder="127.0.0.1"
-                                        className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
-                                    />
-                                </div>
-                            </div>
+                        <div className="w-32 space-y-2">
+                            <label className="text-base">Port</label>
+                            <Input
+                                name="port"
+                                value={formData.port}
+                                onChange={handleInputChange}
+                                placeholder="6379"
+                                className="bg-[#2c2c2c] border-none h-10 text-white placeholder:text-base text-base"
+                            />
+                        </div>
+                    </div>
 
-                            <div className="w-32 space-y-2">
-                                <label className="text-base">Port</label>
+                    <div className="flex gap-4">
+                        <div className="flex-1 space-y-2">
+                            <label className="text-base">Username</label>
+                            <div className="relative">
+                                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
                                 <Input
-                                    name="port"
-                                    value={formData.port}
+                                    name="username"
+                                    value={formData.username}
                                     onChange={handleInputChange}
-                                    placeholder="6379"
-                                    className="bg-[#2c2c2c] border-none h-10 text-white placeholder:text-base text-base"
+                                    placeholder="username"
+                                    className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
                                 />
                             </div>
                         </div>
 
-                        <div className="flex gap-4">
-                            <div className="flex-1 space-y-2">
-                                <label className="text-base">Username</label>
-                                <div className="relative">
-                                    <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                                    <Input
-                                        name="username"
-                                        value={formData.username}
-                                        onChange={handleInputChange}
-                                        placeholder="username"
-                                        className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="flex-1 space-y-2">
-                                <label className="text-base">Password</label>
-                                <div className="relative">
-                                    <KeyIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
-                                    <Input
-                                        name="password"
-                                        value={formData.password}
-                                        onChange={handleInputChange}
-                                        type="password"
-                                        placeholder="password"
-                                        className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
-                                    />
-                                </div>
+                        <div className="flex-1 space-y-2">
+                            <label className="text-base">Password</label>
+                            <div className="relative">
+                                <KeyIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                                <Input
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleInputChange}
+                                    type="password"
+                                    placeholder="password"
+                                    className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
+                                />
                             </div>
                         </div>
+                    </div>
 
-                        <div className="flex justify-end gap-3 pt-12">
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                className="bg-[#4c4c4c] hover:bg-[#5c5c5c] text-white px-4"
-                            >
-                                Test Connection
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                onClick={handleClose}
-                                className="bg-[#2c2c2c] hover:bg-[#3c3c3c] text-white px-4"
-                            >
-                                Cancel
-                            </Button>
-                            <Button
-                                type="button"
-                                className="bg-blue-600 hover:bg-blue-700 text-white px-4"
-                                onClick={handleSave}
-                            >
-                                Create
-                            </Button>
-                        </div>
-                    </form>
-                </div>
+                    <div className="flex justify-end gap-3 pt-12">
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            className="bg-[#4c4c4c] hover:bg-[#5c5c5c] text-white px-4"
+                        >
+                            Test Connection
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={handleClose}
+                            className="bg-[#2c2c2c] hover:bg-[#3c3c3c] text-white px-4"
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="button"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4"
+                            onClick={handleSave}
+                        >
+                            Create
+                        </Button>
+                    </div>
+                </form>
             </CustomDialog>
         </div>
     );

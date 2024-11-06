@@ -6,9 +6,10 @@ interface DialogProps {
   onClose: () => void;
   children: React.ReactNode;
   className?: string;
+  title: string;
 }
 
-export function CustomDialog({ isOpen, onClose, children, className = '' }: DialogProps) {
+export function CustomDialog({ isOpen, onClose, children, className = '', title }: DialogProps) {
   if (!isOpen) return null;
 
   return (
@@ -29,7 +30,10 @@ export function CustomDialog({ isOpen, onClose, children, className = '' }: Dial
             <CloseButton onClose={onClose} />
           </div>
           <div className="mt-3">
-            {children}
+                <div className="text-white px-4 select-none">
+                <h2 className="text-2xl font-normal mb-4">{title}</h2>
+                {children}
+            </div>
           </div>
         </div>
       </div>
