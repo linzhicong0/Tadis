@@ -24,7 +24,7 @@ export default function WindowTitleBar() {
     return (
         <div className="flex flex-row">
             <div data-tauri-drag-region
-                className="z-10 h-8 w-full absolute inset-x-0 top-0 bg-zinc-800 flex gap-2 items-center px-2 select-none rounded-t-lg"
+                className="z-10 h-8 w-full fixed inset-x-0 top-0 bg-zinc-800 flex gap-2 items-center px-2 select-none rounded-t-lg"
             >
                 <div className="flex gap-2 py-3 ">
                     <CloseButton onClose={handleClose} />

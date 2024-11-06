@@ -33,10 +33,10 @@ export default function RootLayout({
       >
         <SidebarProvider>
           <WindowTitleBar />
-            <AppSidebar />
-            <main className="mt-8 w-full">
-              {children}
-            </main>
+          <AppSidebar />
+          <main className="mt-8 w-full h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
+            {children}
+          </main>
         </SidebarProvider>
       </body>
     </html>
