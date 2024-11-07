@@ -1,56 +1,56 @@
 use serde_json::{json, Value};
 use tauri_plugin_store::StoreExt;
-use std::collections::HashMap;
 use crate::models::connection_config::ConnectionConfig;
 
 const CONNECTIONS_KEY: &str = "connections";
+const CONFIG_FILE_NAME: &str = "connections_config.json";
 
 #[tauri::command]
-pub fn save_config(app_handle: tauri::AppHandle, new_configs: Vec<Value>) -> Result<(), String> {
+pub fn save_connection_config(app_handle: tauri::AppHandle, config: ConnectionConfig) -> Result<(), String> {
     let store = app_handle
-        .store("config.json")
+        .store(CONFIG_FILE_NAME)
         .expect("Failed to get store");
-    
-    // Get existing configs
-    let mut existing_configs = match store.get(CONNECTIONS_KEY) {
-        Some(v) => v.as_array()
+
+    let mut existing_connection_configs = match store.get(CONNECTIONS_KEY) {
+        Some(v) => v.as_object()
             .ok_or("Invalid config format")?
             .clone(),
-        None => Vec::new()
+        None => serde_json::Map::new()
     };
-    
-    // Check for duplicate names
-    for new_config in &new_configs {
-        let new_name = new_config["name"].as_str().ok_or("Invalid name format")?;
-        if existing_configs.iter().any(|config| config["name"].as_str() == Some(new_name)) {
-            return Err(format!("Connection '{}' already exists.", new_name));
-        }
+
+
+    if existing_connection_configs.contains_key(&config.name) {
+        return Err(format!("Connection '{}' already exists.", config.name));
+    } else {
+        existing_connection_configs.insert(config.name.clone(), serde_json::to_value(config).unwrap());
+        store.set(CONNECTIONS_KEY, json!(existing_connection_configs));
+        store.save()
+            .map_err(|e| e.to_string())?;
     }
-    
-    // Append new configs
-    existing_configs.extend(new_configs);
-    
-    // Save updated configs
-    store.set(CONNECTIONS_KEY, json!(existing_configs));
-    store.save()
-        .map_err(|e| e.to_string())?;
-    
+
     Ok(())
+
 }
 
 #[tauri::command]
-pub fn load_config(app_handle: tauri::AppHandle) -> Result<Value, String> {
-    // If not in memory, load from file
+pub fn load_connection_config(app_handle: tauri::AppHandle) -> Result<Vec<ConnectionConfig>, String> {
     let store = app_handle
-        .store("config.json")
+        .store(CONFIG_FILE_NAME)
         .expect("Failed to get store");
-    let value = store.get(CONNECTIONS_KEY);
-    // println!("{:?}", value);
 
-    match value {
-        Some(v) => Ok(v.clone()),
-        None => Err("Could not load configuration data".to_string())
-    }
+    let connections = match store.get(CONNECTIONS_KEY) {
+        Some(v) => v.as_object()
+            .ok_or("Invalid config format")?
+            .clone(),
+        None => return Err("No connections found".to_string())
+    };
+    let connections_vec = connections.values()
+        .map(|v| serde_json::from_value::<crate::models::connection_config::ConnectionConfig>(v.clone()))
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|e| e.to_string())?;
+
+
+    Ok(connections_vec)
 }
 
 #[tauri::command]

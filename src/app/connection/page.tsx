@@ -56,13 +56,13 @@ export default function Connection() {
 
     const handleSave = async () => {
         try {
-            await connectionCommands.saveConfig([{
+            await connectionCommands.saveConfig({
                 name: formData.name,
                 host: formData.host,
                 port: Number(formData.port),
                 username: formData.username,
                 password: formData.password
-            }]);
+            });
 
             setConnections(prev => [...prev, {
                 id: formData.name,

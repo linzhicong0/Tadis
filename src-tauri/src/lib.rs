@@ -5,9 +5,9 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
-          commands::connection::save_config,
-          commands::connection::load_config,
           commands::connection::delete_connection_config,
+          commands::connection::save_connection_config,
+          commands::connection::load_connection_config,
         ])
         .setup(|app| {
             if cfg!(debug_assertions) {
