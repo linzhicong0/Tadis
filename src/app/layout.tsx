@@ -27,16 +27,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark rounded-t-lg">
+    <html lang="en" className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <SidebarProvider>
           <WindowTitleBar />
           <AppSidebar />
-          <main className="mt-8 w-full h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
-            {children}
-          </main>
+            <main className="mt-8 w-full h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
+              {children}
+            </main>
         </SidebarProvider>
       </body>
     </html>
