@@ -83,20 +83,20 @@ export default function Connection() {
                 port: Number(formData.port),
                 username: formData.username,
                 password: formData.password
-            });
+            }, !isEditMode);
 
             if (isEditMode) {
-                console.log('Updating existing connection');
                 setConnections(prev => prev.map(conn => 
                     conn.name === formData.name 
                         ? {
                             ...conn,
                             address: `${formData.host}:${formData.port}`,
+                            username: formData.username,
+                            password: formData.password,
                         }
                         : conn
                 ));
             } else {
-                console.log('Creating new connection');
                 setConnections(prev => [...prev, {
                     id: formData.name,
                     name: formData.name,
@@ -179,6 +179,7 @@ export default function Connection() {
                                 onChange={handleInputChange}
                                 placeholder="connection name"
                                 className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
+                                disabled={isEditMode}
                             />
                         </div>
                     </div>

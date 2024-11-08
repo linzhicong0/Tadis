@@ -12,8 +12,8 @@ export const connectionCommands = {
     return invoke<ConnectionConfig[]>(LOAD_CONFIG_COMMAND_NAME);
   },
 
-  saveConfig: async (config: ConnectionConfig): Promise<void> => {
-    return invoke(SAVE_CONFIG_COMMAND_NAME, { config });
+  saveConfig: async (config: ConnectionConfig, isNew: boolean): Promise<void> => {
+    return invoke(SAVE_CONFIG_COMMAND_NAME, { config, isNew });
   },
 
   deleteConfig: async (connectionName: string): Promise<void> => {
