@@ -14,6 +14,8 @@ interface Connection {
     name: string;
     address: string;
     status: string;
+    username: string;
+    password: string;
 }
 
 export default function Connection() {
@@ -31,6 +33,7 @@ export default function Connection() {
         open: false,
         connectionName: ''
     });
+    const [isEditMode, setIsEditMode] = useState(false);
 
     useEffect(() => {
         connectionCommands.loadConfig()
@@ -39,7 +42,9 @@ export default function Connection() {
                     id: config.name,
                     name: config.name,
                     address: `${config.host}:${config.port}`,
-                    status: 'Disconnected'
+                    status: 'Disconnected',
+                    username: config.username || '',
+                    password: config.password || ''
                 }));
                 setConnections(loadedConnections);
                 console.log('Config loaded successfully:', configs);
@@ -58,6 +63,18 @@ export default function Connection() {
         }));
     };
 
+    const handleSettings = (connection: Connection) => {
+        setFormData({
+            name: connection.name,
+            host: connection.address.split(':')[0],
+            port: connection.address.split(':')[1],
+            username: connection.username,
+            password: connection.password,
+        });
+        setIsEditMode(true);
+        setIsDialogOpen(true);
+    };
+
     const handleSave = async () => {
         try {
             await connectionCommands.saveConfig({
@@ -68,21 +85,29 @@ export default function Connection() {
                 password: formData.password
             });
 
-            setConnections(prev => [...prev, {
-                id: formData.name,
-                name: formData.name,
-                address: `${formData.host}:${formData.port}`,
-                status: 'Disconnected'
-            }]);
+            if (isEditMode) {
+                console.log('Updating existing connection');
+                setConnections(prev => prev.map(conn => 
+                    conn.name === formData.name 
+                        ? {
+                            ...conn,
+                            address: `${formData.host}:${formData.port}`,
+                        }
+                        : conn
+                ));
+            } else {
+                console.log('Creating new connection');
+                setConnections(prev => [...prev, {
+                    id: formData.name,
+                    name: formData.name,
+                    address: `${formData.host}:${formData.port}`,
+                    status: 'Disconnected',
+                    username: formData.username,
+                    password: formData.password
+                }]);
+            }
 
-            setIsDialogOpen(false);
-            setFormData({
-                name: '',
-                host: '127.0.0.1',
-                port: '6379',
-                username: '',
-                password: ''
-            });
+            handleClose();
         } catch (error) {
             console.log(error);
             setError(error as string);
@@ -97,6 +122,7 @@ export default function Connection() {
             username: '',
             password: ''
         });
+        setIsEditMode(false);
         setIsDialogOpen(false);
     };
 
@@ -128,7 +154,7 @@ export default function Connection() {
                         address={connection.address}
                         status={connection.status}
                         onPlay={() => console.log('Play', connection.id)}
-                        onSettings={() => console.log('Settings', connection.id)}
+                        onSettings={() => handleSettings(connection)}
                         onDelete={() => handleDelete(connection.name)}
                     />
                 ))}
@@ -141,7 +167,7 @@ export default function Connection() {
                 </button>
             </div>
 
-            <CustomDialog isOpen={isDialogOpen} onClose={handleClose} title={"Create Connection"}>
+            <CustomDialog isOpen={isDialogOpen} onClose={handleClose} title={isEditMode ? 'Update Connection' : 'New Connection'}>
                 <form className="space-y-5">
                     <div className="space-y-2">
                         <label className="text-base">Connection Name</label>
@@ -236,7 +262,7 @@ export default function Connection() {
                             className="bg-blue-600 hover:bg-blue-700 text-white px-4"
                             onClick={handleSave}
                         >
-                            Create
+                            {isEditMode ? 'Save' : 'Create'}
                         </Button>
                     </div>
                 </form>
