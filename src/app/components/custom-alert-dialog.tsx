@@ -26,16 +26,16 @@ export default function CustomAlertDialog({
 }: CustomAlertDialogProps) {
   return (
     <AlertDialog open={open}>
-      <AlertDialogContent className="border-none bg-dialog-default">
+      <AlertDialogContent className="border-none bg-white dark:bg-dialog-default">
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription className="text-base">
+          <AlertDialogTitle className="text-gray-900 dark:text-white">{title}</AlertDialogTitle>
+          <AlertDialogDescription className="text-base text-gray-600 dark:text-gray-300">
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel
-            className="bg-[#2c2c2c] hover:bg-[#3c3c3c] text-white px-4"
+            className="bg-gray-100 hover:bg-gray-200 dark:bg-[#2c2c2c] dark:hover:bg-[#3c3c3c] text-gray-900 dark:text-white px-4"
             onClick={onCancel}
           >
             Cancel

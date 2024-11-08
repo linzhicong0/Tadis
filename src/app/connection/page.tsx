@@ -91,8 +91,6 @@ export default function Connection() {
                         ? {
                             ...conn,
                             address: `${formData.host}:${formData.port}`,
-                            username: formData.username,
-                            password: formData.password,
                         }
                         : conn
                 ));
@@ -161,9 +159,9 @@ export default function Connection() {
 
                 <button
                     onClick={() => setIsDialogOpen(true)}
-                    className="bg-gray-800 rounded-lg p-4 flex items-center justify-center hover:bg-gray-700 transition-colors w-[220px] h-[200px]"
+                    className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 rounded-lg p-4 flex items-center justify-center hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors w-[220px] h-[200px] shadow-lg shadow-black/10 backdrop-blur-sm"
                 >
-                    <PlusIcon className="w-12 h-12 text-gray-400" />
+                    <PlusIcon className="w-12 h-12 text-gray-600 dark:text-gray-400" />
                 </button>
             </div>
 
@@ -172,13 +170,13 @@ export default function Connection() {
                     <div className="space-y-2">
                         <label className="text-base">Connection Name</label>
                         <div className="relative">
-                            <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2  w-5 h-5" />
+                            <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
                             <Input
                                 name="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
                                 placeholder="connection name"
-                                className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
+                                className="bg-gray-50 dark:bg-[#2c2c2c] border-gray-200 dark:border-none pl-10 h-10 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-gray-400 dark:focus:border-gray-600"
                                 disabled={isEditMode}
                             />
                         </div>
@@ -188,13 +186,13 @@ export default function Connection() {
                         <div className="flex-1 space-y-2">
                             <label className="text-base">Host</label>
                             <div className="relative">
-                                <Server className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                                <Server className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
                                 <Input
                                     name="host"
                                     value={formData.host}
                                     onChange={handleInputChange}
                                     placeholder="127.0.0.1"
-                                    className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
+                                    className="bg-gray-50 dark:bg-[#2c2c2c] border-gray-200 dark:border-none pl-10 h-10 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-gray-400 dark:focus:border-gray-600"
                                 />
                             </div>
                         </div>
@@ -206,7 +204,7 @@ export default function Connection() {
                                 value={formData.port}
                                 onChange={handleInputChange}
                                 placeholder="6379"
-                                className="bg-[#2c2c2c] border-none h-10 text-white placeholder:text-base text-base"
+                                className="bg-gray-50 dark:bg-[#2c2c2c] border-gray-200 dark:border-none h-10 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-gray-400 dark:focus:border-gray-600"
                             />
                         </div>
                     </div>
@@ -215,13 +213,13 @@ export default function Connection() {
                         <div className="flex-1 space-y-2">
                             <label className="text-base">Username</label>
                             <div className="relative">
-                                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                                <UserIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
                                 <Input
                                     name="username"
                                     value={formData.username}
                                     onChange={handleInputChange}
                                     placeholder="username"
-                                    className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
+                                    className="bg-gray-50 dark:bg-[#2c2c2c] border-gray-200 dark:border-none pl-10 h-10 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-gray-400 dark:focus:border-gray-600"
                                 />
                             </div>
                         </div>
@@ -229,14 +227,14 @@ export default function Connection() {
                         <div className="flex-1 space-y-2">
                             <label className="text-base">Password</label>
                             <div className="relative">
-                                <KeyIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5" />
+                                <KeyIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 dark:text-gray-400" />
                                 <Input
                                     name="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
                                     type="password"
                                     placeholder="password"
-                                    className="bg-[#2c2c2c] border-none pl-10 h-10 text-white placeholder:text-base text-base"
+                                    className="bg-gray-50 dark:bg-[#2c2c2c] border-gray-200 dark:border-none pl-10 h-10 text-gray-900 dark:text-white placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-gray-400 dark:focus:border-gray-600"
                                 />
                             </div>
                         </div>
@@ -246,7 +244,7 @@ export default function Connection() {
                         <Button
                             type="button"
                             variant="secondary"
-                            className="bg-[#4c4c4c] hover:bg-[#5c5c5c] text-white px-4"
+                            className="bg-gray-200 hover:bg-gray-300 dark:bg-[#4c4c4c] dark:hover:bg-[#5c5c5c] text-gray-900 dark:text-white px-4"
                         >
                             Test Connection
                         </Button>
@@ -254,7 +252,7 @@ export default function Connection() {
                             type="button"
                             variant="secondary"
                             onClick={handleClose}
-                            className="bg-[#2c2c2c] hover:bg-[#3c3c3c] text-white px-4"
+                            className="bg-gray-100 hover:bg-gray-200 dark:bg-[#2c2c2c] dark:hover:bg-[#3c3c3c] text-gray-900 dark:text-white px-4"
                         >
                             Cancel
                         </Button>
