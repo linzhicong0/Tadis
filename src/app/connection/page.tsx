@@ -27,6 +27,10 @@ export default function Connection() {
         username: '',
         password: ''
     });
+    const [deleteConfirmation, setDeleteConfirmation] = useState<{open: boolean, connectionName: string}>({
+        open: false,
+        connectionName: ''
+    });
 
     useEffect(() => {
         connectionCommands.loadConfig()
@@ -97,9 +101,17 @@ export default function Connection() {
     };
 
     const handleDelete = async (connectionName: string) => {
+        setDeleteConfirmation({
+            open: true,
+            connectionName
+        });
+    };
+
+    const handleConfirmedDelete = async () => {
         try {
-            connectionCommands.deleteConfig(connectionName);
-            setConnections(prev => prev.filter(conn => conn.name !== connectionName));
+            await connectionCommands.deleteConfig(deleteConfirmation.connectionName);
+            setConnections(prev => prev.filter(conn => conn.name !== deleteConfirmation.connectionName));
+            setDeleteConfirmation({ open: false, connectionName: '' });
         } catch (error) {
             console.error('Error deleting connection:', error);
             setError('Failed to delete connection');
@@ -128,13 +140,6 @@ export default function Connection() {
                     <PlusIcon className="w-12 h-12 text-gray-400" />
                 </button>
             </div>
-
-            <CustomAlertDialog open={!!error}
-                title="Error saving connection"
-                description={error as string}
-                onCancel={() => setError(null)}
-                onContinue={() => setError(null)}
-            />
 
             <CustomDialog isOpen={isDialogOpen} onClose={handleClose} title={"Create Connection"}>
                 <form className="space-y-5">
@@ -236,6 +241,21 @@ export default function Connection() {
                     </div>
                 </form>
             </CustomDialog>
+
+            <CustomAlertDialog open={!!error}
+                title="Error saving connection"
+                description={error as string}
+                onCancel={() => setError(null)}
+                onContinue={() => setError(null)}
+            />
+
+            <CustomAlertDialog 
+                open={deleteConfirmation.open}
+                title="Delete Connection"
+                description={`Are you sure you want to delete the connection "${deleteConfirmation.connectionName}"?`}
+                onCancel={() => setDeleteConfirmation({ open: false, connectionName: '' })}
+                onContinue={handleConfirmedDelete}
+            />
         </div>
     );
 }
