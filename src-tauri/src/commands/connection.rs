@@ -59,24 +59,17 @@ pub async fn delete_connection_config(
     connection_name: String,
 ) -> Result<(), String> {
     let store = app_handle
-        .store("config.json")
+        .store(CONFIG_FILE_NAME)
         .map_err(|e| e.to_string())?;
     
     let mut connections = store.get(CONNECTIONS_KEY)
         .ok_or("No connections found")?
-        .as_array()
+        .as_object()
         .ok_or("Invalid connections format")?
-        .iter()
-        .map(|v| serde_json::from_value::<crate::models::connection_config::ConnectionConfig>(v.clone()))
-        .collect::<Result<Vec<_>, _>>()
-        .map_err(|e| e.to_string())?;
+        .clone();
 
-    let index = connections.iter()
-        .position(|config| config.name == connection_name)
-        .ok_or_else(|| format!("Connection '{}' not found", connection_name))?;
-    
-    connections.remove(index);
-    
+    connections.remove(&connection_name);
+
     store.set(CONNECTIONS_KEY, json!(connections));
     store.save()
         .map_err(|e| e.to_string())?;
