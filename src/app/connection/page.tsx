@@ -91,6 +91,8 @@ export default function Connection() {
                         ? {
                             ...conn,
                             address: `${formData.host}:${formData.port}`,
+                            username: formData.username,
+                            password: formData.password
                         }
                         : conn
                 ));
