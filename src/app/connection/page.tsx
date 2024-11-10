@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { UserIcon, KeyIcon } from "lucide-react";
 import { connectionCommands } from "@/services/connection-commands";
 import CustomAlertDialog from "../components/custom-alert-dialog";
+import { LoadingDialog } from "@/components/ui/loading-dialog";
 
 interface Connection {
     id: string;
@@ -21,6 +22,7 @@ interface Connection {
 export default function Connection() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const [connections, setConnections] = useState<Connection[]>([]);
     const [formData, setFormData] = useState({
         name: '',
@@ -29,11 +31,12 @@ export default function Connection() {
         username: '',
         password: ''
     });
-    const [deleteConfirmation, setDeleteConfirmation] = useState<{open: boolean, connectionName: string}>({
+    const [deleteConfirmation, setDeleteConfirmation] = useState<{ open: boolean, connectionName: string }>({
         open: false,
         connectionName: ''
     });
     const [isEditMode, setIsEditMode] = useState(false);
+    const [isTestingConnection, setIsTestingConnection] = useState(false);
 
     useEffect(() => {
         connectionCommands.loadConfig()
@@ -86,8 +89,8 @@ export default function Connection() {
             }, !isEditMode);
 
             if (isEditMode) {
-                setConnections(prev => prev.map(conn => 
-                    conn.name === formData.name 
+                setConnections(prev => prev.map(conn =>
+                    conn.name === formData.name
                         ? {
                             ...conn,
                             address: `${formData.host}:${formData.port}`,
@@ -142,6 +145,26 @@ export default function Connection() {
             console.error('Error deleting connection:', error);
             setError('Failed to delete connection');
         }
+    };
+
+    const handleTestConnection = () => {
+        setIsTestingConnection(true);
+        connectionCommands.testConnection({
+            name: formData.name,
+            host: formData.host,
+            port: Number(formData.port),
+            username: formData.username,
+            password: formData.password
+        })
+            .then(() => {
+                setSuccessMessage('Connection successful!');
+            })
+            .catch((error) => {
+                setError(`Connection failed: ${error}`);
+            })
+            .finally(() => {
+                setIsTestingConnection(false);
+            });
     };
 
     return (
@@ -246,6 +269,7 @@ export default function Connection() {
                         <Button
                             type="button"
                             variant="secondary"
+                            onClick={handleTestConnection}
                             className="bg-gray-200 hover:bg-gray-300 dark:bg-[#4c4c4c] dark:hover:bg-[#5c5c5c] text-gray-900 dark:text-white px-4"
                         >
                             Test Connection
@@ -270,18 +294,33 @@ export default function Connection() {
             </CustomDialog>
 
             <CustomAlertDialog open={!!error}
-                title="Error saving connection"
+                title= "Error"
                 description={error as string}
                 onCancel={() => setError(null)}
                 onContinue={() => setError(null)}
             />
 
-            <CustomAlertDialog 
+            <CustomAlertDialog
+                open={!!successMessage}
+                title="Success"
+                description={successMessage as string}
+                onCancel={() => setSuccessMessage(null)}
+                onContinue={() => setSuccessMessage(null)}
+            />
+
+            <CustomAlertDialog
                 open={deleteConfirmation.open}
                 title="Delete Connection"
                 description={`Are you sure you want to delete the connection "${deleteConfirmation.connectionName}"?`}
                 onCancel={() => setDeleteConfirmation({ open: false, connectionName: '' })}
                 onContinue={handleConfirmedDelete}
+            />
+
+            <LoadingDialog 
+                open={isTestingConnection}
+                title="Testing Connection"
+                description="Please wait while we test the connection..."
+                onClose={() => {setIsTestingConnection(false)}}
             />
         </div>
     );

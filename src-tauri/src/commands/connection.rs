@@ -1,6 +1,9 @@
+use std::time::Duration;
+
 use crate::models::connection_config::ConnectionConfig;
 use serde_json::{json, Value};
 use tauri_plugin_store::StoreExt;
+use redis::Client;
 
 const CONNECTIONS_KEY: &str = "connections";
 const CONFIG_FILE_NAME: &str = "connections_config.json";
@@ -85,4 +88,24 @@ pub async fn delete_connection_config(
     store.save().map_err(|e| e.to_string())?;
 
     Ok(())
+}
+
+#[tauri::command]
+pub async fn test_connection(config: ConnectionConfig) -> Result<String, String> {
+    let url = format!(
+        "redis://{}:{}@{}:{}/{}",
+        config.username,
+        config.password,
+        config.host,
+        config.port,
+        0
+    );
+
+    let client = Client::open(url).map_err(|e| format!("Failed to create Redis client: {}", e))?;
+    
+    let connection = client
+        .get_connection_with_timeout(Duration::from_secs(1))
+        .map_err(|e| format!("Failed to connect to Redis: {}", e))?;
+
+    Ok("Connection successful!".to_string())
 }

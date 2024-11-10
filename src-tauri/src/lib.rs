@@ -8,6 +8,7 @@ pub fn run() {
           commands::connection::delete_connection_config,
           commands::connection::save_connection_config,
           commands::connection::load_connection_config,
+          commands::connection::test_connection,
         ])
         .setup(|app| {
             if cfg!(debug_assertions) {
