@@ -16,7 +16,7 @@ export function CustomDialog({ isOpen, onClose, children, className = '', title 
     <>
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
         onClick={onClose}
       />
       

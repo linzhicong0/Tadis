@@ -2,10 +2,11 @@
 import { ConnectionConfig } from '@/models/connection';
 import { invoke } from '@tauri-apps/api/core';
 
-
 const LOAD_CONFIG_COMMAND_NAME = 'load_connection_config';
 const SAVE_CONFIG_COMMAND_NAME = 'save_connection_config';
 const DELETE_CONFIG_COMMAND_NAME = 'delete_connection_config';
+const TEST_CONNECTION_COMMAND_NAME = 'test_connection';
+
 export const connectionCommands = {
 
   loadConfig: async (): Promise<ConnectionConfig[]> => {
@@ -18,6 +19,10 @@ export const connectionCommands = {
 
   deleteConfig: async (connectionName: string): Promise<void> => {
     return invoke(DELETE_CONFIG_COMMAND_NAME, { connectionName });
+  },
+
+  testConnection: async (config: ConnectionConfig): Promise<void> => {
+    return invoke(TEST_CONNECTION_COMMAND_NAME, { config });
   }
 
 };
