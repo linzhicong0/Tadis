@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use crate::models::connection_config::ConnectionConfig;
-use serde_json::{json, Value};
+use serde_json::json;
 use tauri_plugin_store::StoreExt;
 use redis::Client;
 
@@ -103,7 +103,7 @@ pub async fn test_connection(config: ConnectionConfig) -> Result<String, String>
 
     let client = Client::open(url).map_err(|e| format!("Failed to create Redis client: {}", e))?;
     
-    let connection = client
+    let _connection = client
         .get_connection_with_timeout(Duration::from_secs(1))
         .map_err(|e| format!("Failed to connect to Redis: {}", e))?;
 
