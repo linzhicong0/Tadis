@@ -70,7 +70,7 @@ export default function Database() {
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 bg-[#1D1D1D] p-4">
+            <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col">
                 <div className="flex items-center gap-4 text-gray-300 mb-4">
                     <div className="bg-green-600 px-2 py-0.5 text-xs rounded">STRING</div>
                     <div>user:1:name</div>
@@ -83,15 +83,15 @@ export default function Database() {
                     </div>
                 </div>
 
-                <div className="text-gray-400 text-sm space-y-1">
-                    <div>TTL: INFINITY</div>
-                    <div>Memory: 80 bytes</div>
+                <div className="flex flex-row items-center text-gray-400 text-sm gap-2">
+                    <div className="rounded">TTL: INFINITY</div>
+                    <div className="rounded">Memory: 80 bytes</div>
                     <div>Encoding: {/* encoding info */}</div>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-4 flex-1">
                     <textarea
-                        className="w-full h-48 bg-gray-800 text-gray-200 p-3 rounded-md"
+                        className="w-full h-full min-h-0 bg-gray-800 text-gray-200 p-3 rounded-md resize-none"
                         value="asdfadsfasdf1"
                     />
                 </div>
