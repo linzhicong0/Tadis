@@ -4,15 +4,25 @@ import { Plus, RotateCw, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import RedisItem from '@/app/components/redisitem'
 import { redisCommands } from '@/services/redis-commands'
-
+import { mockRedisData } from '@/mock/redis-data';
+import TreeView from '@/app/components/treeview';
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
+    const [selectedItemName, setSelectedItemName] = useState<string>('');
 
     useEffect(() => {
         redisCommands.getAllKeys().then((keys) => {
             console.log(keys)
         })
     }, [])
+
+    const handleDelete = (name: string) => {
+        console.log('Delete:', name);
+    };
+
+    const handleItemSelect = (name: string) => {
+        setSelectedItemName(name);
+    };
 
     return (
         <div className="flex h-full">
@@ -42,26 +52,19 @@ export default function Database() {
 
                     {/* Keys List */}
                     <div className="text-sm text-gray-400 mb-2">
-                        KEYS (14 SCANNED)
+                        KEYS ({mockRedisData.length} SCANNED)
                     </div>
 
                     <div className="space-y-1">
-                        {/* Tree structure for keys */}
-                        <div className="text-gray-300">
-                            <div className="flex items-center gap-2 p-1 hover:bg-gray-800 rounded">
-                                <ChevronDownIcon />
-                                user (1)
-                            </div>
-                            {/* Nested items would go here */}
-                            <div className="flex flex-col gap-2">
-                                <RedisItem type="string" name="user:1:name" onDelete={() => { }} />
-                                <RedisItem type="set" name="user:1:preferences" onDelete={() => {}} />
-                                <RedisItem type="hash" name="user:1:profile" onDelete={() => {}} />
-                                <RedisItem type="list" name="user:1:posts" onDelete={() => {}} />
-                                <RedisItem type="stream" name="user:1:activity" onDelete={() => {}} />
-                                <RedisItem type="zset" name="user:1:scores" onDelete={() => {}} />
-                            </div>
-                        </div>
+                        {mockRedisData.map((item) => (
+                            <TreeView 
+                                key={item.name}
+                                item={item}
+                                onDelete={handleDelete}
+                                selectedItemName={selectedItemName}
+                                onItemSelect={handleItemSelect}
+                            />
+                        ))}
                     </div>
                 </div>
             </div>
