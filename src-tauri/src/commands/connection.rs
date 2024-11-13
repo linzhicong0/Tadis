@@ -1,9 +1,10 @@
-use std::time::Duration;
+use std::{sync::Mutex, time::Duration};
 
-use crate::models::connection_config::ConnectionConfig;
-use serde_json::json;
-use tauri_plugin_store::StoreExt;
+use crate::{models::connection_config::ConnectionConfig, AppState};
 use redis::Client;
+use serde_json::json;
+use tauri::State;
+use tauri_plugin_store::StoreExt;
 
 const CONNECTIONS_KEY: &str = "connections";
 const CONFIG_FILE_NAME: &str = "connections_config.json";
@@ -37,7 +38,6 @@ pub fn save_connection_config(
             .insert(config.name.clone(), serde_json::to_value(config).unwrap());
         store.set(CONNECTIONS_KEY, json!(existing_connection_configs));
         store.save().map_err(|e| e.to_string())?;
-        
     }
 
     Ok(())
@@ -94,18 +94,45 @@ pub async fn delete_connection_config(
 pub async fn test_connection(config: ConnectionConfig) -> Result<String, String> {
     let url = format!(
         "redis://{}:{}@{}:{}/{}",
-        config.username,
-        config.password,
-        config.host,
-        config.port,
-        0
+        config.username, config.password, config.host, config.port, 0
     );
 
     let client = Client::open(url).map_err(|e| format!("Failed to create Redis client: {}", e))?;
-    
+
     let _connection = client
         .get_connection_with_timeout(Duration::from_secs(1))
         .map_err(|e| format!("Failed to connect to Redis: {}", e))?;
 
     Ok("Connection successful!".to_string())
+}
+
+#[tauri::command]
+pub fn connect_to_redis(
+    state: State<'_, Mutex<AppState>>,
+    config: ConnectionConfig,
+) -> Result<(), String> {
+    let url = format!(
+        "redis://{}:{}@{}:{}/{}",
+        config.username, config.password, config.host, config.port, 0
+    );
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    if state.connected_clients.contains_key(&config.name) {
+        return Err(format!("Connection '{}' already connected.", config.name));
+    }
+
+    let client = Client::open(url).map_err(|e| format!("Failed to create Redis client: {}", e))?;
+
+    let connection = client
+        .get_connection_with_timeout(Duration::from_secs(120))
+        .map_err(|e| format!("Failed to connect to Redis: {}", e))?;
+
+    state
+        .connected_clients
+        .insert(config.name.clone(), connection);
+    state.selected_client = config.name.clone();
+    println!("Connected to Redis: {}", config.name);
+
+    Ok(())
 }

@@ -167,6 +167,20 @@ export default function Connection() {
             });
     };
 
+    const handleConnectToRedis = (connection: Connection) => {
+        connectionCommands.connectToRedis({
+            name: connection.name,
+            host: connection.address.split(':')[0],
+            port: Number(connection.address.split(':')[1]),
+            username: connection.username,
+            password: connection.password
+        }).then(() => {
+            setSuccessMessage('Connected to Redis!');
+        }).catch((error) => {
+            setError(`Failed to connect to Redis: ${error}`);
+        });
+    };
+
     return (
         <div>
             <div className="grid auto-rows-[200px] grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 p-4">
@@ -176,7 +190,7 @@ export default function Connection() {
                         name={connection.name}
                         address={connection.address}
                         status={connection.status}
-                        onPlay={() => console.log('Play', connection.id)}
+                        onPlay={() => handleConnectToRedis(connection)}
                         onSettings={() => handleSettings(connection)}
                         onDelete={() => handleDelete(connection.name)}
                     />
