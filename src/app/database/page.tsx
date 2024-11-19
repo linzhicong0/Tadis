@@ -7,6 +7,7 @@ import { redisCommands } from '@/services/redis-commands'
 import { mockRedisData } from '@/mock/redis-data';
 import TreeView from '@/app/components/treeview';
 import { RedisTreeItem } from '@/models/redisTreeItem'
+import { ScrollArea } from '@/components/ui/scroll-area'
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
@@ -28,10 +29,10 @@ export default function Database() {
     };
 
     return (
-        <div className="flex h-full">
+        <div className="flex h-[calc(100vh-2rem)]">
             {/* Left Sidebar */}
-            <div className="w-100 bg-[#1C1C1C] border-r border-gray-700">
-                <div className="p-4">
+            <div className="w-100 bg-[#1C1C1C] border-r border-gray-700 flex flex-col">
+                <div className="p-4 flex flex-col h-full">
                     {/* Search Bar */}
                     <div className="flex gap-2 mb-4">
                         <div className="relative">
@@ -53,27 +54,30 @@ export default function Database() {
                         </button>
                     </div>
 
-                    {/* Keys List */}
+                    {/* Keys List Header */}
                     <div className="text-sm text-gray-400 mb-2">
                         KEYS ({redisData.length} SCANNED)
                     </div>
 
-                    <div className="space-y-1">
-                        {redisData.map((item) => (
-                            <TreeView 
-                                key={item.label}
-                                item={item}
-                                onDelete={handleDelete}
-                                selectedItemName={selectedItemName}
-                                onItemSelect={handleItemSelect}
-                            />
-                        ))}
-                    </div>
+                    {/* Wrap the TreeView in a ScrollArea */}
+                    <ScrollArea className="flex-1">
+                        <div className="space-y-1 pr-4">
+                            {redisData.map((item) => (
+                                <TreeView
+                                    key={item.label}
+                                    item={item}
+                                    onDelete={handleDelete}
+                                    selectedItemName={selectedItemName}
+                                    onItemSelect={handleItemSelect}
+                                />
+                            ))}
+                        </div>
+                    </ScrollArea>
                 </div>
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col">
+            <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col h-full overflow-hidden">
                 <div className="flex items-center gap-4 text-gray-300 mb-4">
                     <div className="bg-green-600 px-2 py-0.5 text-xs rounded">STRING</div>
                     <div>user:1:name</div>
