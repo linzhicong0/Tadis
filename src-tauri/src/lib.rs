@@ -14,7 +14,7 @@ pub fn run() {
             commands::connection::load_connection_config,
             commands::connection::test_connection,
             commands::connection::connect_to_redis,
-            commands::redis::get_all_keys,
+            commands::redis::get_all_keys_as_tree,
         ])
         .setup(|app| {
             if cfg!(debug_assertions) {

@@ -1,13 +1,13 @@
 
 import { ConnectionConfig } from '@/models/connection';
 import { invoke } from '@tauri-apps/api/core';
-
-const GET_ALL_KEYS_COMMAND_NAME = 'get_all_keys';
+import { RedisTreeItem } from '@/models/redisTreeItem';
+const GET_ALL_KEYS_AS_TREE_COMMAND_NAME = 'get_all_keys_as_tree';
 
 export const redisCommands = {
 
-    getAllKeys: async (): Promise<string[]> => {
-        return invoke<string[]>(GET_ALL_KEYS_COMMAND_NAME);
+    getAllKeysAsTree: async (): Promise<RedisTreeItem[]> => {
+        return invoke<RedisTreeItem[]>(GET_ALL_KEYS_AS_TREE_COMMAND_NAME);
     },
 
 

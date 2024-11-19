@@ -6,13 +6,16 @@ import RedisItem from '@/app/components/redisitem'
 import { redisCommands } from '@/services/redis-commands'
 import { mockRedisData } from '@/mock/redis-data';
 import TreeView from '@/app/components/treeview';
+import { RedisTreeItem } from '@/models/redisTreeItem'
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
+    const [redisData, setRedisData] = useState<RedisTreeItem[]>([]);
 
     useEffect(() => {
-        redisCommands.getAllKeys().then((keys) => {
-            console.log(keys)
+        redisCommands.getAllKeysAsTree().then((keys) => {
+            console.log("keys are: ", keys);
+            setRedisData(keys)
         })
     }, [])
 
@@ -52,13 +55,13 @@ export default function Database() {
 
                     {/* Keys List */}
                     <div className="text-sm text-gray-400 mb-2">
-                        KEYS ({mockRedisData.length} SCANNED)
+                        KEYS ({redisData.length} SCANNED)
                     </div>
 
                     <div className="space-y-1">
-                        {mockRedisData.map((item) => (
+                        {redisData.map((item) => (
                             <TreeView 
-                                key={item.name}
+                                key={item.label}
                                 item={item}
                                 onDelete={handleDelete}
                                 selectedItemName={selectedItemName}
