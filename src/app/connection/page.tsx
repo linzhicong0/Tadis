@@ -182,7 +182,7 @@ export default function Connection() {
     };
 
     return (
-        <div>
+        <div className="h-[calc(100vh-2rem)] overflow-y-auto custom-scrollbar">
             <div className="grid auto-rows-[200px] grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-4 p-4">
                 {connections.map((connection) => (
                     <ConnectionCard
