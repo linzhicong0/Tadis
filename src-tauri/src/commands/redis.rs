@@ -21,8 +21,15 @@ pub fn get_all_keys_as_tree(state: State<'_, Mutex<AppState>>) -> Result<Vec<Red
         .keys("*")
         .map_err(|e| format!("Failed to get keys: {}", e))?;
 
-    let result = convert_keys_to_tree(client, keys);    
-    println!("{:?}", result);
+    let mut result = convert_keys_to_tree(client, keys);    
+    result.sort_by(|a, b| {
+        match (a.children.is_some(), b.children.is_some()) {
+            (true, false) => std::cmp::Ordering::Less,
+            (false, true) => std::cmp::Ordering::Greater,
+            _ => a.label.cmp(&b.label),
+        }
+    });
+
     Ok(result)
 }
 
