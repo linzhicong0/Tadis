@@ -14,14 +14,14 @@ const TreeView: React.FC<TreeViewProps> = ({ item, onDelete, selectedItemName, o
   const [isExpanded, setIsExpanded] = useState(false);
   const hasChildren = item.children && item.children.length > 0;
 
-  if (!hasChildren && item.type) {
+  if (!hasChildren && item.item_type) {
     return (
       <RedisItem
-        type={item.type}
-        name={item.name}
+        type={item.item_type}
+        label={item.label}
         onDelete={onDelete}
-        onClick={() => onItemSelect(item.name)}
-        isSelected={selectedItemName === item.name}
+        onClick={() => onItemSelect(item.key)}
+        isSelected={selectedItemName === item.key}
       />
     );
   }
@@ -41,14 +41,14 @@ const TreeView: React.FC<TreeViewProps> = ({ item, onDelete, selectedItemName, o
             )}
           </span>
         )}
-        <span className="text-gray-200 text-sm">{item.name}</span>
+        <span className="text-gray-200 text-sm">{item.label}</span>
       </div>
 
       {isExpanded && hasChildren && (
         <div className="ml-4 flex flex-col gap-1 mt-1">
           {item.children!.map((child) => (
             <TreeView
-              key={child.name}
+              key={child.key}
               item={child}
               onDelete={onDelete}
               selectedItemName={selectedItemName}

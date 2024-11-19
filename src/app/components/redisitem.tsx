@@ -5,13 +5,13 @@ type RedisItemType = 'string' | 'set' | 'hash' | 'list' | 'stream' | 'zset';
 
 interface RedisItemProps {
   type: RedisItemType;
-  name: string;
+  label: string;
   onDelete?: (name: string) => void;
   onClick?: (name: string) => void;
   isSelected?: boolean;
 }
 
-const RedisItem: React.FC<RedisItemProps> = ({ type, name, onDelete, onClick, isSelected }) => {
+const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, isSelected }) => {
   const getTypeColor = (type: RedisItemType) => {
     const colors = {
       string: 'bg-green-500',
@@ -29,21 +29,21 @@ const RedisItem: React.FC<RedisItemProps> = ({ type, name, onDelete, onClick, is
       className={`flex items-center justify-between gap-2 ${
         isSelected ? 'bg-gray-700' : 'hover:bg-gray-800'
       } rounded-md p-1 hover:cursor-pointer`}
-      onClick={() => onClick?.(name)}
+      onClick={() => onClick?.(label)}
     >
       <div className="flex items-center gap-2">
         <span className={`${getTypeColor(type)} text-white rounded-sm font-semibold uppercase text-[10px] w-14 h-5 flex items-center justify-center`}>
           {type}
         </span>
         <span className="text-gray-200 text-sm">
-          {name}
+          {label}
         </span>
       </div>
       {onDelete && (
         <button
           onClick={(e) => {
             e.stopPropagation();
-            onDelete(name);
+            onDelete(label);
           }}
           className="text-gray-400 hover:text-red-500 p-1"
         >
