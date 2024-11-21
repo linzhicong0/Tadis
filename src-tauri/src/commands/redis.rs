@@ -4,7 +4,7 @@ use redis::Commands;
 use tauri::{command, State};
 
 use crate::AppState;
-use crate::models::redis::RedisTreeItem;
+use crate::models::redis::{RedisItem, RedisItemValue, RedisTreeItem};
 
 #[command]
 pub fn get_all_keys_as_tree(state: State<'_, Mutex<AppState>>) -> Result<Vec<RedisTreeItem>, String> {
@@ -33,7 +33,32 @@ pub fn get_all_keys_as_tree(state: State<'_, Mutex<AppState>>) -> Result<Vec<Red
     Ok(result)
 }
 
-pub fn convert_keys_to_tree(client: &mut redis::Connection, keys: Vec<String>) -> Vec<RedisTreeItem> {
+#[command]
+pub fn get_string(state: State<'_, Mutex<AppState>>, key: String) -> Result<RedisItem, String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+    let mut hash_map = std::collections::HashMap::new();
+    hash_map.insert("field1".to_string(), "value1".to_string());
+    hash_map.insert("field2".to_string(), "value2".to_string());
+    hash_map.insert("field3".to_string(), "value3".to_string());
+
+    let value = RedisItem {
+        value: RedisItemValue::HashValue(hash_map),
+        ttl: "INFINITY".to_string(),
+        size: "80 bytes".to_string(),
+    };
+
+
+    Ok(value)
+}
+
+fn convert_keys_to_tree(client: &mut redis::Connection, keys: Vec<String>) -> Vec<RedisTreeItem> {
     let mut root_items: Vec<RedisTreeItem> = Vec::new();
     
     for key in keys {
@@ -84,7 +109,7 @@ pub fn convert_keys_to_tree(client: &mut redis::Connection, keys: Vec<String>) -
     root_items
 }
 
-pub fn get_key_type(client: &mut redis::Connection, key: String) -> Result<String, String> {
+fn get_key_type(client: &mut redis::Connection, key: String) -> Result<String, String> {
 
     let key_type: String = client
         .key_type(&key)
