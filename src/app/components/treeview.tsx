@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { ChevronRight, ChevronDown } from 'lucide-react';
-import { RedisTreeItem } from '@/types/redis';
+import { RedisTreeItem } from '@/models/redisTreeItem';
 import RedisItem from './redisitem';
 
 interface TreeViewProps {
   item: RedisTreeItem;
   onDelete: (name: string) => void;
   selectedItemName: string;
-  onItemSelect: (name: string) => void;
+  onItemSelect: (item: RedisTreeItem) => void;
 }
 
 const TreeView: React.FC<TreeViewProps> = ({ item, onDelete, selectedItemName, onItemSelect }) => {
@@ -20,7 +20,7 @@ const TreeView: React.FC<TreeViewProps> = ({ item, onDelete, selectedItemName, o
         type={item.item_type}
         label={item.label}
         onDelete={onDelete}
-        onClick={() => onItemSelect(item.key)}
+        onClick={() => onItemSelect(item)}
         isSelected={selectedItemName === item.key}
       />
     );

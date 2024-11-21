@@ -24,8 +24,12 @@ export default function Database() {
         console.log('Delete:', name);
     };
 
-    const handleItemSelect = (name: string) => {
-        setSelectedItemName(name);
+    const handleItemSelect = (item: RedisTreeItem) => {
+        console.log('Item selected:', item);
+        setSelectedItemName(item.key);
+        redisCommands.getString(item.key).then((item) => {
+            console.log('Item:', item);
+        })
     };
 
     return (
