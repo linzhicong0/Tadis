@@ -2,9 +2,7 @@
 
 import { Plus, RotateCw, Search } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import RedisItem from '@/app/components/redisitem'
 import { redisCommands } from '@/services/redis-commands'
-import { mockRedisData } from '@/mock/redis-data';
 import TreeView from '@/app/components/treeview';
 import { RedisTreeItem } from '@/models/redisTreeItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
