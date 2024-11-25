@@ -7,7 +7,7 @@ type RedisItemValue =
   | { None: null};
 
 interface RedisDetailItem {
-  redisKey: string,
+  redis_key: string,
   value: RedisItemValue;
   ttl: number;
   size: number;

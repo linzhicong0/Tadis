@@ -28,7 +28,6 @@ export default function Database() {
     const handleItemSelect = (item: RedisTreeItem) => {
         setSelectedItemName(item.key);
         redisCommands.getKeyDetail(item.key).then((redisItem) => {
-            console.log('key:', redisItem.redisKey);
             setSelectedItem(redisItem);
 
         })
@@ -85,7 +84,7 @@ export default function Database() {
             {/* Main Content Area */}
             {selectedItem && (
                 'StringValue' in selectedItem.value ? (
-                    <RedisStringItem redisKey={selectedItem.redisKey} value={selectedItem.value as { StringValue: string }} ttl={selectedItem.ttl} size={selectedItem.size} />
+                    <RedisStringItem redis_key={selectedItem.redis_key} value={selectedItem.value as { StringValue: string }} ttl={selectedItem.ttl} size={selectedItem.size} />
                 ) : 'ListValue' in selectedItem.value ? (
                     <RedisListItem />
                 ) : null
