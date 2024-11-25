@@ -12,7 +12,7 @@ pub struct RedisTreeItem {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct RedisItem{
-    pub redisKey: String,
+    pub redis_key: String,
     pub value: RedisItemValue,
     pub ttl: i64,
     pub size: i64,

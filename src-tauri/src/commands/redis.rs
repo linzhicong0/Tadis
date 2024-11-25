@@ -1,6 +1,5 @@
 use std::sync::Mutex;
 
-use log::kv::value;
 use redis::Commands;
 use tauri::{command, State};
 
@@ -62,7 +61,7 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
     match key_type.as_str() {
         "string" => {
             let value = RedisItem {
-                redisKey: key.clone(),
+                redis_key: key.clone(),
                 value: RedisItemValue::StringValue(get_string(client, key)?),
                 ttl: ttl,
                 size: size,
@@ -72,7 +71,7 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
         }
         "list" => {
             let value = RedisItem {
-                redisKey: key.clone(),
+                redis_key: key.clone(),
                 value: RedisItemValue::ListValue(get_list(client, key)?),
                 ttl: ttl,
                 size: size,
