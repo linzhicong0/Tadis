@@ -8,11 +8,14 @@ import { mockRedisData } from '@/mock/redis-data';
 import TreeView from '@/app/components/treeview';
 import { RedisTreeItem } from '@/models/redisTreeItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import RedisStringItem from '../components/redis-string-item'
+import { RedisDetailItem } from '@/types/redisItem'
+import RedisListItem from '../components/redist-list-item'
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
     const [redisData, setRedisData] = useState<RedisTreeItem[]>([]);
-
+    const [selectedItem, setSelectedItem] = useState<RedisDetailItem | null>(null);
     useEffect(() => {
         redisCommands.getAllKeysAsTree().then((keys) => {
             console.log("keys are: ", keys);
@@ -25,10 +28,11 @@ export default function Database() {
     };
 
     const handleItemSelect = (item: RedisTreeItem) => {
-        console.log('Item selected:', item);
         setSelectedItemName(item.key);
-        redisCommands.getString(item.key).then((item) => {
-            console.log('Item:', item);
+        redisCommands.getKeyDetail(item.key).then((redisItem) => {
+            console.log('key:', redisItem.redisKey);
+            setSelectedItem(redisItem);
+
         })
     };
 
@@ -81,32 +85,13 @@ export default function Database() {
             </div>
 
             {/* Main Content Area */}
-            <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col h-full overflow-hidden">
-                <div className="flex items-center gap-4 text-gray-300 mb-4">
-                    <div className="bg-green-600 px-2 py-0.5 text-xs rounded">STRING</div>
-                    <div>user:1:name</div>
-
-                    <div className="ml-auto flex gap-2">
-                        <button className="p-2 bg-gray-800 rounded-md">Copy</button>
-                        <button className="p-2 bg-gray-800 rounded-md">Reload</button>
-                        <button className="p-2 bg-gray-800 rounded-md">Delete</button>
-                        <button className="p-2 bg-gray-800 rounded-md">Save</button>
-                    </div>
-                </div>
-
-                <div className="flex flex-row items-center text-gray-400 text-sm gap-2">
-                    <div className="rounded">TTL: INFINITY</div>
-                    <div className="rounded">Memory: 80 bytes</div>
-                    <div>Encoding: {/* encoding info */}</div>
-                </div>
-
-                <div className="mt-4 flex-1">
-                    <textarea
-                        className="w-full h-full min-h-0 bg-gray-800 text-gray-200 p-3 rounded-md resize-none"
-                        value="asdfadsfasdf1"
-                    />
-                </div>
-            </div>
+            {selectedItem && (
+                'StringValue' in selectedItem.value ? (
+                    <RedisStringItem redisKey={selectedItem.redisKey} value={selectedItem.value as { StringValue: string }} ttl={selectedItem.ttl} size={selectedItem.size} />
+                ) : 'ListValue' in selectedItem.value ? (
+                    <RedisListItem />
+                ) : null
+            )}
         </div>
     )
 }

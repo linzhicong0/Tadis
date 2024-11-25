@@ -1,16 +1,17 @@
 type RedisItemValue = 
-  | { type: 'String', value: string }
-  | { type: 'Hash', value: Record<string, string> }
-  | { type: 'List', value: string[] }
-  | { type: 'Set', value: string[] }
-  | { type: 'SortedSet', value: Array<[string, number]> }
-  | { type: 'None' };
+  | { StringValue: string }
+  | { HashValue: Record<string, string> }
+  | { ListValue: string[] }
+  | { SetValue: string[] }
+  | { SortedSetValue: Array<[string, number]> }
+  | { None: null};
 
-interface RedisItem {
+interface RedisDetailItem {
+  redisKey: string,
   value: RedisItemValue;
-  ttl: string;
-  size: string;
+  ttl: number;
+  size: number;
 }
 
 
-export type { RedisItem };
+export type { RedisDetailItem };
