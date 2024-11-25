@@ -83,6 +83,17 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
 
 }
 
+#[command]
+pub fn save_string(state: State<'_, Mutex<AppState>>, key: String, value: String) -> Result<(), String> {
+    let mut state = state.lock().map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state.connected_clients.get_mut(&selected).ok_or(format!("No client selected"))?;
+
+    client.set(&key, value).map_err(|e| format!("Failed to save string: {}", e))?;
+
+    Ok(())
+}
+
 fn convert_keys_to_tree(client: &mut redis::Connection, keys: Vec<String>) -> Vec<RedisTreeItem> {
     let mut root_items: Vec<RedisTreeItem> = Vec::new();
 
