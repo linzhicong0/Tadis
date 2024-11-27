@@ -2,6 +2,8 @@ import { toast } from 'sonner';
 import { redisCommands } from '@/services/redis-commands';
 import type { RedisDetailItem } from '@/types/redisItem';
 import { useState } from 'react';
+import { Copy, RotateCw, Trash, Save } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface RedisStringItemProps extends RedisDetailItem {
     value: {
@@ -24,15 +26,22 @@ export default function RedisStringItem({ redis_key, value, ttl, size }: RedisSt
                 <div className="bg-green-600 px-2 py-0.5 text-xs rounded">STRING</div>
                 <div>{redis_key}</div>
                 <div className="ml-auto flex gap-2">
-                    <button className="p-2 bg-gray-800 rounded-md">Copy</button>
-                    <button className="p-2 bg-gray-800 rounded-md">Reload</button>
-                    <button className="p-2 bg-gray-800 rounded-md">Delete</button>
-                    <button 
-                        className="p-2 bg-gray-800 rounded-md" 
-                        onClick={onSave}
-                    >
+                    <Button variant="secondary">
+                        <Copy strokeWidth={1.5} />
+                        Copy
+                    </Button>
+                    <Button variant="secondary">
+                        <RotateCw strokeWidth={1.5} />
+                        Refresh
+                    </Button>
+                    <Button variant="secondary">
+                        <Trash strokeWidth={1.5} />
+                        Delete
+                    </Button>
+                    <Button variant="secondary" onClick={onSave}>
+                        <Save strokeWidth={1.5}  />
                         Save
-                    </button>
+                    </Button>
                 </div>
             </div>
 
