@@ -66,13 +66,21 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
                 ttl: ttl,
                 size: size,
             };
-            println!("value: {:?}", value);
             Ok(value)
         }
         "list" => {
             let value = RedisItem {
                 redis_key: key.clone(),
                 value: RedisItemValue::ListValue(get_list(client, key)?),
+                ttl: ttl,
+                size: size,
+            };
+            Ok(value)
+        }
+        "set" => {
+            let value = RedisItem {
+                redis_key: key.clone(),
+                value: RedisItemValue::SetValue(get_set(client, key)?),
                 ttl: ttl,
                 size: size,
             };
@@ -165,6 +173,14 @@ fn get_list(client: &mut redis::Connection, key: String) -> Result<Vec<String>, 
     let value: Vec<String> = client
         .lrange(&key, 0, -1)
         .map_err(|e| format!("Failed to get list: {}", e))?;
+
+    Ok(value)
+}
+
+fn get_set(client: &mut redis::Connection, key: String) -> Result<Vec<String>, String> {
+    let value: Vec<String> = client
+        .smembers(&key)
+        .map_err(|e| format!("Failed to get set: {}", e))?;
 
     Ok(value)
 }
