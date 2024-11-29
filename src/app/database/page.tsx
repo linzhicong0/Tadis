@@ -8,7 +8,7 @@ import { RedisTreeItem } from '@/models/redisTreeItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import RedisStringItem from '../components/redis-string-item'
 import { RedisDetailItem } from '@/types/redisItem'
-import RedisListItem from '../components/redist-list-item'
+import RedisListItem from '../components/redis-list-item'
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
@@ -31,6 +31,15 @@ export default function Database() {
             setSelectedItem(redisItem);
 
         })
+    };
+
+    const mockListItem  = {
+        redis_key: "test:list",
+        value: {
+            ListValue: ["item1", "item2", "item3", "item4", "item5"]
+        },
+        ttl: -1,
+        size: 1024
     };
 
     return (
@@ -86,7 +95,7 @@ export default function Database() {
                 'StringValue' in selectedItem.value ? (
                     <RedisStringItem redis_key={selectedItem.redis_key} value={selectedItem.value as { StringValue: string }} ttl={selectedItem.ttl} size={selectedItem.size} />
                 ) : 'ListValue' in selectedItem.value ? (
-                    <RedisListItem />
+                    <RedisListItem redis_key={selectedItem.redis_key} value={selectedItem.value as { ListValue: string[] }} ttl={selectedItem.ttl} size={selectedItem.size} />
                 ) : null
             )}
         </div>
