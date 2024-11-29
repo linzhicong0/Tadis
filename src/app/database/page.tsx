@@ -9,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import RedisStringItem from '../components/redis-string-item'
 import { RedisDetailItem } from '@/types/redisItem'
 import RedisListItem from '../components/redis-list-item'
+import RedisSetItem from '../components/redis-item/redis-set-item'
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
@@ -96,6 +97,13 @@ export default function Database() {
                     <RedisStringItem redis_key={selectedItem.redis_key} value={selectedItem.value as { StringValue: string }} ttl={selectedItem.ttl} size={selectedItem.size} />
                 ) : 'ListValue' in selectedItem.value ? (
                     <RedisListItem redis_key={selectedItem.redis_key} value={selectedItem.value as { ListValue: string[] }} ttl={selectedItem.ttl} size={selectedItem.size} />
+                ) : 'SetValue' in selectedItem.value ? (
+                    <RedisSetItem 
+                        redis_key={selectedItem.redis_key}
+                        value={selectedItem.value as { SetValue: string[] }}
+                        ttl={selectedItem.ttl}
+                        size={selectedItem.size}
+                    />
                 ) : null
             )}
         </div>

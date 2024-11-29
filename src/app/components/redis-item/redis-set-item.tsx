@@ -1,9 +1,8 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { DataTable, Payment } from "./data-table";
 import { Button } from "@/components/ui/button";
-import { Copy, Pen, RotateCw, Save, Trash, Trash2 } from "lucide-react";
-import { useState } from "react";
 import { RedisDetailItem } from "@/types/redisItem";
+import { ColumnDef } from "@tanstack/react-table";
+import { Copy, Trash2, Pen, Save, RotateCw } from "lucide-react";
+import { DataTable } from "../data-table";
 
 const columns: ColumnDef<String>[] = [
     {
@@ -16,7 +15,7 @@ const columns: ColumnDef<String>[] = [
     {
         header: "Value",
         cell: ({ row }) => {
-            return <div className="">{row.original}</div>
+            return <div>{row.original}</div>
         }
     },
     {
@@ -40,16 +39,15 @@ const columns: ColumnDef<String>[] = [
 
 interface RedisListItemProps extends RedisDetailItem {
     value: {
-        ListValue: string[];
+        SetValue: string[];
     };
 }
 
-export default function RedisListItem({ redis_key, value, ttl, size }: RedisListItemProps) {
-
+export default function RedisSetItem({ redis_key, value, ttl, size }: RedisListItemProps) {
     return (
         <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col h-full overflow-hidden">
             <div className="flex items-center gap-4 mb-4">
-                <div className="bg-orange-400 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-14">LIST</div>
+                <div className="bg-blue-500 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-14">SET</div>
                 <div>{redis_key}</div>
                 <div className="ml-auto flex gap-2">
                     <Button variant="secondary">
@@ -61,7 +59,7 @@ export default function RedisListItem({ redis_key, value, ttl, size }: RedisList
                         Refresh
                     </Button>
                     <Button variant="secondary">
-                        <Trash strokeWidth={1.5} />
+                        <Trash2 strokeWidth={1.5} />
                         Delete
                     </Button>
                     <Button variant="secondary">
@@ -77,7 +75,7 @@ export default function RedisListItem({ redis_key, value, ttl, size }: RedisList
             </div>
 
             <div className="mt-4 flex-1">
-                <DataTable columns={columns} data={value.ListValue} />
+                <DataTable columns={columns} data={value.SetValue} />
             </div>
         </div>
     );
