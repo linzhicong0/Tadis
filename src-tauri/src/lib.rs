@@ -1,9 +1,12 @@
 use redis::Connection;
+use window_vibrancy::*;
 use std::{collections::HashMap, sync::Mutex};
 use tauri::Manager;
 
 mod commands;
 mod models;
+
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -19,6 +22,18 @@ pub fn run() {
             commands::redis::save_string,
         ])
         .setup(|app| {
+
+            let window = app.get_webview_window("main").unwrap();
+
+
+            #[cfg(target_os = "macos")]
+            apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, None)
+                .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
+            
+            #[cfg(target_os = "windows")]
+            apply_blur(&window, Some((18, 18, 18, 125))).expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+
+
             if cfg!(debug_assertions) {
                 app.handle().plugin(
                     tauri_plugin_log::Builder::default()
