@@ -11,19 +11,26 @@ pub struct RedisTreeItem {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct RedisItem{
+pub struct RedisItem {
     pub redis_key: String,
     pub value: RedisItemValue,
     pub ttl: i64,
     pub size: i64,
 }
 
+// #[derive(Serialize, Deserialize, Debug, Clone)]
+// pub struct StreamEntry {
+//     pub id: String,
+//     pub fields: HashMap<String, String>,
+// }
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub enum RedisItemValue{
+pub enum RedisItemValue {
     StringValue(String),
     HashValue(HashMap<String, String>),
     ListValue(Vec<String>),
     SetValue(Vec<String>),
     SortedSetValue(Vec<(String, f64)>),
+    StreamValue(Vec<HashMap<String, HashMap<String, String>>>),
     None,
 }
