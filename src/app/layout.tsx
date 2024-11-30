@@ -5,7 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/app-sidebar";
 import WindowTitleBar from "./components/window-titlebar";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "./providers/theme-provider";
+import { ThemeProvider as NextThemeProvider } from "next-themes";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -29,11 +29,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" >
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ThemeProvider>
+        <NextThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <SidebarProvider>
             <WindowTitleBar />
             <AppSidebar />
@@ -42,7 +47,7 @@ export default function RootLayout({
             </main>
             <Toaster position="bottom-center" />
           </SidebarProvider>
-        </ThemeProvider>
+        </NextThemeProvider>
       </body>
     </html>
   );
