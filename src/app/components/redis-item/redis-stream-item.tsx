@@ -48,7 +48,7 @@ interface RedisStreamItemProps extends RedisDetailItem {
 export default function RedisStreamItem({ redis_key, value, ttl, size }: RedisStreamItemProps) {
     // Convert stream entries to table format
     console.log("stream value: ", value);
-    const streamEntries = Object.entries(value.StreamValue).map(([id, fields]) => ({
+    const streamEntries = Object.entries(value.StreamValue).map(([, fields]) => ({
         id: Object.keys(fields)[0],
         fields: JSON.stringify(Object.values(fields)[0], null, 2)
     }));
@@ -57,7 +57,7 @@ export default function RedisStreamItem({ redis_key, value, ttl, size }: RedisSt
     return (
         <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col h-full overflow-hidden">
             <div className="flex items-center gap-4 mb-4">
-                <div className="bg-blue-600 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-14">STREAM</div>
+                <div className="bg-blue-600 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-16">STREAM</div>
                 <div>{redis_key}</div>
                 <div className="ml-auto flex gap-2">
                     <Button variant="secondary">
