@@ -60,7 +60,7 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
         .query(client)
         .map_err(|e| format!("Failed to query Redis: {}", e))?;
 
-    println!("size: {:?}, ttl: {:?}", size, ttl);
+    println!("key_type: {:?}, size: {:?}, ttl: {:?}", key_type, size, ttl);
 
     match key_type.as_str() {
         "string" => {
@@ -97,6 +97,16 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
                 ttl: ttl,
                 size: size,
             };
+            Ok(value)
+        }
+        "stream" => {
+            let value = RedisItem {
+                redis_key: key.clone(),
+                value: RedisItemValue::StreamValue(get_stream(client, key)?),
+                ttl,
+                size,
+            };
+            println!("stream value: {:?}", value);
             Ok(value)
         }
         _ => Err(format!("Unsupported key type: {}", key_type)),
@@ -215,5 +225,16 @@ fn get_hash(
     let value: HashMap<String, String> = client
         .hgetall(&key)
         .map_err(|e| format!("Failed to get hash: {}", e))?;
+    Ok(value)
+}
+
+fn get_stream(
+    client: &mut redis::Connection,
+    key: String,
+) -> Result<Vec<HashMap<String, HashMap<String, String>>>, String> {
+    let value: Vec<HashMap<String, HashMap<String, String>>> = client
+        .xrange(&key, "-", "+")
+        .map_err(|e| format!("Failed to get stream: {}", e))?;
+    println!("stream value: {:?}", value);
     Ok(value)
 }

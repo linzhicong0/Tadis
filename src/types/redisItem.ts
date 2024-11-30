@@ -4,6 +4,7 @@ type RedisItemValue =
   | { ListValue: string[] }
   | { SetValue: string[] }
   | { SortedSetValue: Array<[string, number]> }
+  | { StreamValue: Record<string, Record<string, string>> }
   | { None: null};
 
 interface RedisDetailItem {
