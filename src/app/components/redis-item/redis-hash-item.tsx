@@ -55,7 +55,7 @@ export default function RedisHashItem({ redis_key, value, ttl, size }: RedisHash
     return (
         <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col h-full overflow-hidden">
             <div className="flex items-center gap-4 mb-4">
-                <div className="bg-blue-400 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-14">HASH</div>
+                <div className="bg-purple-600 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-14">HASH</div>
                 <div>{redis_key}</div>
                 <div className="ml-auto flex gap-2">
                     <Button variant="secondary">
