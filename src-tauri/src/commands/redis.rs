@@ -1,3 +1,4 @@
+use std::collections::HashMap;
 use std::sync::Mutex;
 
 use redis::Commands;
@@ -51,8 +52,11 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
 
     let (size, ttl): (i64, i64) = redis::pipe()
         .atomic()
-        .cmd("MEMORY").arg("USAGE").arg(&key)
-        .cmd("TTL").arg(&key)
+        .cmd("MEMORY")
+        .arg("USAGE")
+        .arg(&key)
+        .cmd("TTL")
+        .arg(&key)
         .query(client)
         .map_err(|e| format!("Failed to query Redis: {}", e))?;
 
@@ -86,18 +90,37 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
             };
             Ok(value)
         }
+        "hash" => {
+            let value = RedisItem {
+                redis_key: key.clone(),
+                value: RedisItemValue::HashValue(get_hash(client, key)?),
+                ttl: ttl,
+                size: size,
+            };
+            Ok(value)
+        }
         _ => Err(format!("Unsupported key type: {}", key_type)),
     }
-
 }
 
 #[command]
-pub fn save_string(state: State<'_, Mutex<AppState>>, key: String, value: String) -> Result<(), String> {
-    let mut state = state.lock().map_err(|e| format!("Failed to lock state: {}", e))?;
+pub fn save_string(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    value: String,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
     let selected = state.selected_client.clone();
-    let client = state.connected_clients.get_mut(&selected).ok_or(format!("No client selected"))?;
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
 
-    client.set(&key, value).map_err(|e| format!("Failed to save string: {}", e))?;
+    client
+        .set(&key, value)
+        .map_err(|e| format!("Failed to save string: {}", e))?;
 
     Ok(())
 }
@@ -182,5 +205,15 @@ fn get_set(client: &mut redis::Connection, key: String) -> Result<Vec<String>, S
         .smembers(&key)
         .map_err(|e| format!("Failed to get set: {}", e))?;
 
+    Ok(value)
+}
+
+fn get_hash(
+    client: &mut redis::Connection,
+    key: String,
+) -> Result<HashMap<String, String>, String> {
+    let value: HashMap<String, String> = client
+        .hgetall(&key)
+        .map_err(|e| format!("Failed to get hash: {}", e))?;
     Ok(value)
 }

@@ -10,6 +10,7 @@ import RedisStringItem from '../components/redis-string-item'
 import { RedisDetailItem } from '@/types/redisItem'
 import RedisListItem from '../components/redis-list-item'
 import RedisSetItem from '../components/redis-item/redis-set-item'
+import RedisHashItem from '../components/redis-item/redis-hash-item';
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
@@ -104,27 +105,15 @@ export default function Database() {
                         ttl={selectedItem.ttl}
                         size={selectedItem.size}
                     />
+                ) : 'HashValue' in selectedItem.value ? (
+                    <RedisHashItem 
+                        redis_key={selectedItem.redis_key}
+                        value={selectedItem.value as { HashValue: Record<string, string> }}
+                        ttl={selectedItem.ttl}
+                        size={selectedItem.size}
+                    />
                 ) : null
             )}
         </div>
     )
 }
-
-// You'll need to create these icons or import them from a library like heroicons
-const SearchIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-    </svg>
-)
-
-const PlusIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-    </svg>
-)
-
-const ChevronDownIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-    </svg>
-)
