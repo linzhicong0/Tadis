@@ -24,6 +24,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         };
 
         mediaQuery.addEventListener('change', handleChange);
+        // adding this is because changing the theme is not working for the dialog
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.toggle('dark');
+        } else {
+            document.documentElement.classList.toggle('light');
+        }
+
         return () => mediaQuery.removeEventListener('change', handleChange);
     }, []);
 
