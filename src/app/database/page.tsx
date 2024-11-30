@@ -12,6 +12,7 @@ import RedisListItem from '../components/redis-list-item'
 import RedisSetItem from '../components/redis-item/redis-set-item'
 import RedisHashItem from '../components/redis-item/redis-hash-item';
 import RedisStreamItem from '../components/redis-item/redis-stream-item';
+import RedisZsetItem from '../components/redis-item/redis-zset.item';
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
@@ -117,6 +118,13 @@ export default function Database() {
                     <RedisStreamItem 
                         redis_key={selectedItem.redis_key}
                         value={selectedItem.value as { StreamValue: Record<string, Record<string, string>> }}
+                        ttl={selectedItem.ttl}
+                        size={selectedItem.size}
+                    />
+                ) : 'ZSetValue' in selectedItem.value ? (
+                    <RedisZsetItem 
+                        redis_key={selectedItem.redis_key}
+                        value={selectedItem.value as { ZSetValue: Array<[string, number]> }}
                         ttl={selectedItem.ttl}
                         size={selectedItem.size}
                     />

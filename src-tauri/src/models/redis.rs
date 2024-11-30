@@ -30,7 +30,7 @@ pub enum RedisItemValue {
     HashValue(HashMap<String, String>),
     ListValue(Vec<String>),
     SetValue(Vec<String>),
-    SortedSetValue(Vec<(String, f64)>),
+    ZSetValue(Vec<(String, f64)>),
     StreamValue(Vec<HashMap<String, HashMap<String, String>>>),
     None,
 }

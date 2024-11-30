@@ -109,6 +109,15 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
             println!("stream value: {:?}", value);
             Ok(value)
         }
+        "zset" => {
+            let value = RedisItem {
+                redis_key: key.clone(),
+                value: RedisItemValue::ZSetValue(get_zset(client, key)?),
+                ttl,
+                size,
+            };
+            Ok(value)
+        }
         _ => Err(format!("Unsupported key type: {}", key_type)),
     }
 }
@@ -235,6 +244,13 @@ fn get_stream(
     let value: Vec<HashMap<String, HashMap<String, String>>> = client
         .xrange(&key, "-", "+")
         .map_err(|e| format!("Failed to get stream: {}", e))?;
-    println!("stream value: {:?}", value);
+    Ok(value)
+}
+
+fn get_zset(client: &mut redis::Connection, key: String) -> Result<Vec<(String, f64)>, String> {
+    let value: Vec<(String, f64)> = client
+        .zrange_withscores(&key, 0, -1)
+        .map_err(|e| format!("Failed to get zset: {}", e))?;
+    println!("zset value: {:?}", value);
     Ok(value)
 }
