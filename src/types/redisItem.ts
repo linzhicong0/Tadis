@@ -3,7 +3,7 @@ type RedisItemValue =
   | { HashValue: Record<string, string> }
   | { ListValue: string[] }
   | { SetValue: string[] }
-  | { SortedSetValue: Array<[string, number]> }
+  | { ZSetValue: Array<[string, number]> }
   | { StreamValue: Record<string, Record<string, string>> }
   | { None: null};
 
