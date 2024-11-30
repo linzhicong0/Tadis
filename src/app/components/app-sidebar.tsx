@@ -36,7 +36,7 @@ export function AppSidebar() {
     const pathname = usePathname()
 
     return (
-        <Sidebar collapsible="icon" className="mt-8 dark:bg-gray-950/50 bg-gray-200/50">
+        <Sidebar collapsible="icon" className="mt-8 dark:bg-gray-900/50 bg-gray-200/50">
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel className="-mt-2">
