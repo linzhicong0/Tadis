@@ -6,9 +6,9 @@ import { redisCommands } from '@/services/redis-commands'
 import TreeView from '@/app/components/treeview';
 import { RedisTreeItem } from '@/models/redisTreeItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import RedisStringItem from '../components/redis-string-item'
+import RedisStringItem from '../components/redis-item/redis-string-item'
 import { RedisDetailItem } from '@/types/redisItem'
-import RedisListItem from '../components/redis-list-item'
+import RedisListItem from '../components/redis-item/redis-list-item'
 import RedisSetItem from '../components/redis-item/redis-set-item'
 import RedisHashItem from '../components/redis-item/redis-hash-item';
 import RedisStreamItem from '../components/redis-item/redis-stream-item';

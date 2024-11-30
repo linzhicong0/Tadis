@@ -22,8 +22,8 @@ export default function RedisStringItem({ redis_key, value, ttl, size }: RedisSt
 
     return (
         <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col h-full overflow-hidden">
-            <div className="flex items-center gap-4 text-gray-300 mb-4">
-                <div className="bg-green-600 px-2 py-0.5 text-xs rounded">STRING</div>
+            <div className="flex items-center gap-4 mb-4">
+                <div className="bg-green-600 px-2 text-white py-0.5 text-xs rounded">STRING</div>
                 <div>{redis_key}</div>
                 <div className="ml-auto flex gap-2">
                     <Button variant="secondary">
