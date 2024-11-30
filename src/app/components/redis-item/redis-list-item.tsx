@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { DataTable, Payment } from "./data-table";
+import { DataTable, Payment } from "../data-table";
 import { Button } from "@/components/ui/button";
 import { Copy, Pen, RotateCw, Save, Trash, Trash2 } from "lucide-react";
 import { useState } from "react";
