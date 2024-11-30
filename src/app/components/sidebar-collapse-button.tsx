@@ -6,10 +6,10 @@ export default function SidebarCollapseButton() {
 
     return (
         <button
-            className="text-gray-300 hover:text-white"
+            className="hover:text-blue-600 dark:text-gray-300 dark:hover:text-white"
             onClick={toggleSidebar}
         >
-            <PanelLeft className="w-[18px] h-[18px]"/>
+            <PanelLeft className="w-[18px] h-[18px]" />
         </button>
     )
 }
