@@ -23,8 +23,8 @@ export default function RedisStringItem({ redis_key, value, ttl, size }: RedisSt
     return (
         <div className="redis-item-page">
             <div className="flex items-center gap-4 mb-4">
-                <div className="bg-green-600 px-2 text-white py-0.5 text-xs rounded">STRING</div>
-                <div>{redis_key}</div>
+                <div className="bg-green-600 px-2 text-white py-0.5 text-xs rounded font-semibold">STRING</div>
+                <div className="text-gray-800 dark:text-gray-200 text-base">{redis_key}</div>
                 <div className="ml-auto flex gap-2">
                     <Button variant="secondary">
                         <Copy strokeWidth={1.5} />

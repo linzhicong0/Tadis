@@ -47,8 +47,8 @@ export default function RedisSetItem({ redis_key, value, ttl, size }: RedisListI
     return (
         <div className="redis-item-page">
             <div className="flex items-center gap-4 mb-4">
-                <div className="bg-blue-500 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-14">SET</div>
-                <div>{redis_key}</div>
+                <div className="bg-blue-500 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-14 font-semibold">SET</div>
+                <div className="text-gray-800 dark:text-gray-200 text-base">{redis_key}</div>
                 <div className="ml-auto flex gap-2">
                     <Button variant="secondary">
                         <Copy strokeWidth={1.5} />
