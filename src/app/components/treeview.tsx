@@ -29,11 +29,11 @@ const TreeView: React.FC<TreeViewProps> = ({ item, onDelete, selectedItemName, o
   return (
     <div>
       <div
-        className="flex items-center gap-1 hover:bg-gray-800 rounded-md p-1 cursor-pointer"
+        className="flex items-center gap-1 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md p-1 cursor-pointer"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         {hasChildren && (
-          <span className="text-gray-400">
+          <span className="text-gray-800 dark:text-gray-400">
             {isExpanded ? (
               <ChevronDown className="w-4 h-4" />
             ) : (
@@ -41,7 +41,7 @@ const TreeView: React.FC<TreeViewProps> = ({ item, onDelete, selectedItemName, o
             )}
           </span>
         )}
-        <span className="text-gray-200 text-sm">{item.label}</span>
+        <span className="text-gray-800 dark:text-gray-200 text-sm">{item.label}</span>
       </div>
 
       {isExpanded && hasChildren && (

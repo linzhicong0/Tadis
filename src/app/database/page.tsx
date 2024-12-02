@@ -49,7 +49,7 @@ export default function Database() {
     return (
         <div className="flex h-[calc(100vh-2rem)]">
             {/* Left Sidebar */}
-            <div className="w-100 bg-[#1C1C1C] border-r border-gray-700 flex flex-col">
+            <div className="w-100 bg-gray-200/50 dark:bg-gray-800/50 border-r border-gray-700 flex flex-col">
                 <div className="p-4 flex flex-col h-full">
                     {/* Search Bar */}
                     <div className="flex gap-2 mb-4">
@@ -58,22 +58,22 @@ export default function Database() {
                             <input
                                 type="text"
                                 placeholder="search"
-                                className="bg-yello-500 pl-8 bg-gray-800 text-gray-200 h-full rounded-lg"
+                                className="bg-yello-500 pl-8 bg-gray-300 dark:bg-gray-800 text-gray-200 h-full rounded-lg"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
 
-                        <button className="bg-gray-800 rounded-md p-0.5">
-                            <RotateCw className="p-1" />
+                        <button className="bg-gray-300 dark:bg-gray-800 rounded-md p-0.5">
+                            <RotateCw className="p-1 dark:text-gray-300" />
                         </button>
-                        <button className="bg-gray-800 rounded-md p-0.5">
-                            <Plus className="p-0.5" />
+                        <button className="bg-gray-300 dark:bg-gray-800 rounded-md p-0.5">
+                            <Plus className="p-0.5 dark:text-gray-300" />
                         </button>
                     </div>
 
                     {/* Keys List Header */}
-                    <div className="text-sm text-gray-400 mb-2">
+                    <div className="text-sm text-gray-800 dark:text-gray-400 mb-2">
                         KEYS ({redisData.length} SCANNED)
                     </div>
 
