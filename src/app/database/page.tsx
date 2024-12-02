@@ -53,22 +53,22 @@ export default function Database() {
                 <div className="p-4 flex flex-col h-full">
                     {/* Search Bar */}
                     <div className="flex gap-2 mb-4">
-                        <div className="relative">
-                            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <div className="relative h-full">
+                            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4  text-gray-600 dark:text-gray-400" />
                             <input
                                 type="text"
                                 placeholder="search"
-                                className="bg-yello-500 pl-8 bg-gray-300 dark:bg-gray-800 text-gray-200 h-full rounded-lg"
+                                className="pl-8 bg-gray-300 dark:bg-gray-800 text-gray-200 h-8 rounded-lg"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
 
                         <button className="bg-gray-300 dark:bg-gray-800 rounded-md p-0.5">
-                            <RotateCw className="p-1 dark:text-gray-300" />
+                            <RotateCw className="p-1 text-gray-700 dark:text-gray-300" />
                         </button>
                         <button className="bg-gray-300 dark:bg-gray-800 rounded-md p-0.5">
-                            <Plus className="p-0.5 dark:text-gray-300" />
+                            <Plus className="p-0.5 text-gray-700 dark:text-gray-300" />
                         </button>
                     </div>
 

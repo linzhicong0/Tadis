@@ -57,8 +57,8 @@ export default function RedisStreamItem({ redis_key, value, ttl, size }: RedisSt
     return (
         <div className="redis-item-page">
             <div className="flex items-center gap-4 mb-4">
-                <div className="bg-blue-600 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-16">STREAM</div>
-                <div>{redis_key}</div>
+                <div className="bg-blue-600 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-16 font-semibold">STREAM</div>
+                <div className="text-gray-800 dark:text-gray-200 text-base">{redis_key}</div>
                 <div className="ml-auto flex gap-2">
                     <Button variant="secondary">
                         <Copy strokeWidth={1.5} />
