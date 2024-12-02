@@ -47,7 +47,7 @@ interface RedisListItemProps extends RedisDetailItem {
 export default function RedisListItem({ redis_key, value, ttl, size }: RedisListItemProps) {
 
     return (
-        <div className="flex-1 bg-[#1D1D1D] p-4 flex flex-col h-full overflow-hidden">
+        <div className="redis-item-page">
             <div className="flex items-center gap-4 mb-4">
                 <div className="bg-orange-400 px-2 text-white text-bold py-0.5 text-xs text-center rounded w-14">LIST</div>
                 <div>{redis_key}</div>
@@ -71,7 +71,7 @@ export default function RedisListItem({ redis_key, value, ttl, size }: RedisList
                 </div>
             </div>
 
-            <div className="flex flex-row items-center text-gray-400 text-sm gap-2">
+            <div className="flex flex-row items-center redis-item-info-color text-sm gap-2">
                 <div className="rounded">TTL: {ttl === -1 ? 'INFINITY' : ttl}</div>
                 <div className="rounded">Memory: {size} bytes</div>
             </div>

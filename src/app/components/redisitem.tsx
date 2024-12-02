@@ -27,7 +27,7 @@ const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, i
   return (
     <div 
       className={`flex items-center justify-between gap-2 ${
-        isSelected ? 'bg-gray-700' : 'hover:bg-gray-800'
+        isSelected ? 'bg-gray-200 dark:bg-gray-700' : ' hover:bg-gray-200 dark:hover:bg-gray-700'
       } rounded-md p-1 hover:cursor-pointer`}
       onClick={() => onClick?.(label)}
     >
@@ -35,7 +35,7 @@ const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, i
         <span className={`${getTypeColor(type)} text-white rounded-sm font-semibold uppercase text-[10px] w-14 h-5 flex items-center justify-center`}>
           {type}
         </span>
-        <span className="text-gray-200 text-sm">
+        <span className="text-gray-800 dark:text-gray-200 text-sm">
           {label}
         </span>
       </div>
@@ -45,7 +45,7 @@ const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, i
             e.stopPropagation();
             onDelete(label);
           }}
-          className="text-gray-400 hover:text-red-500 p-1"
+          className="text-gray-700 dark:text-gray-400 hover:text-red-500 p-1"
         >
           <Trash2 strokeWidth={1.5} className="w-4 h-4" />
         </button>
