@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
 import React from 'react';
 
@@ -25,10 +26,9 @@ const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, i
   };
 
   return (
-    <div 
-      className={`flex items-center justify-between gap-2 ${
-        isSelected ? 'bg-gray-200 dark:bg-gray-700' : ' hover:bg-gray-200 dark:hover:bg-gray-700'
-      } rounded-md p-1 hover:cursor-pointer`}
+    <div
+      className={`flex items-center justify-between gap-2 ${isSelected ? 'bg-gray-200 dark:bg-gray-700' : ' hover:bg-gray-200 dark:hover:bg-gray-700'
+        } rounded-md p-1 hover:cursor-pointer`}
       onClick={() => onClick?.(label)}
     >
       <div className="flex items-center gap-2">
@@ -40,15 +40,13 @@ const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, i
         </span>
       </div>
       {onDelete && (
-        <button
+        <Button variant="ghost" size="icon" className="h-6 w-6 text-gray-700 dark:text-gray-300 dark:hover:text-red-500 hover:text-red-500 p-1"
           onClick={(e) => {
             e.stopPropagation();
             onDelete(label);
-          }}
-          className="text-gray-700 dark:text-gray-400 hover:text-red-500 p-1"
-        >
+          }}>
           <Trash2 strokeWidth={1.5} className="w-4 h-4" />
-        </button>
+        </Button>
       )}
     </div>
   );

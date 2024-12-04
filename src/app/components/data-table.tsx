@@ -35,11 +35,11 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="rounded-md border dark:border-gray-100">
+        <div className="rounded-md">
             <Table>
                 <TableHeader>
                     {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id} >
+                        <TableRow key={headerGroup.id} className="hover:bg-transparent border-t border-gray-300/50 dark:border-gray-400/20">
                             {headerGroup.headers.map((header) => {
                                 return (
                                     <TableHead 
@@ -60,8 +60,12 @@ export function DataTable<TData, TValue>({
                 </TableHeader>
                 <TableBody>
                     {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
+                        table.getRowModel().rows.map((row, index) => (
                             <TableRow
+                                className={cn(
+                                    "border-none hover:bg-white/70 dark:hover:bg-blue-500/80",
+                                    index % 2 === 0 ? "redis-item-table-row-color" : "",
+                                )}
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
                             >

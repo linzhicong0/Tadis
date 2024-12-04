@@ -11,32 +11,35 @@ interface ZSetEntry {
 
 const columns: ColumnDef<ZSetEntry>[] = [
     {
-        header: "#",
+        id: "index",
+        header: () => <div className="redis-item-table-text-color">#</div>,
         size: 20,
-        cell: ({ row }) => <div>{row.index + 1}</div>
+        cell: ({ row }) => <div className="redis-item-table-text-color">{row.index + 1}</div>
     },
     {
-        header: "Member",
+        id: "member",
+        header: () => <div className="redis-item-table-text-color">Member</div>,
         accessorKey: "member",
-        cell: ({ row }) => <div>{row.original.member}</div>
+        cell: ({ row }) => <div className="redis-item-table-text-color">{row.original.member}</div>
     },
     {
-        header: "Score",
+        id: "score",
+        header: () => <div className="redis-item-table-text-color">Score</div>,
         accessorKey: "score",
-        cell: ({ row }) => <div>{row.original.score}</div>
+        cell: ({ row }) => <div className="redis-item-table-text-color">{row.original.score}</div>
     },
     {
         id: "action",
-        header: "Operations",
+        header: () => <div className="redis-item-table-text-color">Operations</div>,
         cell: ({ row }) => (
             <div className="flex">
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Copy strokeWidth={1.5} />
                 </Button>
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Pen strokeWidth={1.5} />
                 </Button>
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Trash2 strokeWidth={1.5} />
                 </Button>
             </div>

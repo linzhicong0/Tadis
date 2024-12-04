@@ -121,4 +121,12 @@ body {
   .redis-item-info-color {
     @apply text-black dark:text-gray-400;
   }
+
+  .redis-item-table-text-color {
+    @apply text-gray-800 dark:text-gray-200;
+  }
+
+  .redis-item-table-row-color {
+    @apply bg-gray-200/30 dark:bg-gray-700/50;
+  }
 }
