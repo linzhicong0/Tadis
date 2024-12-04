@@ -7,31 +7,33 @@ import { RedisDetailItem } from "@/types/redisItem";
 
 const columns: ColumnDef<String>[] = [
     {
-        header: "#",
+        id: "index",
+        header: () => <div className="redis-item-table-text-color">#</div>,
         size: 20,
         cell: ({ row }) => {
-            return <div>{row.index + 1}</div>
+            return <div className="redis-item-table-text-color">{row.index + 1}</div>
         }
     },
     {
-        header: "Value",
+        id: "value",
+        header: () => <div className="redis-item-table-text-color">Value</div>,
         cell: ({ row }) => {
-            return <div className="">{row.original}</div>
+            return <div className="redis-item-table-text-color">{row.original}</div>
         }
     },
     {
         id: "action",
-        header: "Operations",
+        header: () => <div className="redis-item-table-text-color">Operations</div>,
         cell: ({ row }) => {
             return <div className="flex">
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Copy strokeWidth={1.5} />
                 </Button>
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Pen strokeWidth={1.5} />
                 </Button>
-                <Button variant="ghost" size="sm">
-                    <Trash2 strokeWidth={1.5} className=""/>
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
+                    <Trash2 strokeWidth={1.5} />
                 </Button>
             </div>
         }

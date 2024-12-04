@@ -6,32 +6,35 @@ import { RedisDetailItem } from "@/types/redisItem";
 
 const columns: ColumnDef<{ id: string; fields: string }>[] = [
     {
-        header: "#",
+        id: "index",
+        header: () => <div className="redis-item-table-text-color">#</div>,
         size: 20,
-        cell: ({ row }) => <div>{row.index + 1}</div>
+        cell: ({ row }) => <div className="redis-item-table-text-color">{row.index + 1}</div>
     },
     {
-        header: "ID",
+        id: "id",
+        header: () => <div className="redis-item-table-text-color">ID</div>,
         accessorKey: "id",
-        cell: ({ row }) => <div>{row.original.id}</div>
+        cell: ({ row }) => <div className="redis-item-table-text-color">{row.original.id}</div>
     },
     {
-        header: "Fields",
+        id: "fields",
+        header: () => <div className="redis-item-table-text-color">Fields</div>,
         accessorKey: "fields",
-        cell: ({ row }) => <pre className="whitespace-pre-wrap">{row.original.fields}</pre>
+        cell: ({ row }) => <pre className="whitespace-pre-wrap redis-item-table-text-color">{row.original.fields}</pre>
     },
     {
         id: "action",
-        header: "Operations",
+        header: () => <div className="redis-item-table-text-color">Operations</div>,
         cell: ({ row }) => (
             <div className="flex">
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Copy strokeWidth={1.5} />
                 </Button>
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Pen strokeWidth={1.5} />
                 </Button>
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Trash2 strokeWidth={1.5} />
                 </Button>
             </div>

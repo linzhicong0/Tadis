@@ -7,31 +7,31 @@ import { DataTable } from "../data-table";
 const columns: ColumnDef<String>[] = [
     {
         id: "index",
-        header: "#",
+        header: () => <div className="redis-item-table-text-color">#</div>,
         size: 20,
         cell: ({ row }) => {
-            return <div>{row.index + 1}</div>
+            return <div className="redis-item-table-text-color">{row.index + 1}</div>
         }
     },
     {
         id: "value",
-        header: () => <div>Value</div>,
+        header: () => <div className="redis-item-table-text-color">Value</div>,
         cell: ({ row }) => {
-            return <div>{row.original}</div>
+            return <div className="redis-item-table-text-color">{row.original}</div>
         }
     },
     {
         id: "action",
-        header: "Operations",
+        header: () => <div className="redis-item-table-text-color">Operations</div>,
         cell: ({ row }) => {
             return <div className="flex">
-                <Button className="h-6 w-6" variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Copy strokeWidth={1.5} />
                 </Button>
-                <Button className="h-6 w-6" variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Pen strokeWidth={1.5} />
                 </Button>
-                <Button className="h-6 w-6" variant="ghost" size="sm">
+                <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
                     <Trash2 strokeWidth={1.5} />
                 </Button>
             </div>
