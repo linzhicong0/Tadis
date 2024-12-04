@@ -94,6 +94,9 @@ export default function Database() {
                 </div>
             </div>
 
+            {/* Try to use the dynamic route but seem we set the output: export, we can not pass the dynamic param to the sub page
+                so now we will keep using this way to render the item first
+            */}
             {/* Main Content Area */}
             {selectedItem && (
                 'StringValue' in selectedItem.value ? (
