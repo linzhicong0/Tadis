@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { RedisDetailItem } from "@/types/redisItem";
 import { ColumnDef } from "@tanstack/react-table";
-import { Copy, Trash2, Pen, Save, RotateCw } from "lucide-react";
+import { Copy, Trash2, Pen, RotateCw, Clock, Plus } from "lucide-react";
 import { DataTable } from "../data-table";
 
 const columns: ColumnDef<String>[] = [
     {
+        id: "index",
         header: "#",
         size: 20,
         cell: ({ row }) => {
@@ -13,7 +14,8 @@ const columns: ColumnDef<String>[] = [
         }
     },
     {
-        header: "Value",
+        id: "value",
+        header: () => <div>Value</div>,
         cell: ({ row }) => {
             return <div>{row.original}</div>
         }
@@ -23,14 +25,14 @@ const columns: ColumnDef<String>[] = [
         header: "Operations",
         cell: ({ row }) => {
             return <div className="flex">
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6" variant="ghost" size="sm">
                     <Copy strokeWidth={1.5} />
                 </Button>
-                <Button variant="ghost" size="sm">
+                <Button className="h-6 w-6" variant="ghost" size="sm">
                     <Pen strokeWidth={1.5} />
                 </Button>
-                <Button variant="ghost" size="sm">
-                    <Trash2 strokeWidth={1.5} className=""/>
+                <Button className="h-6 w-6" variant="ghost" size="sm">
+                    <Trash2 strokeWidth={1.5} />
                 </Button>
             </div>
         }
@@ -51,20 +53,16 @@ export default function RedisSetItem({ redis_key, value, ttl, size }: RedisListI
                 <div className="text-gray-800 dark:text-gray-200 text-base">{redis_key}</div>
                 <div className="ml-auto flex gap-2">
                     <Button variant="secondary">
-                        <Copy strokeWidth={1.5} />
-                        Copy
-                    </Button>
-                    <Button variant="secondary">
                         <RotateCw strokeWidth={1.5} />
                         Refresh
                     </Button>
                     <Button variant="secondary">
-                        <Trash2 strokeWidth={1.5} />
-                        Delete
+                        <Clock strokeWidth={1.5} />
+                        TTL
                     </Button>
                     <Button variant="secondary">
-                        <Save strokeWidth={1.5} />
-                        Save
+                        <Plus strokeWidth={1.5} />
+                        Add
                     </Button>
                 </div>
             </div>
@@ -74,9 +72,12 @@ export default function RedisSetItem({ redis_key, value, ttl, size }: RedisListI
                 <div className="rounded">Memory: {size} bytes</div>
             </div>
 
-            <div className="mt-4 flex-1">
-                <DataTable columns={columns} data={value.SetValue} />
-            </div>
+            {/* <ScrollArea className="mt-4"> */}
+                <div className="mt-4 overflow-y-auto">
+                    <DataTable columns={columns} data={value.SetValue} />
+                </div>
+            {/* </ScrollArea> */}
+
         </div>
     );
 }
