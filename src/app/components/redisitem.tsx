@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Trash2 } from 'lucide-react';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { cn } from '@/lib/utils';
 
 type RedisItemType = 'string' | 'set' | 'hash' | 'list' | 'stream' | 'zset';
 
@@ -13,8 +14,10 @@ interface RedisItemProps {
 }
 
 const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, isSelected }) => {
-  const getTypeColor = (type: RedisItemType) => {
-    const colors = {
+
+  // Not sure why only write the function here will work, it's not working when import from utils.ts
+  function getRedisItemTypeColor(type: RedisItemType): string {
+    const colors: Record<RedisItemType, string> = {
       string: 'bg-green-500',
       set: 'bg-blue-500',
       hash: 'bg-purple-600',
@@ -23,7 +26,7 @@ const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, i
       zset: 'bg-purple-500'
     };
     return colors[type];
-  };
+  }
 
   return (
     <div
@@ -32,7 +35,10 @@ const RedisItem: React.FC<RedisItemProps> = ({ type, label, onDelete, onClick, i
       onClick={() => onClick?.(label)}
     >
       <div className="flex items-center gap-2">
-        <span className={`${getTypeColor(type)} text-white rounded-sm font-semibold uppercase text-[10px] w-14 h-5 flex items-center justify-center`}>
+        <span className={cn(
+          getRedisItemTypeColor(type),
+          "text-white rounded-sm font-semibold uppercase text-[10px] w-14 h-5 flex items-center justify-center"
+        )}>
           {type}
         </span>
         <span className="text-gray-800 dark:text-gray-200 text-sm">
