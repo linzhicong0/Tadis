@@ -6,18 +6,11 @@ import { redisCommands } from '@/services/redis-commands'
 import TreeView from '@/app/components/treeview';
 import { RedisTreeItem } from '@/models/redisTreeItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import RedisStringItem from '../components/redis-item/redis-string-item'
-import { RedisDetailItem } from '@/types/redisItem'
-import RedisListItem from '../components/redis-item/redis-list-item'
-import RedisSetItem from '../components/redis-item/redis-set-item'
-import RedisHashItem from '../components/redis-item/redis-hash-item';
-import RedisStreamItem from '../components/redis-item/redis-stream-item';
-import RedisZsetItem from '../components/redis-item/redis-zset.item';
+import RedisItemDetail from '../components/redis-item/redis-item-detail';
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
     const [redisData, setRedisData] = useState<RedisTreeItem[]>([]);
-    const [selectedItem, setSelectedItem] = useState<RedisDetailItem | null>(null);
     useEffect(() => {
         redisCommands.getAllKeysAsTree().then((keys) => {
             console.log("keys are: ", keys);
@@ -31,19 +24,11 @@ export default function Database() {
 
     const handleItemSelect = (item: RedisTreeItem) => {
         setSelectedItemName(item.key);
-        redisCommands.getKeyDetail(item.key).then((redisItem) => {
-            setSelectedItem(redisItem);
+        console.log("selected item name: ", item.key);
+        // redisCommands.getKeyDetail(item.key).then((redisItem) => {
+        //     setSelectedItem(redisItem);
 
-        })
-    };
-
-    const mockListItem  = {
-        redis_key: "test:list",
-        value: {
-            ListValue: ["item1", "item2", "item3", "item4", "item5"]
-        },
-        ttl: -1,
-        size: 1024
+        // })
     };
 
     return (
@@ -98,41 +83,11 @@ export default function Database() {
                 so now we will keep using this way to render the item first
             */}
             {/* Main Content Area */}
-            {selectedItem && (
-                'StringValue' in selectedItem.value ? (
-                    <RedisStringItem redis_key={selectedItem.redis_key} value={selectedItem.value as { StringValue: string }} ttl={selectedItem.ttl} size={selectedItem.size} />
-                ) : 'ListValue' in selectedItem.value ? (
-                    <RedisListItem redis_key={selectedItem.redis_key} value={selectedItem.value as { ListValue: string[] }} ttl={selectedItem.ttl} size={selectedItem.size} />
-                ) : 'SetValue' in selectedItem.value ? (
-                    <RedisSetItem 
-                        redis_key={selectedItem.redis_key}
-                        value={selectedItem.value as { SetValue: string[] }}
-                        ttl={selectedItem.ttl}
-                        size={selectedItem.size}
-                    />
-                ) : 'HashValue' in selectedItem.value ? (
-                    <RedisHashItem 
-                        redis_key={selectedItem.redis_key}
-                        value={selectedItem.value as { HashValue: Record<string, string> }}
-                        ttl={selectedItem.ttl}
-                        size={selectedItem.size}
-                    />
-                ) : 'StreamValue' in selectedItem.value ? (
-                    <RedisStreamItem 
-                        redis_key={selectedItem.redis_key}
-                        value={selectedItem.value as { StreamValue: Record<string, Record<string, string>> }}
-                        ttl={selectedItem.ttl}
-                        size={selectedItem.size}
-                    />
-                ) : 'ZSetValue' in selectedItem.value ? (
-                    <RedisZsetItem 
-                        redis_key={selectedItem.redis_key}
-                        value={selectedItem.value as { ZSetValue: Array<[string, number]> }}
-                        ttl={selectedItem.ttl}
-                        size={selectedItem.size}
-                    />
-                ) : null
-            )}
+            {
+                selectedItemName && (
+                    <RedisItemDetail redisKey={selectedItemName} />
+                )
+            }
         </div>
     )
 }
