@@ -22,25 +22,27 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
     const [redisItem, setRedisItem] = useState<RedisDetailItem | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
+    const loadRedisItem = async () => {
         setIsLoading(true);
-        redisCommands.getKeyDetail(redisKey)
-            .then((item) => {
-                setRedisItem(item);
-            })
-            .catch((error) => {
-                console.error("Error loading Redis item:", error);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
+        try {
+            const item = await redisCommands.getKeyDetail(redisKey);
+            setRedisItem(item);
+        } catch (error) {
+            toast.error("Failed to refresh data");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadRedisItem();
     }, [redisKey]);
 
     const handleSave = async () => {
         if (redisItem && 'StringValue' in redisItem.value) {
             try {
                 await redisCommands.saveString(redisItem.redis_key, redisItem.value.StringValue);
-                toast.success("Value saved successfully");
+                toast.success("Saved");
             } catch (error) {
                 toast.error("Failed to save value");
             }
@@ -63,7 +65,11 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                 <div className="ml-auto flex gap-2">
 
                     <ToolTip tooltipContent="Refresh">
-                        <Button variant="secondary" className="w-8 h-8">
+                        <Button 
+                            variant="secondary" 
+                            className="w-8 h-8"
+                            onClick={loadRedisItem}
+                        >
                             <RotateCw strokeWidth={1.5} />
                         </Button>
                     </ToolTip>
