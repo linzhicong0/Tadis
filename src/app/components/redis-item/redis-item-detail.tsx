@@ -41,7 +41,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
             toast.success("Refreshed");
         } catch (error) {
             toast.error("Failed to refresh data");
-        } 
+        }
     }
 
     useEffect(() => {
@@ -88,11 +88,17 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                             <Clock3 strokeWidth={1.5} />
                         </Button>
                     </ToolTip>
-                    <ToolTip tooltipContent="Add">
-                        <Button variant="secondary" className="w-8 h-8">
-                            <Plus strokeWidth={1.5} />
-                        </Button>
-                    </ToolTip>
+
+                    {/* Bellow button only applicable for non string value */}
+                    {
+                        !('StringValue' in redisItem!.value) && (
+                            <ToolTip tooltipContent="Add">
+                                <Button variant="secondary" className="w-8 h-8">
+                                    <Plus strokeWidth={1.5} />
+                                </Button>
+                            </ToolTip>
+                        )
+                    }
 
                     {/* Bellow button only applicable for string value */}
                     {
