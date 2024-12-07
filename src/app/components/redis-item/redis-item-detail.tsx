@@ -28,11 +28,21 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
             const item = await redisCommands.getKeyDetail(redisKey);
             setRedisItem(item);
         } catch (error) {
-            toast.error("Failed to refresh data");
+            toast.error("Failed to load data");
         } finally {
             setIsLoading(false);
         }
     };
+
+    const refreshRedisItem = async () => {
+        try {
+            const item = await redisCommands.getKeyDetail(redisKey);
+            setRedisItem(item);
+            toast.success("Refreshed");
+        } catch (error) {
+            toast.error("Failed to refresh data");
+        } 
+    }
 
     useEffect(() => {
         loadRedisItem();
@@ -65,10 +75,10 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                 <div className="ml-auto flex gap-2">
 
                     <ToolTip tooltipContent="Refresh">
-                        <Button 
-                            variant="secondary" 
+                        <Button
+                            variant="secondary"
                             className="w-8 h-8"
-                            onClick={loadRedisItem}
+                            onClick={refreshRedisItem}
                         >
                             <RotateCw strokeWidth={1.5} />
                         </Button>
