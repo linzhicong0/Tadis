@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { redisCommands } from "@/services/redis-commands";
 import { RedisDetailItem } from "@/types/redisItem";
-import { Copy, RotateCw, Save, Trash } from "lucide-react";
+import { Clock3, Copy, Plus, RotateCw, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import RedisListTable from "./redis-list-table";
 import RedisSetTable from "./redis-set-table";
@@ -10,6 +10,8 @@ import RedisStreamTable from "./redis-stream-table";
 import RedisZSetTable from "./redis-zset-table";
 import { getRedisItemColor, getRedisItemType } from "@/lib/utils";
 import RedisStringEditor from "./redis-string-editor";
+import { toast } from "sonner";
+import ToolTip from "../tool-tip";
 
 interface RedisItemDetailProps {
     redisKey: string;
@@ -34,6 +36,17 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
             });
     }, [redisKey]);
 
+    const handleSave = async () => {
+        if (redisItem && 'StringValue' in redisItem.value) {
+            try {
+                await redisCommands.saveString(redisItem.redis_key, redisItem.value.StringValue);
+                toast.success("Value saved successfully");
+            } catch (error) {
+                toast.error("Failed to save value");
+            }
+        }
+    };
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -48,22 +61,42 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     {redisItem?.redis_key}
                 </div>
                 <div className="ml-auto flex gap-2">
-                    <Button variant="secondary">
-                        <Copy strokeWidth={1.5} />
-                        Copy
-                    </Button>
-                    <Button variant="secondary">
-                        <RotateCw strokeWidth={1.5} />
-                        Refresh
-                    </Button>
-                    <Button variant="secondary">
-                        <Trash strokeWidth={1.5} />
-                        Delete
-                    </Button>
-                    <Button variant="secondary">
-                        <Save strokeWidth={1.5} />
-                        Save
-                    </Button>
+
+                    <ToolTip tooltipContent="Refresh">
+                        <Button variant="secondary" className="w-8 h-8">
+                            <RotateCw strokeWidth={1.5} />
+                        </Button>
+                    </ToolTip>
+                    <ToolTip tooltipContent="TTL">
+                        <Button variant="secondary" className="w-8 h-8">
+                            <Clock3 strokeWidth={1.5} />
+                        </Button>
+                    </ToolTip>
+                    <ToolTip tooltipContent="Add">
+                        <Button variant="secondary" className="w-8 h-8">
+                            <Plus strokeWidth={1.5} />
+                        </Button>
+                    </ToolTip>
+
+                    {/* Bellow button only applicable for string value */}
+                    {
+                        'StringValue' in redisItem!.value && (
+                            <>
+                                <ToolTip tooltipContent="Copy">
+                                    <Button variant="secondary" className="w-8 h-8">
+                                        <Copy strokeWidth={1.5} />
+                                    </Button>
+                                </ToolTip>
+                                <ToolTip tooltipContent="Save">
+                                    <Button variant="secondary" onClick={handleSave} className="w-8 h-8">
+                                        <Save strokeWidth={1.5} />
+                                    </Button>
+                                </ToolTip>
+                            </>
+                        )
+                    }
+
+
                 </div>
             </div>
 
@@ -88,7 +121,15 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                             ) : 'ZSetValue' in redisItem.value ? (
                                 <RedisZSetTable item={redisItem} />
                             ) : 'StringValue' in redisItem.value ? (
-                                <RedisStringEditor item={redisItem} />
+                                <RedisStringEditor
+                                    item={redisItem}
+                                    onValueChange={(value) => {
+                                        setRedisItem(prev => prev ? {
+                                            ...prev,
+                                            value: { StringValue: value }
+                                        } : null)
+                                    }}
+                                />
                             ) : null
                         }
                     </div>
