@@ -13,6 +13,7 @@ import RedisStringEditor from "./redis-string-editor";
 import { toast } from "sonner";
 import ToolTip from "../tool-tip";
 import TTLDialog from "../ttl-dialog";
+import AddListDialog from "../add-item/add-list-diaglog";
 
 interface RedisItemDetailProps {
     redisKey: string;
@@ -24,6 +25,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
     const [isLoading, setIsLoading] = useState(true);
     const [isTTLDialogOpen, setIsTTLDialogOpen] = useState(false);
     const [ttlValue, setTTLValue] = useState("-1");
+    const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
 
     const loadRedisItem = async () => {
         setIsLoading(true);
@@ -75,6 +77,10 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
         return <div>Loading...</div>;
     }
 
+    function handleAddList(position: "Start" | "End", items: string[]): void {
+        throw new Error("Function not implemented.");
+    }
+
     return (
         <div className="redis-item-page">
             <div className="flex items-center gap-4 mb-4">
@@ -112,7 +118,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     {
                         !('StringValue' in redisItem!.value) && (
                             <ToolTip tooltipContent="Add">
-                                <Button variant="secondary" className="w-8 h-8">
+                                <Button variant="secondary" className="w-8 h-8" onClick={() => setIsAddItemDialogOpen(true)}>
                                     <Plus strokeWidth={1.5} />
                                 </Button>
                             </ToolTip>
@@ -184,7 +190,15 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                 ttlValue={parseInt(ttlValue)}
                 onConfirm={handleUpdateTTL}
             />
-
+            {
+                redisItem?.value && 'ListValue' in redisItem.value && (
+                    <AddListDialog
+                        isOpen={isAddItemDialogOpen}
+                        onClose={() => setIsAddItemDialogOpen(false)}
+                        redisKey={redisItem!.redis_key}
+                    />
+                )
+            }
         </div>
     );
 }

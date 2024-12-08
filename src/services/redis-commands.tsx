@@ -7,7 +7,7 @@ const GET_ALL_KEYS_AS_TREE_COMMAND_NAME = 'get_all_keys_as_tree';
 const GET_KEY_DETAIL_COMMAND_NAME = 'get_key_detail';
 const SAVE_STRING_COMMAND_NAME = 'save_string';
 const UPDATE_TTL_COMMAND_NAME = 'update_ttl';
-
+const LIST_ADD_ITEMS_COMMAND_NAME = 'list_add_items';
 export const redisCommands = {
 
     getAllKeysAsTree: async (): Promise<RedisTreeItem[]> => {
@@ -24,6 +24,10 @@ export const redisCommands = {
 
     updateTTL: async (key: string, ttl: number): Promise<void> => {
         return invoke<void>(UPDATE_TTL_COMMAND_NAME, { key, ttl });
+    },
+
+    listAddItems: async (key: string, items: string[], direction: 'Start' | 'End'): Promise<void> => {
+        return invoke<void>(LIST_ADD_ITEMS_COMMAND_NAME, { key, items, direction });
     },
 
 };

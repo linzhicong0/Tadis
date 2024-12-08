@@ -21,6 +21,7 @@ pub fn run() {
             commands::redis::get_key_detail,
             commands::redis::save_string,
             commands::redis::update_ttl,
+            commands::redis::list_add_items,
         ])
         .setup(|app| {
 
