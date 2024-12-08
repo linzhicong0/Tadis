@@ -23,6 +23,7 @@ pub fn run() {
             commands::redis::update_ttl,
             commands::redis::list_add_items,
             commands::redis::set_add_items,
+            commands::redis::hash_add_items,
         ])
         .setup(|app| {
 
