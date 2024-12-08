@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 
-export default function CloseButton({ onClose }: { onClose: () => void }) {
+export default function CloseButton({ onClose }: { onClose?: () => void }) {
     return (
         <button
             className="w-[12px] h-[12px] rounded-full bg-[#FF5F57] relative"

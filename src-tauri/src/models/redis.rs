@@ -34,3 +34,9 @@ pub enum RedisItemValue {
     StreamValue(Vec<HashMap<String, HashMap<String, String>>>),
     None,
 }
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub enum ListDirection {
+    Start,
+    End,
+}

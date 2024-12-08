@@ -3,7 +3,7 @@ import CloseButton from '@/app/components/close-button';
 
 interface DialogProps {
   isOpen: boolean;
-  onClose: () => void;
+  onClose?: () => void;
   children: React.ReactNode;
   className?: string;
   title: string;
