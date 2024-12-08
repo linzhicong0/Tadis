@@ -5,7 +5,7 @@ import { DataTable } from "../data-table";
 
 export default function RedisZSetTable({ item }: { item: RedisDetailItem }) {
 
-    const zsetColumns: ColumnDef<{ score: number; member: string }>[] = [
+    const zsetColumns: ColumnDef<{ score: number; value: string }>[] = [
         {
             id: "index",
             header: () => <RedisTableHeader header="#" />,
@@ -13,16 +13,16 @@ export default function RedisZSetTable({ item }: { item: RedisDetailItem }) {
             cell: ({ row }) => <RedisTableCell value={row.index + 1} />
         },
         {
+            id: "value",
+            header: () => <RedisTableHeader header="Value" />,
+            accessorKey: "value",
+            cell: ({ row }) => <RedisTableCell value={row.original.value} />
+        },
+        {
             id: "score",
             header: () => <RedisTableHeader header="Score" />,
             accessorKey: "score",
             cell: ({ row }) => <RedisTableCell value={row.original.score} />
-        },
-        {
-            id: "member",
-            header: () => <RedisTableHeader header="Member" />,
-            accessorKey: "member",
-            cell: ({ row }) => <RedisTableCell value={row.original.member} />
         },
         {
             id: "action",
@@ -40,7 +40,7 @@ export default function RedisZSetTable({ item }: { item: RedisDetailItem }) {
             columns={zsetColumns}
             data={Object.entries(item.value.ZSetValue).map(([_, value]) => ({
                 score: Number(value[1]),
-                member: value[0]
+                value: value[0]
             }))}
         />
     );
