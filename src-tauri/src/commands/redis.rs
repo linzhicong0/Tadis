@@ -144,6 +144,30 @@ pub fn save_string(
     Ok(())
 }
 
+#[command]
+pub fn update_ttl(state: State<'_, Mutex<AppState>>, key: String, ttl: i64) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    if ttl == -1 {
+        client
+            .persist(&key)
+            .map_err(|e| format!("Failed to update ttl: {}", e))?;
+    } else {
+        client
+            .expire(&key, ttl)
+            .map_err(|e| format!("Failed to update ttl: {}", e))?;
+    }
+
+    Ok(())
+}
+
 fn convert_keys_to_tree(client: &mut redis::Connection, keys: Vec<String>) -> Vec<RedisTreeItem> {
     let mut root_items: Vec<RedisTreeItem> = Vec::new();
 

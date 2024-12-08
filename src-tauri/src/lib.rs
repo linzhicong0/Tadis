@@ -20,6 +20,7 @@ pub fn run() {
             commands::redis::get_all_keys_as_tree,
             commands::redis::get_key_detail,
             commands::redis::save_string,
+            commands::redis::update_ttl,
         ])
         .setup(|app| {
 

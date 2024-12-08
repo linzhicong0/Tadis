@@ -12,6 +12,11 @@ import { getRedisItemColor, getRedisItemType } from "@/lib/utils";
 import RedisStringEditor from "./redis-string-editor";
 import { toast } from "sonner";
 import ToolTip from "../tool-tip";
+import { CustomDialog } from "@/components/ui/custom-dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import TTLDialog from "../ttl-dialog";
 
 interface RedisItemDetailProps {
     redisKey: string;
@@ -21,6 +26,8 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
 
     const [redisItem, setRedisItem] = useState<RedisDetailItem | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isTTLDialogOpen, setIsTTLDialogOpen] = useState(false);
+    const [ttlValue, setTTLValue] = useState("-1");
 
     const loadRedisItem = async () => {
         setIsLoading(true);
@@ -59,6 +66,15 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
         }
     };
 
+    const handleUpdateTTL = async (value: number) => {
+        try {
+            await redisCommands.updateTTL(redisKey, value);
+            await refreshRedisItem();
+        } catch (error) {
+            toast.error("Failed to update TTL");
+        }
+    };
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -84,7 +100,14 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                         </Button>
                     </ToolTip>
                     <ToolTip tooltipContent="TTL">
-                        <Button variant="secondary" className="w-8 h-8">
+                        <Button
+                            variant="secondary"
+                            className="w-8 h-8"
+                            onClick={() => {
+                                setTTLValue(redisItem?.ttl.toString() || "-1");
+                                setIsTTLDialogOpen(true);
+                            }}
+                        >
                             <Clock3 strokeWidth={1.5} />
                         </Button>
                     </ToolTip>
@@ -157,6 +180,14 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     </div>
                 )
             }
+
+            <TTLDialog
+                isOpen={isTTLDialogOpen}
+                onClose={() => setIsTTLDialogOpen(false)}
+                ttlValue={parseInt(ttlValue)}
+                onConfirm={handleUpdateTTL}
+            />
+
         </div>
     );
 }
