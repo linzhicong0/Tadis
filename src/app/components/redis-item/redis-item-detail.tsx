@@ -12,10 +12,6 @@ import { getRedisItemColor, getRedisItemType } from "@/lib/utils";
 import RedisStringEditor from "./redis-string-editor";
 import { toast } from "sonner";
 import ToolTip from "../tool-tip";
-import { CustomDialog } from "@/components/ui/custom-dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import TTLDialog from "../ttl-dialog";
 
 interface RedisItemDetailProps {
@@ -184,6 +180,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
             <TTLDialog
                 isOpen={isTTLDialogOpen}
                 onClose={() => setIsTTLDialogOpen(false)}
+                redisKey={redisItem!.redis_key}
                 ttlValue={parseInt(ttlValue)}
                 onConfirm={handleUpdateTTL}
             />
