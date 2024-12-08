@@ -38,9 +38,9 @@ export default function RedisZSetTable({ item }: { item: RedisDetailItem }) {
     return (
         <DataTable
             columns={zsetColumns}
-            data={Object.entries(item.value.ZSetValue).map(([member, score]) => ({
-                score: Number(score),
-                member
+            data={Object.entries(item.value.ZSetValue).map(([_, value]) => ({
+                score: Number(value[1]),
+                member: value[0]
             }))}
         />
     );
