@@ -21,12 +21,12 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
     const [direction, setDirection] = useState<'Start' | 'End'>('Start');
     const [items, setItems] = useState<string[]>(['']);
     const lastInputRef = useRef<HTMLInputElement>(null);
-
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const handleAddItem = () => {
         setItems([...items, '']);
         setTimeout(() => {
-            lastInputRef.current?.scrollIntoView({ behavior: 'smooth' });
-            lastInputRef.current?.focus();
+            lastInputRef.current?.select();
+            buttonRef.current?.scrollIntoView({ behavior: 'smooth' });
         }, 0);
     };
 
@@ -118,6 +118,7 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
                             ))}
 
                             <Button
+                                ref={buttonRef}
                                 variant="secondary"
                                 className="w-full"
                                 onClick={handleAddItem}
