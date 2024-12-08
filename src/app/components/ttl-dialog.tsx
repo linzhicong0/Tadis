@@ -3,16 +3,17 @@ import { CustomDialog } from "@/components/ui/custom-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface TTLDialogProps {
     isOpen: boolean;
     onClose: () => void;
+    redisKey: string;
     ttlValue: number;
     onConfirm: (value: number) => void;
 }
 
-export default function TTLDialog({ isOpen, onClose, ttlValue, onConfirm }: TTLDialogProps) {
+export default function TTLDialog({ isOpen, onClose, redisKey, ttlValue, onConfirm }: TTLDialogProps) {
     const [ttl, setTTL] = useState(ttlValue);
     const [unit, setUnit] = useState("seconds");
 
@@ -30,7 +31,6 @@ export default function TTLDialog({ isOpen, onClose, ttlValue, onConfirm }: TTLD
         } else if (unit === "days") {
             ttlInSeconds = ttl * 24 * 60 * 60;
         }
-        console.log(ttlInSeconds);
         onConfirm(ttlInSeconds);
         onClose();
     };
@@ -42,6 +42,10 @@ export default function TTLDialog({ isOpen, onClose, ttlValue, onConfirm }: TTLD
             title="Update TTL"
         >
             <div className="space-y-4">
+                <div>
+                    <Label>Key</Label>
+                    <Input value={redisKey} disabled />
+                </div>
                 <div className="space-y-2">
                     <Label htmlFor="ttl">TTL</Label>
                     <div className="flex gap-2">
