@@ -15,6 +15,7 @@ import ToolTip from "../tool-tip";
 import TTLDialog from "../ttl-dialog";
 import AddListDialog from "../add-item/add-list-diaglog";
 import AddSetDialog from "../add-item/add-set-dialog";
+import AddHashDialog from "../add-item/add-hash-dialog";
 
 interface RedisItemDetailProps {
     redisKey: string;
@@ -212,6 +213,13 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     />
                 ) : 'SetValue' in redisItem.value ? (
                     <AddSetDialog
+                        isOpen={isAddItemDialogOpen}
+                        onClose={() => setIsAddItemDialogOpen(false)}
+                        redisKey={redisItem!.redis_key}
+                        onConfirm={handleUpdate}
+                    />
+                ) : 'HashValue' in redisItem.value ? (
+                    <AddHashDialog
                         isOpen={isAddItemDialogOpen}
                         onClose={() => setIsAddItemDialogOpen(false)}
                         redisKey={redisItem!.redis_key}
