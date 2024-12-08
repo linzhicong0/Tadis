@@ -1,27 +1,25 @@
 import { CustomDialog } from "@/components/ui/custom-dialog";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ListStart, ListEnd, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useState, useRef } from "react";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { redisCommands } from "@/services/redis-commands";
 import { toast } from "sonner";
 
-interface AddListDialogProps {
+interface AddSetDialogProps {
     isOpen: boolean;
     onClose?: () => void;
     redisKey: string;
-    onConfirm?: (position: 'Start' | 'End', items: string[]) => void;
+    onConfirm?: (items: string[]) => void;
 }
 
-export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: AddListDialogProps) {
-    const [direction, setDirection] = useState<'Start' | 'End'>('Start');
+export default function AddSetDialog({ isOpen, onClose, redisKey, onConfirm }: AddSetDialogProps) {
     const [items, setItems] = useState<string[]>(['']);
     const lastInputRef = useRef<HTMLInputElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+
     const handleAddItem = () => {
         setItems([...items, '']);
         setTimeout(() => {
@@ -43,9 +41,9 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
 
     const handleConfirm = () => {
         const nonEmptyItems = items.filter(item => item.trim() !== '');
-        redisCommands.listAddItems(redisKey, nonEmptyItems, direction).then(() => {
+        redisCommands.setAddItems(redisKey, nonEmptyItems).then(() => {
             reset();
-            onConfirm?.(direction, nonEmptyItems);
+            onConfirm?.(nonEmptyItems);
             onClose?.();
         }).catch((error) => {
             toast.error("Failed to add items: " + error);
@@ -59,11 +57,10 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
 
     const reset = () => {
         setItems(['']);
-        setDirection('Start');
     };
 
     return (
-        <CustomDialog isOpen={isOpen} onClose={handleCancel} title={"List Add Item(s)"}>
+        <CustomDialog isOpen={isOpen} onClose={handleCancel} title={"Set Add Item(s)"}>
             <div className="space-y-2 py-2">
                 <div className="space-y-2">
                     <Label>Key</Label>
@@ -71,31 +68,8 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
                 </div>
 
                 <div className="space-y-2">
-                    <Label>Type</Label>
-                    <ToggleGroup
-                        type="single"
-                        size="sm"
-                        defaultValue={direction}
-                        className="justify-start"
-                    >
-                        <ToggleGroupItem value="Start" aria-label="Toggle start">
-                            <div className="flex items-center gap-2">
-                                <ListStart className="h-4 w-4" />
-                                <span>Start</span>
-                            </div>
-                        </ToggleGroupItem>
-                        <ToggleGroupItem value="End" aria-label="Toggle end">
-                            <div className="flex items-center gap-2">
-                                <ListEnd className="h-4 w-4" />
-                                <span>End</span>
-                            </div>
-                        </ToggleGroupItem>
-                    </ToggleGroup>
-                </div>
-
-                <div className="space-y-2">
                     <Label>Item(s)</Label>
-                    <ScrollArea className="h-24">
+                    <ScrollArea className="h-48">
                         <div className="space-y-2 mr-3 ml-1 mt-1">
                             {items.map((item, index) => (
                                 <div key={index} className="flex gap-1">
@@ -106,6 +80,7 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
                                         placeholder="new item"
                                     />
                                     <Button
+                                        ref={buttonRef}
                                         className="redis-item-table-text-color hover:text-red-500"
                                         variant="ghost"
                                         size="sm"
@@ -117,7 +92,6 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
                             ))}
 
                             <Button
-                                ref={buttonRef}
                                 variant="secondary"
                                 className="w-full"
                                 onClick={handleAddItem}
@@ -150,3 +124,4 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
         </CustomDialog>
     );
 }
+

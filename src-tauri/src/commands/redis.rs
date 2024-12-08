@@ -177,6 +177,28 @@ pub fn list_add_items(
 }
 
 #[command]
+pub fn set_add_items(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    items: Vec<String>,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .sadd(&key, items)
+        .map_err(|e| format!("Failed to add items: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
 pub fn update_ttl(state: State<'_, Mutex<AppState>>, key: String, ttl: i64) -> Result<(), String> {
     let mut state = state
         .lock()

@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import ToolTip from "../tool-tip";
 import TTLDialog from "../ttl-dialog";
 import AddListDialog from "../add-item/add-list-diaglog";
+import AddSetDialog from "../add-item/add-set-dialog";
 
 interface RedisItemDetailProps {
     redisKey: string;
@@ -40,13 +41,8 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
     };
 
     const refreshRedisItem = async () => {
-        try {
-            const item = await redisCommands.getKeyDetail(redisKey);
-            setRedisItem(item);
-            toast.success("Refreshed");
-        } catch (error) {
-            toast.error("Failed to refresh data");
-        }
+        const item = await redisCommands.getKeyDetail(redisKey);
+        setRedisItem(item);
     }
 
     useEffect(() => {
@@ -64,21 +60,37 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
         }
     };
 
+    const handleRefresh = async () => {
+        await refreshRedisItem().then(() => {
+            toast.success("Refreshed");
+        }).catch((error) => {
+            toast.error(`Failed to refresh data: ${error}`);
+        });
+    }
+
     const handleUpdateTTL = async (value: number) => {
         try {
             await redisCommands.updateTTL(redisKey, value);
-            await refreshRedisItem();
+            await refreshRedisItem().then(() => {
+                toast.success("TTL updated");
+            }).catch((error) => {
+                toast.error(`Failed to update TTL: ${error}`);
+            });
         } catch (error) {
             toast.error("Failed to update TTL");
         }
     };
 
-    if (isLoading) {
-        return <div>Loading...</div>;
+    const handleUpdate = async() =>{
+        await refreshRedisItem().then(() => {
+            toast.success("Updated");
+        }).catch((error) => {
+            toast.error(`Failed to update: ${error}`);
+        });
     }
 
-    function handleAddList(position: "Start" | "End", items: string[]): void {
-        throw new Error("Function not implemented.");
+    if (isLoading) {
+        return <div>Loading...</div>;
     }
 
     return (
@@ -96,7 +108,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                         <Button
                             variant="secondary"
                             className="w-8 h-8"
-                            onClick={refreshRedisItem}
+                            onClick={handleRefresh}
                         >
                             <RotateCw strokeWidth={1.5} />
                         </Button>
@@ -191,13 +203,21 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                 onConfirm={handleUpdateTTL}
             />
             {
-                redisItem?.value && 'ListValue' in redisItem.value && (
+                redisItem?.value && ('ListValue' in redisItem.value ? (
                     <AddListDialog
                         isOpen={isAddItemDialogOpen}
                         onClose={() => setIsAddItemDialogOpen(false)}
                         redisKey={redisItem!.redis_key}
+                        onConfirm={handleUpdate}
                     />
-                )
+                ) : 'SetValue' in redisItem.value ? (
+                    <AddSetDialog
+                        isOpen={isAddItemDialogOpen}
+                        onClose={() => setIsAddItemDialogOpen(false)}
+                        redisKey={redisItem!.redis_key}
+                        onConfirm={handleUpdate}
+                    />
+                ) : null)
             }
         </div>
     );
