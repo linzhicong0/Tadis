@@ -38,10 +38,14 @@ export default function RedisStreamTable({ item }: { item: RedisDetailItem }) {
     return (
         <DataTable
             columns={streamColumns}
-            data={Object.entries(item.value.StreamValue).map(([id, fields]) => ({
-            id,
-            fields: JSON.stringify(fields, null, 2)
-        }))}
+            data={Object.entries(item.value.StreamValue).flatMap(([id, fields]) => {
+                return Object.entries(fields).map(([key, value]) => {
+                    return {
+                        id: key,
+                        fields: JSON.stringify(value, null, 2)
+                    }
+                })
+            })}
         />
     );
 }
