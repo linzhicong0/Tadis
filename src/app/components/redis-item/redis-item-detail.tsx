@@ -8,7 +8,7 @@ import RedisSetTable from "./redis-set-table";
 import RedisHashTable from "./redis-hash-table";
 import RedisStreamTable from "./redis-stream-table";
 import RedisZSetTable from "./redis-zset-table";
-import { getRedisItemColor, getRedisItemType } from "@/lib/utils";
+import { copyToClipboard, getRedisItemColor, getRedisItemType } from "@/lib/utils";
 import RedisStringEditor from "./redis-string-editor";
 import { toast } from "sonner";
 import ToolTip from "../tool-tip";
@@ -145,7 +145,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                         'StringValue' in redisItem!.value && (
                             <>
                                 <ToolTip tooltipContent="Copy">
-                                    <Button variant="secondary" className="w-8 h-8">
+                                    <Button variant="secondary" className="w-8 h-8" onClick={() => copyToClipboard('StringValue' in redisItem!.value ? redisItem!.value.StringValue : '')}>
                                         <Copy strokeWidth={1.5} />
                                     </Button>
                                 </ToolTip>
