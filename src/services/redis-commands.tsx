@@ -8,7 +8,7 @@ const UPDATE_TTL_COMMAND_NAME = 'update_ttl';
 const LIST_ADD_ITEMS_COMMAND_NAME = 'list_add_items';
 const SET_ADD_ITEMS_COMMAND_NAME = 'set_add_items';
 const HASH_ADD_ITEMS_COMMAND_NAME = 'hash_add_items';
-
+const ZSET_ADD_ITEMS_COMMAND_NAME = 'zset_add_items';
 export const redisCommands = {
 
     getAllKeysAsTree: async (): Promise<RedisTreeItem[]> => {
@@ -39,5 +39,8 @@ export const redisCommands = {
         return invoke<void>(HASH_ADD_ITEMS_COMMAND_NAME, { key, items });
     },
 
+    zsetAddItems: async (key: string, items: [number, string][], replace: boolean): Promise<void> => {
+        return invoke<void>(ZSET_ADD_ITEMS_COMMAND_NAME, { key, items, replace });
+    },
 };
 
