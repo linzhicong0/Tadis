@@ -9,6 +9,8 @@ const LIST_ADD_ITEMS_COMMAND_NAME = 'list_add_items';
 const SET_ADD_ITEMS_COMMAND_NAME = 'set_add_items';
 const HASH_ADD_ITEMS_COMMAND_NAME = 'hash_add_items';
 const ZSET_ADD_ITEMS_COMMAND_NAME = 'zset_add_items';
+const STREAM_ADD_ITEMS_COMMAND_NAME = 'stream_add_items';
+
 export const redisCommands = {
 
     getAllKeysAsTree: async (): Promise<RedisTreeItem[]> => {
@@ -41,6 +43,10 @@ export const redisCommands = {
 
     zsetAddItems: async (key: string, items: [number, string][], replace: boolean): Promise<void> => {
         return invoke<void>(ZSET_ADD_ITEMS_COMMAND_NAME, { key, items, replace });
+    },
+
+    streamAddItems: async (key: string, id: string, items: [string, string][]): Promise<void> => {
+        return invoke<void>(STREAM_ADD_ITEMS_COMMAND_NAME, { key, id, items });
     },
 };
 

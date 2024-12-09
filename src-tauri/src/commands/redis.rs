@@ -218,7 +218,7 @@ pub fn hash_add_items(
         .map_err(|e| format!("Failed to add items: {}", e))?;
 
     Ok(())
-}   
+}
 
 #[command]
 pub fn zset_add_items(
@@ -239,10 +239,41 @@ pub fn zset_add_items(
 
     if replace {
         println!("replace");
-        client.zadd_multiple(&key, &items).map_err(|e| format!("Failed to add items: {}", e))?;
+        client
+            .zadd_multiple(&key, &items)
+            .map_err(|e| format!("Failed to add items: {}", e))?;
     } else {
-        redis::cmd("ZADD").arg(key).arg("NX").arg(items).exec(client).map_err(|e| format!("Failed to add items: {}", e))?;
+        redis::cmd("ZADD")
+            .arg(key)
+            .arg("NX")
+            .arg(items)
+            .exec(client)
+            .map_err(|e| format!("Failed to add items: {}", e))?;
     }
+
+    Ok(())
+}
+
+#[command]
+pub fn stream_add_items(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    id: Option<String>,
+    items: Vec<(String, String)>,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    let id = id.unwrap_or("*".to_string());
+    client
+        .xadd(&key, id, &items)
+        .map_err(|e| format!("Failed to add items: {}", e))?;
 
     Ok(())
 }
