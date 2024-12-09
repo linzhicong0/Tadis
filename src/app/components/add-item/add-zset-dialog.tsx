@@ -42,7 +42,6 @@ export default function AddZSetDialog({ isOpen, onClose, redisKey, onConfirm }: 
     };
 
     const handleConfirm = () => {
-        console.log(duplicationType);
         const nonEmptyItems = items.filter(([_, value]) => value.trim() !== '');
         redisCommands.zsetAddItems(redisKey, nonEmptyItems, duplicationType === 'Replace').then(() => {
             reset();
