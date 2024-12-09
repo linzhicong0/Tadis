@@ -1,6 +1,7 @@
 import { RedisDetailItem } from "@/types/redisItem";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { writeText, readText } from '@tauri-apps/plugin-clipboard-manager';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -32,4 +33,8 @@ export function getRedisItemType(item: RedisDetailItem) {
           : "StreamValue" in item.value ? "stream"
             : "ZSetValue" in item.value ? "zset"
               : "unknown";
+}
+
+export async function copyToClipboard(text: string) {
+  await writeText(text);
 }
