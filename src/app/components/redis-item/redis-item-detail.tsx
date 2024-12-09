@@ -17,6 +17,7 @@ import AddListDialog from "../add-item/add-list-diaglog";
 import AddSetDialog from "../add-item/add-set-dialog";
 import AddHashDialog from "../add-item/add-hash-dialog";
 import AddZSetDialog from "../add-item/add-zset-dialog";
+import AddStreamDialog from "../add-item/add-stream-dialog";
 
 interface RedisItemDetailProps {
     redisKey: string;
@@ -228,6 +229,13 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     />
                 ) : 'ZSetValue' in redisItem.value ? (
                     <AddZSetDialog
+                        isOpen={isAddItemDialogOpen}
+                        onClose={() => setIsAddItemDialogOpen(false)}
+                        redisKey={redisItem!.redis_key}
+                        onConfirm={handleUpdate}
+                    />
+                ) : 'StreamValue' in redisItem.value ? (
+                    <AddStreamDialog
                         isOpen={isAddItemDialogOpen}
                         onClose={() => setIsAddItemDialogOpen(false)}
                         redisKey={redisItem!.redis_key}

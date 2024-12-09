@@ -25,6 +25,7 @@ pub fn run() {
             commands::redis::set_add_items,
             commands::redis::hash_add_items,
             commands::redis::zset_add_items,
+            commands::redis::stream_add_items,
         ])
         .setup(|app| {
 
