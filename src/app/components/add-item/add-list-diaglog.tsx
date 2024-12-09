@@ -77,6 +77,7 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
                         size="sm"
                         defaultValue={direction}
                         className="justify-start"
+                        onValueChange={(value) => setDirection(value as 'Start' | 'End')}
                     >
                         <ToggleGroupItem value="Start" aria-label="Toggle start">
                             <div className="flex items-center gap-2">
