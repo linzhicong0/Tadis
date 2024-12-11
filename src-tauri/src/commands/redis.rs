@@ -201,7 +201,9 @@ pub fn list_update_value(
     index: i64,
     value: String,
 ) -> Result<(), String> {
-    let mut state = state.lock().map_err(|e| format!("Failed to lock state: {}", e))?;
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
     let selected = state.selected_client.clone();
     let client = state
         .connected_clients
@@ -221,7 +223,9 @@ pub fn list_delete_value(
     key: String,
     index: i64,
 ) -> Result<(), String> {
-    let mut state = state.lock().map_err(|e| format!("Failed to lock state: {}", e))?;
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
     let selected = state.selected_client.clone();
     let client = state
         .connected_clients
@@ -257,6 +261,33 @@ pub fn set_add_items(
     client
         .sadd(&key, items)
         .map_err(|e| format!("Failed to add items: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
+pub fn set_update_value(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    value: String,
+    new_value: String,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .srem(&key, &value)
+        .map_err(|e| format!("Failed to update value: {}", e))?;
+
+    client
+        .sadd(&key, &new_value)
+        .map_err(|e| format!("Failed to update value: {}", e))?;
 
     Ok(())
 }

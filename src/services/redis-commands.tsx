@@ -18,6 +18,7 @@ const ZSET_DELETE_VALUE_COMMAND_NAME = 'zset_delete_value';
 const STREAM_DELETE_VALUE_COMMAND_NAME = 'stream_delete_value';
 const LIST_DELETE_VALUE_COMMAND_NAME = 'list_delete_value';
 const LIST_UPDATE_VALUE_COMMAND_NAME = 'list_update_value';
+const SET_UPDATE_VALUE_COMMAND_NAME = 'set_update_value';
 export const redisCommands = {
 
     getAllKeysAsTree: async (): Promise<RedisTreeItem[]> => {
@@ -84,6 +85,10 @@ export const redisCommands = {
         return invoke<void>(LIST_UPDATE_VALUE_COMMAND_NAME, { key, index, value });
     },
 
+    setUpdateValue: async (key: string, value: string, newValue: string): Promise<void> => {
+        return invoke<void>(SET_UPDATE_VALUE_COMMAND_NAME, { key, value, newValue });
+    },
 };
+
 
 

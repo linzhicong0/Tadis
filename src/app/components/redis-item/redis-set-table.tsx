@@ -1,18 +1,26 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { RedisTableAction, RedisTableCell, RedisTableHeader } from "./redis-table-components";
+import { RedisTableAction, RedisTableCell, RedisTableHeader, RedisTableInputCell } from "./redis-table-components";
 import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
 import { redisCommands } from "@/services/redis-commands";
 import { toast } from "sonner";
 
 
-export default function RedisSetTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: () => void }) {
+export default function RedisSetTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: (message?: string) => void }) {
 
     function handleDelete(value: string) {
         redisCommands.setDeleteValue(item.redis_key, value).then(() => {
-            onRefresh?.();
+            onRefresh?.("Deleted.");
         }).catch((error) => {
             toast.error('Failed to delete value: ' + error);
+        });
+    }
+
+    function handleUpdate(value: string, newValue: string) {
+        redisCommands.setUpdateValue(item.redis_key, value, newValue).then(() => {
+            onRefresh?.("Updated.");
+        }).catch((error) => {
+            toast.error('Failed to update value: ' + error);
         });
     }
 
@@ -29,7 +37,7 @@ export default function RedisSetTable({ item, onRefresh }: { item: RedisDetailIt
             id: "value",
             header: () => <RedisTableHeader header="Value" />,
             cell: ({ row }) => {
-                return <RedisTableCell value={row.original} />;
+                return <RedisTableInputCell value={row.original} onConfirm={(newValue) => handleUpdate(row.original, newValue)} />;
             }
         },
         {
