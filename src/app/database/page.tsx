@@ -8,6 +8,7 @@ import { RedisTreeItem } from '@/models/redisTreeItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import RedisItemDetail from '../components/redis-item/redis-item-detail';
 import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 
 
 export default function Database() {
@@ -39,6 +40,13 @@ export default function Database() {
         // })
     };
 
+    const handleRefresh = () => {
+        redisCommands.getAllKeysAsTree().then((keys) => {
+            setRedisData(keys)
+            toast.success('Refreshed');
+        })
+    }
+
     return (
         <div className="flex h-[calc(100vh-2rem)]">
             {/* Left Sidebar */}
@@ -57,7 +65,8 @@ export default function Database() {
                             />
                         </div>
 
-                        <button className="bg-gray-200 dark:bg-gray-800 rounded-md p-0.5">
+
+                        <button className="bg-gray-200 dark:bg-gray-800 rounded-md p-0.5" onClick={handleRefresh}>
                             <RotateCw className="p-1 text-gray-700 dark:text-gray-300" />
                         </button>
                         <button className="bg-gray-200 dark:bg-gray-800 rounded-md p-0.5">
