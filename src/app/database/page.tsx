@@ -7,6 +7,9 @@ import TreeView from '@/app/components/treeview';
 import { RedisTreeItem } from '@/models/redisTreeItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import RedisItemDetail from '../components/redis-item/redis-item-detail';
+import { toast } from 'sonner';
+
+
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
@@ -18,8 +21,13 @@ export default function Database() {
         })
     }, [])
 
-    const handleDelete = (name: string) => {
-        console.log('Delete:', name);
+    const handleDelete = (key: string) => {
+        redisCommands.deleteKey(key).then(() => {
+            setRedisData(redisData.filter(item => item.key !== key));
+            toast.success('Key deleted successfully');
+        }).catch((error) => {
+            toast.error('Failed to delete key: ' + error);
+        });
     };
 
     const handleItemSelect = (item: RedisTreeItem) => {

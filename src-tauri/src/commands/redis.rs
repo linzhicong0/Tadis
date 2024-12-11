@@ -121,6 +121,20 @@ pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<
         _ => Err(format!("Unsupported key type: {}", key_type)),
     }
 }
+#[command]
+pub fn delete_key(state: State<'_, Mutex<AppState>>, key: String) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client.del(&key).map_err(|e| format!("Failed to delete key: {}", e))?;
+    Ok(())
+}
 
 #[command]
 pub fn save_string(
