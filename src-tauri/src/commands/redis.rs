@@ -132,7 +132,9 @@ pub fn delete_key(state: State<'_, Mutex<AppState>>, key: String) -> Result<(), 
         .get_mut(&selected)
         .ok_or(format!("No client selected"))?;
 
-    client.del(&key).map_err(|e| format!("Failed to delete key: {}", e))?;
+    client
+        .del(&key)
+        .map_err(|e| format!("Failed to delete key: {}", e))?;
     Ok(())
 }
 
@@ -213,6 +215,28 @@ pub fn set_add_items(
 }
 
 #[command]
+pub fn set_delete_value(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    value: String,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .srem(&key, &value)
+        .map_err(|e| format!("Failed to delete value: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
 pub fn hash_add_items(
     state: State<'_, Mutex<AppState>>,
     key: String,
@@ -240,14 +264,21 @@ pub fn hash_delete_field(
     key: String,
     field: String,
 ) -> Result<(), String> {
-    let mut state = state.lock().map_err(|e| format!("Failed to lock state: {}", e))?;
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
     let selected = state.selected_client.clone();
-    let client = state.connected_clients.get_mut(&selected).ok_or(format!("No client selected"))?;
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
 
-    client.hdel(&key, &field).map_err(|e| format!("Failed to delete field: {}", e))?;
+    client
+        .hdel(&key, &field)
+        .map_err(|e| format!("Failed to delete field: {}", e))?;
 
     Ok(())
-}   
+}
 
 #[command]
 pub fn zset_add_items(

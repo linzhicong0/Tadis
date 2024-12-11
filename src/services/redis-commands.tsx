@@ -1,6 +1,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { RedisTreeItem } from '@/models/redisTreeItem';
 import { RedisDetailItem } from '@/types/redisItem';
+
 const GET_ALL_KEYS_AS_TREE_COMMAND_NAME = 'get_all_keys_as_tree';
 const GET_KEY_DETAIL_COMMAND_NAME = 'get_key_detail';
 const SAVE_STRING_COMMAND_NAME = 'save_string';
@@ -12,6 +13,7 @@ const ZSET_ADD_ITEMS_COMMAND_NAME = 'zset_add_items';
 const STREAM_ADD_ITEMS_COMMAND_NAME = 'stream_add_items';
 const DELETE_KEY_COMMAND_NAME = 'delete_key';
 const HASH_DELETE_FIELD_COMMAND_NAME = 'hash_delete_field';
+const SET_DELETE_VALUE_COMMAND_NAME = 'set_delete_value';
 
 export const redisCommands = {
 
@@ -58,6 +60,10 @@ export const redisCommands = {
     hashDeleteField: async (key: string, field: string): Promise<void> => {
         return invoke<void>(HASH_DELETE_FIELD_COMMAND_NAME, { key, field });
     },
-    
+
+    setDeleteValue: async (key: string, value: string): Promise<void> => {
+        return invoke<void>(SET_DELETE_VALUE_COMMAND_NAME, { key, value });
+    },
+
 };
 

@@ -2,8 +2,19 @@ import { ColumnDef } from "@tanstack/react-table";
 import { RedisTableAction, RedisTableCell, RedisTableHeader } from "./redis-table-components";
 import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
+import { redisCommands } from "@/services/redis-commands";
+import { toast } from "sonner";
 
-export default function RedisSetTable({ item }: { item: RedisDetailItem }) {
+
+export default function RedisSetTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: () => void }) {
+
+    function handleDelete(value: string) {
+        redisCommands.setDeleteValue(item.redis_key, value).then(() => {
+            onRefresh?.();
+        }).catch((error) => {
+            toast.error('Failed to delete value: ' + error);
+        });
+    }
 
     const setColumns: ColumnDef<string>[] = [
         {
@@ -25,7 +36,7 @@ export default function RedisSetTable({ item }: { item: RedisDetailItem }) {
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => {
-                return <RedisTableAction onCopy={() => { }} onEdit={() => { }} onDelete={() => { }} />
+                return <RedisTableAction onCopy={() => { }} onEdit={() => { }} onDelete={() => handleDelete(row.original) } />
             }
         }
     ]
