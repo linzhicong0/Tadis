@@ -179,7 +179,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                             ) : 'HashValue' in redisItem.value ? (
                                 <RedisHashTable item={redisItem} onRefresh={handleRefresh} />
                             ) : 'StreamValue' in redisItem.value ? (
-                                <RedisStreamTable item={redisItem} />
+                                <RedisStreamTable item={redisItem} onRefresh={handleRefresh} />
                             ) : 'ZSetValue' in redisItem.value ? (
                                 <RedisZSetTable item={redisItem} onRefresh={handleRefresh} />
                             ) : 'StringValue' in redisItem.value ? (

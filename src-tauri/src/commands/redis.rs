@@ -361,6 +361,27 @@ pub fn stream_add_items(
 }
 
 #[command]
+pub fn stream_delete_value(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    id: String,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+    client
+        .xdel(&key, &[&id])
+        .map_err(|e| format!("Failed to delete value: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
 pub fn update_ttl(state: State<'_, Mutex<AppState>>, key: String, ttl: i64) -> Result<(), String> {
     let mut state = state
         .lock()
