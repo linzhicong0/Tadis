@@ -2,8 +2,18 @@ import { ColumnDef } from "@tanstack/react-table";
 import { RedisTableAction, RedisTableCell, RedisTableHeader } from "./redis-table-components";
 import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
+import { toast } from "sonner";
+import { redisCommands } from "@/services/redis-commands";
 
-export default function RedisStreamTable({ item }: { item: RedisDetailItem }) {
+export default function RedisStreamTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: () => void }) {
+
+    function handleDelete(id: string) {
+        redisCommands.streamDeleteValue(item.redis_key, id).then(() => {
+            onRefresh?.();
+        }).catch((error) => {
+            toast.error('Failed to delete value: ' + error);
+        });
+    }
 
     const streamColumns: ColumnDef<{ id: string; fields: string }>[] = [
         {
@@ -28,7 +38,7 @@ export default function RedisStreamTable({ item }: { item: RedisDetailItem }) {
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => {
-                return <RedisTableAction onCopy={() => { }} onDelete={() => { }} />
+                return <RedisTableAction onCopy={() => { }} onDelete={() => handleDelete(row.original.id)} />
             }
         }
     ];
