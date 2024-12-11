@@ -24,6 +24,7 @@ pub fn run() {
             commands::redis::list_add_items,
             commands::redis::set_add_items,
             commands::redis::hash_add_items,
+            commands::redis::hash_delete_field,
             commands::redis::zset_add_items,
             commands::redis::stream_add_items,
             commands::redis::delete_key,
