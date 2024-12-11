@@ -2,9 +2,23 @@ import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { RedisTableAction, RedisTableCell, RedisTableHeader } from "./redis-table-components";
+import { redisCommands } from "@/services/redis-commands";
+import { toast } from "sonner";
 
+interface RedisHashTableProps {
+    item: RedisDetailItem;
+    onRefresh?: () => void;
+}
 
-export default function RedisHashTable({ item }: { item: RedisDetailItem }) {
+export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps) {
+
+    function handleDelete(field: string) {
+        redisCommands.hashDeleteField(item.redis_key, field).then(() => {
+            onRefresh?.();
+        }).catch((error) => {
+            toast.error('Failed to delete field: ' + error);
+        });
+    }
 
     const hashColumns: ColumnDef<Record<string, string>>[] = [
         {
@@ -31,7 +45,7 @@ export default function RedisHashTable({ item }: { item: RedisDetailItem }) {
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => (
-                <RedisTableAction onCopy={() => { }} onEdit={() => { }} onDelete={() => { }} />
+                <RedisTableAction onCopy={() => { }} onEdit={() => { }} onDelete={() => handleDelete(row.original.key)} />
             )
         }
     ];

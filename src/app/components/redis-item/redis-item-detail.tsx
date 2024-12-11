@@ -65,7 +65,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
 
     const handleRefresh = async () => {
         await refreshRedisItem().then(() => {
-            toast.success("Refreshed");
+            toast.success("Refreshed.");
         }).catch((error) => {
             toast.error(`Failed to refresh data: ${error}`);
         });
@@ -177,7 +177,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                             ) : 'SetValue' in redisItem.value ? (
                                 <RedisSetTable item={redisItem} />
                             ) : 'HashValue' in redisItem.value ? (
-                                <RedisHashTable item={redisItem} />
+                                <RedisHashTable item={redisItem} onRefresh={handleRefresh} />
                             ) : 'StreamValue' in redisItem.value ? (
                                 <RedisStreamTable item={redisItem} />
                             ) : 'ZSetValue' in redisItem.value ? (

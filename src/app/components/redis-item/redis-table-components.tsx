@@ -27,15 +27,15 @@ interface RedisTableActionProps {
 function RedisTableAction({ onCopy, onEdit, onDelete }: RedisTableActionProps) {
     return <div className="flex">
         {onCopy &&
-            <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
+            <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm" onClick={onCopy}>
                 <Copy strokeWidth={1.5} />
             </Button>}
         {onEdit &&
-            <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
+            <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm" onClick={onEdit}>
                 <Pen strokeWidth={1.5} />
             </Button>}
         {onDelete &&
-            <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm">
+            <Button className="h-6 w-6 redis-item-table-text-color" variant="ghost" size="sm" onClick={onDelete}>
                 <Trash2 strokeWidth={1.5} />
             </Button>}
     </div>;

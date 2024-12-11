@@ -235,6 +235,21 @@ pub fn hash_add_items(
 }
 
 #[command]
+pub fn hash_delete_field(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    field: String,
+) -> Result<(), String> {
+    let mut state = state.lock().map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state.connected_clients.get_mut(&selected).ok_or(format!("No client selected"))?;
+
+    client.hdel(&key, &field).map_err(|e| format!("Failed to delete field: {}", e))?;
+
+    Ok(())
+}   
+
+#[command]
 pub fn zset_add_items(
     state: State<'_, Mutex<AppState>>,
     key: String,
