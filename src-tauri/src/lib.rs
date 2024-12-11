@@ -33,6 +33,7 @@ pub fn run() {
             commands::redis::set_delete_value,
             commands::redis::list_delete_value,
             commands::redis::list_update_value,
+            commands::redis::set_update_value,
         ])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();

@@ -63,9 +63,9 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
         }
     };
 
-    const handleRefresh = async () => {
+    const handleRefresh = async (message?: string) => {
         await refreshRedisItem().then(() => {
-            toast.success("Refreshed.");
+            toast.success(message || "Refreshed.");
         }).catch((error) => {
             toast.error(`Failed to refresh data: ${error}`);
         });
@@ -111,7 +111,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                         <Button
                             variant="secondary"
                             className="w-8 h-8"
-                            onClick={handleRefresh}
+                            onClick={() => handleRefresh()}
                         >
                             <RotateCw strokeWidth={1.5} />
                         </Button>
