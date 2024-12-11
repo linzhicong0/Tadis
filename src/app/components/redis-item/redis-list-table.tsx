@@ -5,11 +5,11 @@ import { DataTable } from "../data-table";
 import { toast } from "sonner";
 import { redisCommands } from "@/services/redis-commands";
 
-export default function RedisListTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: () => void }) {
+export default function RedisListTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: (message?: string) => void }) {
 
     function handleDelete(index: number) {
         redisCommands.listDeleteValue(item.redis_key, index).then(() => {
-            onRefresh?.();
+            onRefresh?.("Deleted.");
         }).catch((error) => {
             toast.error('Failed to delete value: ' + error);
         });
@@ -17,7 +17,7 @@ export default function RedisListTable({ item, onRefresh }: { item: RedisDetailI
 
     function handleUpdate(index: number, value: string) {
         redisCommands.listUpdateValue(item.redis_key, index, value).then(() => {
-            toast.success('Updated.');
+            onRefresh?.("Updated.");
         }).catch((error) => {
             toast.error('Failed to update value: ' + error);
         });
