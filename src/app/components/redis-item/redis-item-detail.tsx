@@ -173,7 +173,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     <div className="mt-4 flex-1">
                         {
                             'ListValue' in redisItem.value ? (
-                                <RedisListTable item={redisItem} />
+                                <RedisListTable item={redisItem} onRefresh={handleRefresh} />
                             ) : 'SetValue' in redisItem.value ? (
                                 <RedisSetTable item={redisItem} onRefresh={handleRefresh} />
                             ) : 'HashValue' in redisItem.value ? (

@@ -7,6 +7,8 @@ use tauri::{command, State};
 use crate::models::redis::{ListDirection, RedisItem, RedisItemValue, RedisTreeItem};
 use crate::AppState;
 
+const LIST_DELETED_VALUE_PLACEHOLDER: &str = "__MADIS_DELETED_VALUE_PLACEHOLDER__";
+
 #[command]
 pub fn get_all_keys_as_tree(
     state: State<'_, Mutex<AppState>>,
@@ -188,6 +190,30 @@ pub fn list_add_items(
                 .map_err(|e| format!("Failed to add items: {}", e))?;
         }
     }
+
+    Ok(())
+}
+
+#[command]
+pub fn list_delete_value(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    index: i64,
+) -> Result<(), String> {
+    let mut state = state.lock().map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .lset(&key, index as isize, LIST_DELETED_VALUE_PLACEHOLDER)
+        .map_err(|e| format!("Failed to delete value: {}", e))?;
+
+    client
+        .lrem(&key, 0, &LIST_DELETED_VALUE_PLACEHOLDER)
+        .map_err(|e| format!("Failed to delete value: {}", e))?;
 
     Ok(())
 }

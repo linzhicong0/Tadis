@@ -16,6 +16,7 @@ const HASH_DELETE_FIELD_COMMAND_NAME = 'hash_delete_field';
 const SET_DELETE_VALUE_COMMAND_NAME = 'set_delete_value';
 const ZSET_DELETE_VALUE_COMMAND_NAME = 'zset_delete_value';
 const STREAM_DELETE_VALUE_COMMAND_NAME = 'stream_delete_value';
+const LIST_DELETE_VALUE_COMMAND_NAME = 'list_delete_value';
 
 export const redisCommands = {
 
@@ -73,6 +74,10 @@ export const redisCommands = {
 
     streamDeleteValue: async (key: string, id: string): Promise<void> => {
         return invoke<void>(STREAM_DELETE_VALUE_COMMAND_NAME, { key, id });
+    },
+
+    listDeleteValue: async (key: string, index: number): Promise<void> => {
+        return invoke<void>(LIST_DELETE_VALUE_COMMAND_NAME, { key, index });
     },
 
 };
