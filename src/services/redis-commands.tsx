@@ -10,6 +10,7 @@ const SET_ADD_ITEMS_COMMAND_NAME = 'set_add_items';
 const HASH_ADD_ITEMS_COMMAND_NAME = 'hash_add_items';
 const ZSET_ADD_ITEMS_COMMAND_NAME = 'zset_add_items';
 const STREAM_ADD_ITEMS_COMMAND_NAME = 'stream_add_items';
+const DELETE_KEY_COMMAND_NAME = 'delete_key';
 
 export const redisCommands = {
 
@@ -47,6 +48,10 @@ export const redisCommands = {
 
     streamAddItems: async (key: string, id: string, items: [string, string][]): Promise<void> => {
         return invoke<void>(STREAM_ADD_ITEMS_COMMAND_NAME, { key, id, items });
+    },
+
+    deleteKey: async (key: string): Promise<void> => {
+        return invoke<void>(DELETE_KEY_COMMAND_NAME, { key });
     },
 };
 

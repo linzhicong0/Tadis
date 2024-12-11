@@ -26,6 +26,7 @@ pub fn run() {
             commands::redis::hash_add_items,
             commands::redis::zset_add_items,
             commands::redis::stream_add_items,
+            commands::redis::delete_key,
         ])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();

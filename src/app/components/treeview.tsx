@@ -17,8 +17,7 @@ const TreeView: React.FC<TreeViewProps> = ({ item, onDelete, selectedItemName, o
   if (!hasChildren && item.item_type) {
     return (
       <RedisItem
-        type={item.item_type}
-        label={item.label}
+        item={item}
         onDelete={onDelete}
         onClick={() => onItemSelect(item)}
         isSelected={selectedItemName === item.key}
