@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { RedisTableAction, RedisTableCell, RedisTableHeader } from "./redis-table-components";
+import { RedisTableAction, RedisTableCell, RedisTableHeader, RedisTableInputCell } from "./redis-table-components";
 import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
 import { toast } from "sonner";
@@ -12,6 +12,14 @@ export default function RedisListTable({ item, onRefresh }: { item: RedisDetailI
             onRefresh?.();
         }).catch((error) => {
             toast.error('Failed to delete value: ' + error);
+        });
+    }
+
+    function handleUpdate(index: number, value: string) {
+        redisCommands.listUpdateValue(item.redis_key, index, value).then(() => {
+            toast.success('Updated.');
+        }).catch((error) => {
+            toast.error('Failed to update value: ' + error);
         });
     }
 
@@ -28,7 +36,7 @@ export default function RedisListTable({ item, onRefresh }: { item: RedisDetailI
             id: "value",
             header: () => <RedisTableHeader header="Value" />,
             cell: ({ row }) => {
-                return <RedisTableCell value={row.original} />;
+                return <RedisTableInputCell value={row.original} onConfirm={(value) => handleUpdate(row.index, value)} />;
             }
         },
         {

@@ -195,6 +195,27 @@ pub fn list_add_items(
 }
 
 #[command]
+pub fn list_update_value(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    index: i64,
+    value: String,
+) -> Result<(), String> {
+    let mut state = state.lock().map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .lset(&key, index as isize, &value)
+        .map_err(|e| format!("Failed to update value: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
 pub fn list_delete_value(
     state: State<'_, Mutex<AppState>>,
     key: String,
