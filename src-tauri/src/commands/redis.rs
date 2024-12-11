@@ -315,6 +315,28 @@ pub fn zset_add_items(
 }
 
 #[command]
+pub fn zset_delete_value(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    value: String,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .zrem(&key, &value)
+        .map_err(|e| format!("Failed to delete value: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
 pub fn stream_add_items(
     state: State<'_, Mutex<AppState>>,
     key: String,
