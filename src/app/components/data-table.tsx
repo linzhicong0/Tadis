@@ -63,7 +63,7 @@ export function DataTable<TData, TValue>({
                         table.getRowModel().rows.map((row, index) => (
                             <TableRow
                                 className={cn(
-                                    "border-none hover:bg-white/70 dark:hover:bg-blue-500/80",
+                                    "border-none hover:bg-white/70 dark:hover:bg-blue-500/30",
                                     index % 2 === 0 ? "redis-item-table-row-color" : "",
                                 )}
                                 key={row.id}
