@@ -61,7 +61,7 @@ export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps)
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => (
-                <RedisTableAction onCopy={() => { }} onEdit={() => { }} onDelete={() => handleDelete(row.original.field)} />
+                <RedisTableAction onCopy={() => { }} onDelete={() => handleDelete(row.original.field)} />
             )
         }
     ];

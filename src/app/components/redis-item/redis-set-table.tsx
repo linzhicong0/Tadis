@@ -44,7 +44,7 @@ export default function RedisSetTable({ item, onRefresh }: { item: RedisDetailIt
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => {
-                return <RedisTableAction onCopy={() => { }} onEdit={() => { }} onDelete={() => handleDelete(row.original) } />
+                return <RedisTableAction onCopy={() => { }} onDelete={() => handleDelete(row.original) } />
             }
         }
     ]

@@ -54,7 +54,7 @@ export default function RedisZSetTable({ item, onRefresh }: { item: RedisDetailI
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => {
-                return <RedisTableAction onCopy={() => {}} onEdit={() => {}} onDelete={() => handleDelete(row.original.member)} />
+                return <RedisTableAction onCopy={() => {}} onDelete={() => handleDelete(row.original.member)} />
             }
         }
     ];
