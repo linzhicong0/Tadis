@@ -92,6 +92,11 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
         });
     }
 
+    const handleStringCopy = async (value: string) => {
+        copyToClipboard(value);
+        toast.success('Copied to clipboard.');
+    }
+
     if (isLoading) {
         return <div>Loading...</div>;
     }
@@ -145,7 +150,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                         'StringValue' in redisItem!.value && (
                             <>
                                 <ToolTip tooltipContent="Copy">
-                                    <Button variant="secondary" className="w-8 h-8" onClick={() => copyToClipboard('StringValue' in redisItem!.value ? redisItem!.value.StringValue : '')}>
+                                    <Button variant="secondary" className="w-8 h-8" onClick={() => handleStringCopy('StringValue' in redisItem!.value ? redisItem!.value.StringValue : '')}>
                                         <Copy strokeWidth={1.5} />
                                     </Button>
                                 </ToolTip>

@@ -4,6 +4,7 @@ import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
 import { toast } from "sonner";
 import { redisCommands } from "@/services/redis-commands";
+import { copyToClipboard } from "@/lib/utils";
 
 export default function RedisListTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: (message?: string) => void }) {
 
@@ -21,6 +22,11 @@ export default function RedisListTable({ item, onRefresh }: { item: RedisDetailI
         }).catch((error) => {
             toast.error('Failed to update value: ' + error);
         });
+    }
+
+    function handleCopy(value: string) {
+        copyToClipboard(value);
+        toast.success('Copied to clipboard.');
     }
 
     const listColumns: ColumnDef<string>[] = [
@@ -43,7 +49,7 @@ export default function RedisListTable({ item, onRefresh }: { item: RedisDetailI
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => {
-                return <RedisTableAction onCopy={() => { }} onDelete={() => handleDelete(row.index)} />
+                return <RedisTableAction onCopy={() => { handleCopy(row.original) }} onDelete={() => handleDelete(row.index)} />
             }
         }
     ]
