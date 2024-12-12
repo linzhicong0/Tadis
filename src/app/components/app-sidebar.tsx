@@ -36,18 +36,19 @@ export function AppSidebar() {
     const pathname = usePathname()
 
     return (
-        <Sidebar collapsible="icon" className="mt-8 dark:bg-gray-900/50 bg-gray-100/50">
+        <Sidebar collapsible="icon" className="mt-8 dark:bg-gray-900/50 bg-gray-100/50 dark:border-r-gray-700">
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel className="-mt-2">
+                    <SidebarGroupLabel className="-mt-2 dark:text-gray-200">
                         Madis
                     </SidebarGroupLabel>
-                    <SidebarSeparator />
+                    <SidebarSeparator className="mb-2 dark:bg-gray-500"/>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton 
+                                        className="dark:hover:bg-blue-600 dark:text-gray-200 dark:data-[active=true]:bg-blue-600"
                                         asChild 
                                         isActive={pathname === item.url}
                                     >
