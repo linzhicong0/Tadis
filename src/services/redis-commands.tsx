@@ -21,6 +21,8 @@ const LIST_UPDATE_VALUE_COMMAND_NAME = 'list_update_value';
 const SET_UPDATE_VALUE_COMMAND_NAME = 'set_update_value';
 const HASH_UPDATE_FIELD_COMMAND_NAME = 'hash_update_field';
 const HASH_UPDATE_KEY_COMMAND_NAME = 'hash_update_key';
+const ZSET_UPDATE_SCORE_COMMAND_NAME = 'zset_update_score';
+const ZSET_UPDATE_MEMBER_COMMAND_NAME = 'zset_update_member';
 
 export const redisCommands = {
 
@@ -98,6 +100,14 @@ export const redisCommands = {
 
     hashUpdateKey: async (key: string, oldField: string, newField: string, value: string): Promise<void> => {
         return invoke<void>(HASH_UPDATE_KEY_COMMAND_NAME, { key, oldField, newField, value });
+    },
+
+    zsetUpdateScore: async (key: string, member: string, score: number): Promise<void> => {
+        return invoke<void>(ZSET_UPDATE_SCORE_COMMAND_NAME, { key, member, score });
+    },
+
+    zsetUpdateMember: async (key: string, oldMember: string, newMember: string, score: number): Promise<void> => {
+        return invoke<void>(ZSET_UPDATE_MEMBER_COMMAND_NAME, { key, oldMember, newMember, score });
     },
 };
 

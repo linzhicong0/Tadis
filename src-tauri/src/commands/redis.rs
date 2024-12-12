@@ -466,6 +466,59 @@ pub fn zset_delete_value(
 }
 
 #[command]
+pub fn zset_update_score(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    member: String,
+    score: f64,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .zadd(&key, &member, score)
+        .map_err(|e| format!("Failed to update score: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
+pub fn zset_update_member(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    old_member: String,
+    new_member: String,
+    score: f64,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .zrem(&key, &old_member)
+        .map_err(|e| format!("Failed to delete member: {}", e))?;
+
+    client
+        .zadd(&key, &new_member, score)
+        .map_err(|e| format!("Failed to add member: {}", e))?;
+
+    Ok(())
+}
+
+
+
+#[command]
 pub fn stream_add_items(
     state: State<'_, Mutex<AppState>>,
     key: String,
