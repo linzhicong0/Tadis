@@ -4,6 +4,7 @@ import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
 import { redisCommands } from "@/services/redis-commands";
 import { toast } from "sonner";
+import { copyToClipboard } from "@/lib/utils";
 
 export default function RedisZSetTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: () => void }) {
 
@@ -31,6 +32,11 @@ export default function RedisZSetTable({ item, onRefresh }: { item: RedisDetailI
         });
     }
 
+    function handleCopy({ score, member }: { score: number; member: string }) {
+        copyToClipboard(JSON.stringify({ score, member }));
+        toast.success('Copied to clipboard.');
+    }
+
     const zsetColumns: ColumnDef<{ score: number; member: string }>[] = [
         {
             id: "index",
@@ -54,7 +60,7 @@ export default function RedisZSetTable({ item, onRefresh }: { item: RedisDetailI
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => {
-                return <RedisTableAction onCopy={() => {}} onDelete={() => handleDelete(row.original.member)} />
+                return <RedisTableAction onCopy={() => { handleCopy(row.original) }} onDelete={() => handleDelete(row.original.member)} />
             }
         }
     ];

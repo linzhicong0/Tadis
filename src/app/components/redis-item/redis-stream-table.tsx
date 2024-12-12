@@ -4,6 +4,7 @@ import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
 import { toast } from "sonner";
 import { redisCommands } from "@/services/redis-commands";
+import { copyToClipboard } from "@/lib/utils";
 
 export default function RedisStreamTable({ item, onRefresh }: { item: RedisDetailItem, onRefresh?: () => void }) {
 
@@ -13,6 +14,11 @@ export default function RedisStreamTable({ item, onRefresh }: { item: RedisDetai
         }).catch((error) => {
             toast.error('Failed to delete value: ' + error);
         });
+    }
+
+    function handleCopy(value: string) {
+        copyToClipboard(value);
+        toast.success('Copied to clipboard.');
     }
 
     const streamColumns: ColumnDef<{ id: string; fields: string }>[] = [
@@ -38,7 +44,7 @@ export default function RedisStreamTable({ item, onRefresh }: { item: RedisDetai
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => {
-                return <RedisTableAction onCopy={() => { }} onDelete={() => handleDelete(row.original.id)} />
+                return <RedisTableAction onCopy={() => { handleCopy(row.original.fields) }} onDelete={() => handleDelete(row.original.id)} />
             }
         }
     ];

@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { RedisTableAction, RedisTableCell, RedisTableHeader, RedisTableInputCell } from "./redis-table-components";
 import { redisCommands } from "@/services/redis-commands";
 import { toast } from "sonner";
+import { copyToClipboard } from "@/lib/utils";
 
 interface RedisHashTableProps {
     item: RedisDetailItem;
@@ -36,6 +37,11 @@ export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps)
         });
     }
 
+    function handleCopy(record: Record<string, string>) {
+        copyToClipboard(JSON.stringify(record));
+        toast.success('Copied to clipboard.');
+    }
+
     const hashColumns: ColumnDef<Record<string, string>>[] = [
         {
             id: "index",
@@ -61,7 +67,7 @@ export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps)
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => (
-                <RedisTableAction onCopy={() => { }} onDelete={() => handleDelete(row.original.field)} />
+                <RedisTableAction onCopy={() => { handleCopy(row.original) }} onDelete={() => handleDelete(row.original.field)} />
             )
         }
     ];
