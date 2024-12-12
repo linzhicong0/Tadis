@@ -3,6 +3,7 @@ import { RedisTreeItem } from '@/models/redisTreeItem';
 import { RedisDetailItem } from '@/types/redisItem';
 
 const GET_ALL_KEYS_AS_TREE_COMMAND_NAME = 'get_all_keys_as_tree';
+const SEARCH_KEYS_AS_TREE_COMMAND_NAME = 'search_keys_as_tree';
 const GET_KEY_DETAIL_COMMAND_NAME = 'get_key_detail';
 const SAVE_STRING_COMMAND_NAME = 'save_string';
 const UPDATE_TTL_COMMAND_NAME = 'update_ttl';
@@ -28,6 +29,10 @@ export const redisCommands = {
 
     getAllKeysAsTree: async (): Promise<RedisTreeItem[]> => {
         return invoke<RedisTreeItem[]>(GET_ALL_KEYS_AS_TREE_COMMAND_NAME);
+    },
+
+    searchKeysAsTree: async (searchTerm: string): Promise<RedisTreeItem[]> => {
+        return invoke<RedisTreeItem[]>(SEARCH_KEYS_AS_TREE_COMMAND_NAME, { searchTerm });
     },
 
     getKeyDetail: async (key: string): Promise<RedisDetailItem> => {
