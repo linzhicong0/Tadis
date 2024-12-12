@@ -1,22 +1,38 @@
 import { RedisDetailItem } from "@/types/redisItem";
 import { DataTable } from "../data-table";
 import { ColumnDef } from "@tanstack/react-table";
-import { RedisTableAction, RedisTableCell, RedisTableHeader } from "./redis-table-components";
+import { RedisTableAction, RedisTableCell, RedisTableHeader, RedisTableInputCell } from "./redis-table-components";
 import { redisCommands } from "@/services/redis-commands";
 import { toast } from "sonner";
 
 interface RedisHashTableProps {
     item: RedisDetailItem;
-    onRefresh?: () => void;
+    onRefresh?: (message?: string) => void;
 }
 
 export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps) {
 
     function handleDelete(field: string) {
         redisCommands.hashDeleteField(item.redis_key, field).then(() => {
-            onRefresh?.();
+            onRefresh?.("Deleted.");
         }).catch((error) => {
             toast.error('Failed to delete field: ' + error);
+        });
+    }
+
+    function handleUpdateValue(field: string, newValue: string) {
+        redisCommands.hashUpdateField(item.redis_key, field, newValue).then(() => {
+            onRefresh?.("Updated.");
+        }).catch((error) => {
+            toast.error('Failed to update field: ' + error);
+        });
+    }
+
+    function handleUpdateKey(oldField: string, newField: string, value: string) {
+        redisCommands.hashUpdateKey(item.redis_key, oldField, newField, value).then(() => {
+            onRefresh?.("Updated.");
+        }).catch((error) => {
+            toast.error('Failed to update field: ' + error);
         });
     }
 
@@ -33,13 +49,13 @@ export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps)
             id: "key",
             header: () => <RedisTableHeader header="Key" />,
             accessorKey: "key",
-            cell: ({ row }) => <RedisTableCell value={row.original.key} />
+            cell: ({ row }) => <RedisTableInputCell value={row.original.key} onConfirm={(field) => handleUpdateKey(row.original.key, field, row.original.value)} />
         },
         {
             id: "value",
             header: () => <RedisTableHeader header="Value" />,
             accessorKey: "value",
-            cell: ({ row }) => <RedisTableCell value={row.original.value} />
+            cell: ({ row }) => <RedisTableInputCell value={row.original.value} onConfirm={(value) => handleUpdateValue(row.original.key, value)} />
         },
         {
             id: "action",

@@ -359,6 +359,57 @@ pub fn hash_delete_field(
 }
 
 #[command]
+pub fn hash_update_field(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    field: String,
+    value: String,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .hset(&key, &field, &value)
+        .map_err(|e| format!("Failed to update field: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
+pub fn hash_update_key(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    old_field: String,
+    new_field: String,
+    value: String,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client
+        .hdel(&key, &old_field)
+        .map_err(|e| format!("Failed to delete field: {}", e))?;
+
+    client
+        .hset(&key, &new_field, &value)
+        .map_err(|e| format!("Failed to update key: {}", e))?;
+
+    Ok(())
+}
+
+#[command]
 pub fn zset_add_items(
     state: State<'_, Mutex<AppState>>,
     key: String,
