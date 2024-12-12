@@ -33,17 +33,23 @@ export default function Database() {
 
     const handleItemSelect = (item: RedisTreeItem) => {
         setSelectedItemName(item.key);
-        console.log("selected item name: ", item.key);
-        // redisCommands.getKeyDetail(item.key).then((redisItem) => {
-        //     setSelectedItem(redisItem);
-
-        // })
     };
 
     const handleRefresh = () => {
-        redisCommands.getAllKeysAsTree().then((keys) => {
+        if (searchTerm) {
+            handleSearch();
+        } else {
+            redisCommands.getAllKeysAsTree().then((keys) => {
+                setRedisData(keys)
+                toast.success('Refreshed');
+            })
+        }
+    }
+
+    const handleSearch = () => {
+        redisCommands.searchKeysAsTree(searchTerm).then((keys) => {
             setRedisData(keys)
-            toast.success('Refreshed');
+            toast.success('Refreshed.');
         })
     }
 
@@ -59,9 +65,17 @@ export default function Database() {
                             <input
                                 type="text"
                                 placeholder="search"
-                                className="pl-8 bg-gray-200 dark:bg-gray-800 text-gray-200 h-8 rounded-lg"
+                                className="pl-8 bg-gray-200 dark:bg-gray-800 text-gray-600 h-8 rounded-lg"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
+                                onBlur={() => {
+                                    handleSearch();
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                        handleSearch();
+                                    }
+                                }}
                             />
                         </div>
 

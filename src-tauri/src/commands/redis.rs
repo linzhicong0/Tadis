@@ -37,6 +37,35 @@ pub fn get_all_keys_as_tree(
 }
 
 #[command]
+pub fn search_keys_as_tree(
+    state: State<'_, Mutex<AppState>>,
+    search_term: String,
+) -> Result<Vec<RedisTreeItem>, String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    let keys: Vec<String> = client
+        .keys(&format!("*{}*", search_term))
+        .map_err(|e| format!("Failed to get keys: {}", e))?;
+
+    let mut result = convert_keys_to_tree(client, keys);
+    result.sort_by(|a, b| match (a.children.is_some(), b.children.is_some()) {
+        (true, false) => std::cmp::Ordering::Less,
+        (false, true) => std::cmp::Ordering::Greater,
+        _ => a.label.cmp(&b.label),
+    });
+
+    Ok(result)
+}
+
+
+#[command]
 pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<RedisItem, String> {
     let mut state = state
         .lock()
