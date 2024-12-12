@@ -21,15 +21,15 @@ export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps)
     }
 
     function handleUpdateValue(field: string, newValue: string) {
-        redisCommands.hashUpdateField(item.redis_key, field, newValue).then(() => {
+        redisCommands.hashUpdateValue(item.redis_key, field, newValue).then(() => {
             onRefresh?.("Updated.");
         }).catch((error) => {
             toast.error('Failed to update field: ' + error);
         });
     }
 
-    function handleUpdateKey(oldField: string, newField: string, value: string) {
-        redisCommands.hashUpdateKey(item.redis_key, oldField, newField, value).then(() => {
+    function handleUpdateField(oldField: string, newField: string, value: string) {
+        redisCommands.hashUpdateField(item.redis_key, oldField, newField, value).then(() => {
             onRefresh?.("Updated.");
         }).catch((error) => {
             toast.error('Failed to update field: ' + error);
@@ -46,22 +46,22 @@ export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps)
             }
         },
         {
-            id: "key",
-            header: () => <RedisTableHeader header="Key" />,
-            accessorKey: "key",
-            cell: ({ row }) => <RedisTableInputCell value={row.original.key} onConfirm={(field) => handleUpdateKey(row.original.key, field, row.original.value)} />
+            id: "field",
+            header: () => <RedisTableHeader header="Field" />,
+            accessorKey: "field",
+            cell: ({ row }) => <RedisTableInputCell value={row.original.field} onConfirm={(field) => handleUpdateField(row.original.field, field, row.original.value)} />
         },
         {
             id: "value",
             header: () => <RedisTableHeader header="Value" />,
             accessorKey: "value",
-            cell: ({ row }) => <RedisTableInputCell value={row.original.value} onConfirm={(value) => handleUpdateValue(row.original.key, value)} />
+            cell: ({ row }) => <RedisTableInputCell value={row.original.value} onConfirm={(value) => handleUpdateValue(row.original.field, value)} />
         },
         {
             id: "action",
             header: () => <RedisTableHeader header="Operations" />,
             cell: ({ row }) => (
-                <RedisTableAction onCopy={() => { }} onEdit={() => { }} onDelete={() => handleDelete(row.original.key)} />
+                <RedisTableAction onCopy={() => { }} onEdit={() => { }} onDelete={() => handleDelete(row.original.field)} />
             )
         }
     ];
@@ -72,7 +72,9 @@ export default function RedisHashTable({ item, onRefresh }: RedisHashTableProps)
     return (
         <DataTable
             columns={hashColumns}
-            data={Object.entries(item.value.HashValue).map(([key, value]) => ({ key, value }))}
+            data={Object.entries(item.value.HashValue)
+                .sort(([fieldA], [fieldB]) => fieldA.localeCompare(fieldB))
+                .map(([field, value]) => ({ field, value }))}
         />
     );
 }
