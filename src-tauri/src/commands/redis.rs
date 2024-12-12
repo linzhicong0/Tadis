@@ -359,7 +359,7 @@ pub fn hash_delete_field(
 }
 
 #[command]
-pub fn hash_update_field(
+pub fn hash_update_value(
     state: State<'_, Mutex<AppState>>,
     key: String,
     field: String,
@@ -382,7 +382,7 @@ pub fn hash_update_field(
 }
 
 #[command]
-pub fn hash_update_key(
+pub fn hash_update_field(
     state: State<'_, Mutex<AppState>>,
     key: String,
     old_field: String,

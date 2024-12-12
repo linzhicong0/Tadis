@@ -34,8 +34,8 @@ pub fn run() {
             commands::redis::list_delete_value,
             commands::redis::list_update_value,
             commands::redis::set_update_value,
+            commands::redis::hash_update_value,
             commands::redis::hash_update_field,
-            commands::redis::hash_update_key,
             commands::redis::zset_update_score,
             commands::redis::zset_update_member,
         ])

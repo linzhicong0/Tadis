@@ -20,7 +20,7 @@ const LIST_DELETE_VALUE_COMMAND_NAME = 'list_delete_value';
 const LIST_UPDATE_VALUE_COMMAND_NAME = 'list_update_value';
 const SET_UPDATE_VALUE_COMMAND_NAME = 'set_update_value';
 const HASH_UPDATE_FIELD_COMMAND_NAME = 'hash_update_field';
-const HASH_UPDATE_KEY_COMMAND_NAME = 'hash_update_key';
+const HASH_UPDATE_VALUE_COMMAND_NAME = 'hash_update_value';
 const ZSET_UPDATE_SCORE_COMMAND_NAME = 'zset_update_score';
 const ZSET_UPDATE_MEMBER_COMMAND_NAME = 'zset_update_member';
 
@@ -94,12 +94,12 @@ export const redisCommands = {
         return invoke<void>(SET_UPDATE_VALUE_COMMAND_NAME, { key, value, newValue });
     },
 
-    hashUpdateField: async (key: string, field: string, value: string): Promise<void> => {
-        return invoke<void>(HASH_UPDATE_FIELD_COMMAND_NAME, { key, field, value });
+    hashUpdateValue: async (key: string, field: string, value: string): Promise<void> => {
+        return invoke<void>(HASH_UPDATE_VALUE_COMMAND_NAME, { key, field, value });
     },
 
-    hashUpdateKey: async (key: string, oldField: string, newField: string, value: string): Promise<void> => {
-        return invoke<void>(HASH_UPDATE_KEY_COMMAND_NAME, { key, oldField, newField, value });
+    hashUpdateField: async (key: string, oldField: string, newField: string, value: string): Promise<void> => {
+        return invoke<void>(HASH_UPDATE_FIELD_COMMAND_NAME, { key, oldField, newField, value });
     },
 
     zsetUpdateScore: async (key: string, member: string, score: number): Promise<void> => {
