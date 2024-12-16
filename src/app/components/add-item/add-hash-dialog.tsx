@@ -42,7 +42,7 @@ export default function AddHashDialog({ isOpen, onClose, redisKey, onConfirm }: 
 
     const handleConfirm = () => {
         const nonEmptyItems = items.filter(([key, value]) => key.trim() !== '' && value.trim() !== '');
-        redisCommands.hashAddItems(redisKey, nonEmptyItems).then(() => {
+        redisCommands.hashAddItems(redisKey, nonEmptyItems, null).then(() => {
             reset();
             onConfirm?.(nonEmptyItems);
             onClose?.();
@@ -62,54 +62,57 @@ export default function AddHashDialog({ isOpen, onClose, redisKey, onConfirm }: 
 
     return (
         <CustomDialog isOpen={isOpen} onClose={handleCancel} title={"Hash Add Item(s)"}>
-            <div className="space-y-2 py-2">
-                <div className="space-y-2">
-                    <Label>Key</Label>
-                    <Input value={redisKey} disabled />
+            <ScrollArea className="h-[calc(80vh-8rem)] max-h-[300px]">
+                <div className="space-y-2 py-2 mr-4">
+                    <div className="space-y-2">
+                        <Label>Key</Label>
+                        <Input value={redisKey} disabled />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Item(s)</Label>
+                        <ScrollArea className="h-48">
+                            <div className="space-y-2 mr-3 ml-1 mt-1">
+                                {items.map((item, index) => (
+                                    <div key={index} className="flex gap-1">
+                                        <Input
+                                            ref={index === items.length - 1 ? lastInputRef : null}
+                                            value={item[0]}
+                                            onChange={(e) => handleItemChange(index, [e.target.value, item[1]])}
+                                            placeholder="key"
+                                        />
+                                        <Input
+                                            value={item[1]}
+                                            onChange={(e) => handleItemChange(index, [item[0], e.target.value])}
+                                            placeholder="value"
+                                        />
+                                        <Button
+                                            ref={buttonRef}
+                                            className="redis-item-table-text-color hover:text-red-500"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleRemoveItem(index)}
+                                        >
+                                            <Trash2 strokeWidth={1.5} className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+
+                                <Button
+                                    variant="secondary"
+                                    className="w-full"
+                                    onClick={handleAddItem}
+                                >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Item
+                                </Button>
+                            </div>
+
+                        </ScrollArea>
+                    </div>
                 </div>
 
-                <div className="space-y-2">
-                    <Label>Item(s)</Label>
-                    <ScrollArea className="h-48">
-                        <div className="space-y-2 mr-3 ml-1 mt-1">
-                            {items.map((item, index) => (
-                                <div key={index} className="flex gap-1">
-                                    <Input
-                                        ref={index === items.length - 1 ? lastInputRef : null}
-                                        value={item[0]}
-                                        onChange={(e) => handleItemChange(index, [e.target.value, item[1]])}
-                                        placeholder="key"
-                                    />
-                                    <Input
-                                        value={item[1]}
-                                        onChange={(e) => handleItemChange(index, [item[0], e.target.value])}
-                                        placeholder="value"
-                                    />
-                                    <Button
-                                        ref={buttonRef}
-                                        className="redis-item-table-text-color hover:text-red-500"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleRemoveItem(index)}
-                                    >
-                                        <Trash2 strokeWidth={1.5} className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            ))}
-
-                            <Button
-                                variant="secondary"
-                                className="w-full"
-                                onClick={handleAddItem}
-                            >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Add Item
-                            </Button>
-                        </div>
-
-                    </ScrollArea>
-                </div>
-            </div>
+            </ScrollArea>
 
             <div className="flex justify-end gap-3 pt-4">
                 <Button
