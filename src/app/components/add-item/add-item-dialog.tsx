@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { DynamicItemList } from './dynamic-item-list';
 
 interface AddItemDialogProps {
     isOpen: boolean;
@@ -17,7 +18,12 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
         dbIndex: 0,
         dataType: 'STRING',
         ttl: '-1',
-        value: ''
+        value: '',
+        listItems: [{ value: '' }],
+        hashItems: [{ field: '', value: '' }],
+        setItems: [{ value: '' }],
+        zsetItems: [{ value: '', score: 0 }],
+        streamItems: [{ field: '', value: '' }]
     });
 
     const handleSubmit = () => {
@@ -25,6 +31,117 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
         console.log(formData);
         onClose();
     };
+
+    function showTypeInput(dataType: string) {
+        if (dataType === 'LIST') {
+            return <DynamicItemList
+                items={formData.listItems}
+                fields={[
+                    {
+                        type: 'string',
+                        placeholder: 'item'
+                    }
+                ]}
+                onChange={(items) => {
+                    setFormData({
+                        ...formData,
+                        listItems: items
+                    });
+                }}
+                createEmptyItem={() => ({ value: '' })}
+                getItemValue={(item, fieldIndex) => item.value}
+                setItemValue={(item, fieldIndex, value) => ({ ...item, value })}
+            />
+        } else if (dataType === 'STRING') {
+            return <textarea
+                value={formData.value}
+                onChange={(e) => setFormData({ ...formData, value: e.target.value })}
+                className="w-full h-32 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+            />
+        } else if (dataType === 'HASH') {
+            return <DynamicItemList
+                items={formData.hashItems}
+                fields={[
+                    {
+                        type: 'string',
+                        placeholder: 'field'
+                    },
+                    {
+                        type: 'string', 
+                        placeholder: 'value'
+                    }
+                ]}
+                onChange={(items) => {
+                    setFormData({
+                        ...formData,
+                        hashItems: items
+                    });
+                }}
+                createEmptyItem={() => ({ value: '', field: '' })}
+                getItemValue={(item, fieldIndex) => fieldIndex === 0 ? item.field : item.value}
+                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? {...item, field: value} : {...item, value}}
+            />
+        } else if (dataType === 'SET') {
+            return <DynamicItemList
+                items={formData.setItems} 
+                fields={[
+                    {
+                        type: 'string',
+                        placeholder: 'item'
+                    }
+                ]}
+                onChange={(items) => {
+                    setFormData({
+                        ...formData,
+                        setItems: items
+                    });
+                }}
+                createEmptyItem={() => ({ value: '' })}
+                getItemValue={(item, fieldIndex) => item.value}
+                setItemValue={(item, fieldIndex, value) => ({ ...item, value })}
+            />
+        } else if (dataType === 'ZSET') {
+            return <DynamicItemList
+                items={formData.zsetItems}
+                fields={[
+                    {
+                        type: 'string',
+                        placeholder: 'member'
+                    },
+                    {
+                        type: 'number',
+                        placeholder: 'score'
+                    }
+                ]}
+                onChange={(items) => {
+                    setFormData({
+                        ...formData,
+                        zsetItems: items
+                    });
+                }}
+                createEmptyItem={() => ({ value: '', score: 0 })}
+                getItemValue={(item, fieldIndex) => fieldIndex === 0 ? item.value : item.score.toString()}
+                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? {...item, value} : {...item, score: parseFloat(value)}}
+            />
+        } else if (dataType === 'STREAM') {
+            return <DynamicItemList
+                items={formData.streamItems}
+                fields={[
+                    { type: 'string', placeholder: 'field' },
+                    { type: 'string', placeholder: 'value' }
+                ]}
+                onChange={(items) => {
+                    setFormData({
+                        ...formData,
+                        streamItems: items
+                    });
+                }}
+                createEmptyItem={() => ({ field: '', value: '' })}
+                getItemValue={(item, fieldIndex) => fieldIndex === 0 ? item.field : item.value}
+                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? {...item, field: value} : {...item, value}}
+            />
+        }   
+    }
 
     return (
         <CustomDialog isOpen={isOpen} onClose={onClose} title="Add Item">
@@ -98,13 +215,8 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                 <div className="space-y-2">
                     <Label>Value</Label>
                     <ScrollArea className="h-48">
-                        <textarea
-                            value={formData.value}
-                            onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                            className="w-full h-32 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
-                        />
+                        {showTypeInput(formData.dataType)}
                     </ScrollArea>
-
                 </div>
 
                 {/* Action Buttons */}
