@@ -63,6 +63,9 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                 case 'HASH':
                     result = redisCommands.hashAddItems(validatedData.key, formData.hashItems.map(item => [item.field, item.value]), parseInt(formData.ttl));
                     break;
+                case 'ZSET':
+                    result = redisCommands.addZsetItems(validatedData.key, formData.zsetItems.map(item => [item.score, item.value]), parseInt(formData.ttl));
+                    break;
             }
 
             result.then(() => {
