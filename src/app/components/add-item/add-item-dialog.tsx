@@ -6,6 +6,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { DynamicItemList } from './dynamic-item-list';
+import { redisCommands } from '@/services/redis-commands';
+import { toast } from 'sonner';
+
+import { z } from "zod";
+
+const redisSchema = z.object({
+    key: z.string().min(1, "Key must be at least 1 characters."),
+});
 
 interface AddItemDialogProps {
     isOpen: boolean;
@@ -34,10 +42,37 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
         onClose();
     };
 
-    const handleConfirm = () => {
+    const handleConfirm = async () => {
         // Handle form submission
-        console.log(formData);
-        onClose();
+
+        try {
+
+            const validatedData = redisSchema.parse(formData);
+
+            let result: Promise<void> = Promise.resolve();
+            switch (formData.dataType) {
+                case 'LIST':
+                    result = redisCommands.addList(validatedData.key, formData.listItems.map(item => item.value), parseInt(formData.ttl));
+                    break;
+            }
+
+            result.then(() => {
+                toast.success('Item added successfully.');
+                setFormData(initialFormData);
+                onClose();
+            }).catch((error) => {
+                toast.error(`Error adding item: ${error}`);
+            });
+
+
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                toast.error(error.errors[0].message);
+                return;
+            }
+            toast.error('An unexpected error occurred');
+            return;
+        }
     };
     const handleTypeChange = (value: string) => {
         setFormData({
