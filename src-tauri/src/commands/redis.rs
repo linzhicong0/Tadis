@@ -391,6 +391,7 @@ pub fn hash_add_items(
     state: State<'_, Mutex<AppState>>,
     key: String,
     items: Vec<(String, String)>,
+    ttl: Option<i64>,
 ) -> Result<(), String> {
     let mut state = state
         .lock()
@@ -401,8 +402,14 @@ pub fn hash_add_items(
         .get_mut(&selected)
         .ok_or(format!("No client selected"))?;
 
-    client
-        .hset_multiple(&key, &items)
+    let mut pipe = redis::pipe();
+    pipe.hset_multiple(&key, &items);
+    if let Some(ttl) = ttl {
+        if ttl > 0 {
+            pipe.expire(&key, ttl);
+        }
+    }
+    pipe.query(client)
         .map_err(|e| format!("Failed to add items: {}", e))?;
 
     Ok(())
