@@ -64,80 +64,82 @@ export default function AddZSetDialog({ isOpen, onClose, redisKey, onConfirm }: 
 
     return (
         <CustomDialog isOpen={isOpen} onClose={handleCancel} title={"ZSet Add Item(s)"}>
-            <div className="space-y-2 py-2">
-                <div className="space-y-2">
-                    <Label>Key</Label>
-                    <Input value={redisKey} disabled />
-                </div>
+            <ScrollArea className="h-[calc(80vh-8rem)] max-h-[300px]">
+                <div className="space-y-2 py-2 mr-4">
+                    <div className="space-y-2">
+                        <Label>Key</Label>
+                        <Input value={redisKey} disabled />
+                    </div>
 
-                <div className="space-y-2">
-                    <Label>Type</Label>
-                    <ToggleGroup
-                        type="single"
-                        size="sm"
-                        defaultValue={duplicationType}
-                        className="justify-start"
-                        onValueChange={(value) => setDuplicationType(value as 'Replace' | 'Ignore')}
-                    >
-                        <ToggleGroupItem value="Replace" aria-label="Toggle replace">
-                            <div className="flex items-center gap-2">
-                                <Replace className="h-4 w-4" />
-                                <span>Replace</span>
-                            </div>
-                        </ToggleGroupItem>
-                        <ToggleGroupItem value="Ignore" aria-label="Toggle ignore">
-                            <div className="flex items-center gap-2">
-                                <BookmarkMinus className="h-4 w-4" />
-                                <span>Ignore</span>
-                            </div>
-                        </ToggleGroupItem>
-                    </ToggleGroup>
-                </div>
-
-                <div className="space-y-2">
-                    <Label>Item(s)</Label>
-                    <ScrollArea className="h-48">
-                        <div className="space-y-2 mr-3 ml-1 mt-1">
-                            {items.map((item, index) => (
-                                <div key={index} className="flex gap-1">
-                                    <Input
-                                        ref={index === items.length - 1 ? lastInputRef : null}
-                                        value={item[1]}
-                                        onChange={(e) => handleItemChange(index, [item[0], e.target.value])}
-                                        placeholder="member"
-                                        autoComplete="off"
-                                    />
-                                    <Input
-                                        type="number"
-                                        value={item[0]}
-                                        onChange={(e) => handleItemChange(index, [Number(e.target.value), item[1]])}
-                                        placeholder="score"
-                                        autoComplete="off"
-                                    />
-                                    <Button
-                                        ref={buttonRef}
-                                        className="redis-item-table-text-color hover:text-red-500"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleRemoveItem(index)}
-                                    >
-                                        <Trash2 strokeWidth={1.5} className="h-4 w-4" />
-                                    </Button>
+                    <div className="space-y-2">
+                        <Label>Type</Label>
+                        <ToggleGroup
+                            type="single"
+                            size="sm"
+                            defaultValue={duplicationType}
+                            className="justify-start"
+                            onValueChange={(value) => setDuplicationType(value as 'Replace' | 'Ignore')}
+                        >
+                            <ToggleGroupItem value="Replace" aria-label="Toggle replace">
+                                <div className="flex items-center gap-2">
+                                    <Replace className="h-4 w-4" />
+                                    <span>Replace</span>
                                 </div>
-                            ))}
+                            </ToggleGroupItem>
+                            <ToggleGroupItem value="Ignore" aria-label="Toggle ignore">
+                                <div className="flex items-center gap-2">
+                                    <BookmarkMinus className="h-4 w-4" />
+                                    <span>Ignore</span>
+                                </div>
+                            </ToggleGroupItem>
+                        </ToggleGroup>
+                    </div>
 
-                            <Button
-                                variant="secondary"
-                                className="w-full"
-                                onClick={handleAddItem}
-                            >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Add Item
-                            </Button>
-                        </div>
-                    </ScrollArea>
+                    <div className="space-y-2">
+                        <Label>Item(s)</Label>
+                        <ScrollArea className="h-44">
+                            <div className="space-y-2 mr-3 ml-1 mt-1">
+                                {items.map((item, index) => (
+                                    <div key={index} className="flex gap-1">
+                                        <Input
+                                            ref={index === items.length - 1 ? lastInputRef : null}
+                                            value={item[1]}
+                                            onChange={(e) => handleItemChange(index, [item[0], e.target.value])}
+                                            placeholder="member"
+                                            autoComplete="off"
+                                        />
+                                        <Input
+                                            type="number"
+                                            value={item[0]}
+                                            onChange={(e) => handleItemChange(index, [Number(e.target.value), item[1]])}
+                                            placeholder="score"
+                                            autoComplete="off"
+                                        />
+                                        <Button
+                                            ref={buttonRef}
+                                            className="redis-item-table-text-color hover:text-red-500"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleRemoveItem(index)}
+                                        >
+                                            <Trash2 strokeWidth={1.5} className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+
+                                <Button
+                                    variant="secondary"
+                                    className="w-full"
+                                    onClick={handleAddItem}
+                                >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Item
+                                </Button>
+                            </div>
+                        </ScrollArea>
+                    </div>
                 </div>
-            </div>
+            </ScrollArea>
 
             <div className="flex justify-end gap-3 pt-4">
                 <Button

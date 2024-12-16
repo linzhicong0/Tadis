@@ -71,7 +71,7 @@ export default function AddHashDialog({ isOpen, onClose, redisKey, onConfirm }: 
 
                     <div className="space-y-2">
                         <Label>Item(s)</Label>
-                        <ScrollArea className="h-48">
+                        <ScrollArea className="h-44">
                             <div className="space-y-2 mr-3 ml-1 mt-1">
                                 {items.map((item, index) => (
                                     <div key={index} className="flex gap-1">
