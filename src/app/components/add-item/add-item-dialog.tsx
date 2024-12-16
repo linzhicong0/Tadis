@@ -57,6 +57,9 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                 case 'LIST':
                     result = redisCommands.addList(validatedData.key, formData.listItems.map(item => item.value), parseInt(formData.ttl));
                     break;
+                case 'SET':
+                    result = redisCommands.setAddItems(validatedData.key, formData.setItems.map(item => item.value), parseInt(formData.ttl));
+                    break;
             }
 
             result.then(() => {
