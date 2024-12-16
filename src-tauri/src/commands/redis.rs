@@ -169,6 +169,29 @@ pub fn delete_key(state: State<'_, Mutex<AppState>>, key: String) -> Result<(), 
     Ok(())
 }
 
+
+#[command]
+pub fn add_list(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    items: Vec<String>,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    client.rpush(&key, items).map_err(|e| format!("Failed to add items: {}", e))?;
+    Ok(())
+}
+
+
+
+
 #[command]
 pub fn save_string(
     state: State<'_, Mutex<AppState>>,
