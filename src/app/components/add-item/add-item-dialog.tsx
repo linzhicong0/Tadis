@@ -12,19 +12,28 @@ interface AddItemDialogProps {
     onClose: () => void;
 }
 
+// First, create an initial state object
+const initialFormData = {
+    key: '',
+    dbIndex: 0,
+    dataType: 'STRING',
+    ttl: '-1',
+    value: '',
+    listItems: [{ value: '' }],
+    hashItems: [{ field: '', value: '' }],
+    setItems: [{ value: '' }],
+    zsetItems: [{ value: '', score: 0 }],
+    streamItems: [{ field: '', value: '' }]
+};
+
 export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
-    const [formData, setFormData] = useState({
-        key: '',
-        dbIndex: 0,
-        dataType: 'STRING',
-        ttl: '-1',
-        value: '',
-        listItems: [{ value: '' }],
-        hashItems: [{ field: '', value: '' }],
-        setItems: [{ value: '' }],
-        zsetItems: [{ value: '', score: 0 }],
-        streamItems: [{ field: '', value: '' }]
-    });
+    const [formData, setFormData] = useState(initialFormData);
+
+    // Create a new handler for closing
+    const handleClose = () => {
+        setFormData(initialFormData);
+        onClose();
+    };
 
     const handleSubmit = () => {
         // Handle form submission
@@ -144,7 +153,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
     }
 
     return (
-        <CustomDialog isOpen={isOpen} onClose={onClose} title="Add Item">
+        <CustomDialog isOpen={isOpen} onClose={handleClose} title="Add Item">
             <div className="space-y-4">
                 {/* Key Input */}
                 <div className="space-y-2">
@@ -225,7 +234,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                         type="button"
                         variant="secondary"
                         className="bg-gray-100 hover:bg-gray-200 dark:bg-[#2c2c2c] dark:hover:bg-[#3c3c3c] text-gray-900 dark:text-white px-4"
-                        onClick={onClose}
+                        onClick={handleClose}
                     >
                         Cancel
                     </Button>
