@@ -12,7 +12,6 @@ interface AddItemDialogProps {
     onClose: () => void;
 }
 
-// First, create an initial state object
 const initialFormData = {
     key: '',
     dbIndex: 0,
@@ -35,11 +34,22 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
         onClose();
     };
 
-    const handleSubmit = () => {
+    const handleConfirm = () => {
         // Handle form submission
         console.log(formData);
         onClose();
     };
+    const handleTypeChange = (value: string) => {
+        setFormData({
+            ...formData,
+            dataType: value,
+            listItems: [{ value: '' }],
+            hashItems: [{ field: '', value: '' }],
+            setItems: [{ value: '' }],
+            zsetItems: [{ value: '', score: 0 }],
+            streamItems: [{ field: '', value: '' }]
+        });
+    }
 
     function showTypeInput(dataType: string) {
         if (dataType === 'LIST') {
@@ -76,7 +86,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                         placeholder: 'field'
                     },
                     {
-                        type: 'string', 
+                        type: 'string',
                         placeholder: 'value'
                     }
                 ]}
@@ -88,11 +98,11 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                 }}
                 createEmptyItem={() => ({ value: '', field: '' })}
                 getItemValue={(item, fieldIndex) => fieldIndex === 0 ? item.field : item.value}
-                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? {...item, field: value} : {...item, value}}
+                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? { ...item, field: value } : { ...item, value }}
             />
         } else if (dataType === 'SET') {
             return <DynamicItemList
-                items={formData.setItems} 
+                items={formData.setItems}
                 fields={[
                     {
                         type: 'string',
@@ -130,7 +140,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                 }}
                 createEmptyItem={() => ({ value: '', score: 0 })}
                 getItemValue={(item, fieldIndex) => fieldIndex === 0 ? item.value : item.score.toString()}
-                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? {...item, value} : {...item, score: parseFloat(value)}}
+                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? { ...item, value } : { ...item, score: parseFloat(value) }}
             />
         } else if (dataType === 'STREAM') {
             return <DynamicItemList
@@ -147,9 +157,9 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                 }}
                 createEmptyItem={() => ({ field: '', value: '' })}
                 getItemValue={(item, fieldIndex) => fieldIndex === 0 ? item.field : item.value}
-                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? {...item, field: value} : {...item, value}}
+                setItemValue={(item, fieldIndex, value) => fieldIndex === 0 ? { ...item, field: value } : { ...item, value }}
             />
-        }   
+        }
     }
 
     return (
@@ -192,7 +202,9 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                     <Label>Data Type</Label>
                     <Select
                         value={formData.dataType}
-                        onValueChange={(value) => setFormData({ ...formData, dataType: value })}
+                        onValueChange={(value) => {
+                            handleTypeChange(value);
+                        }}
                     >
                         <SelectTrigger>
                             <SelectValue placeholder="Select data type" />
@@ -241,7 +253,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                     <Button
                         type="button"
                         className="bg-blue-600 hover:bg-blue-700 text-white px-4"
-                        onClick={handleSubmit}
+                        onClick={handleConfirm}
                     >
                         Confirm
                     </Button>
