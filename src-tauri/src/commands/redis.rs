@@ -488,6 +488,37 @@ pub fn hash_update_field(
     Ok(())
 }
 
+
+#[command]
+pub fn add_zset_items(
+    state: State<'_, Mutex<AppState>>,
+    key: String,
+    items: Vec<(f64, String)>,
+    ttl: Option<i64>,
+) -> Result<(), String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    let mut pipe = redis::pipe();
+    pipe.zadd_multiple(&key, &items);
+    if let Some(ttl) = ttl {
+        if ttl > 0 {
+            pipe.expire(&key, ttl);
+        }
+    }
+    pipe.query(client)
+        .map_err(|e| format!("Failed to add items: {}", e))?;
+
+    Ok(())
+}
+
+
 #[command]
 pub fn zset_add_items(
     state: State<'_, Mutex<AppState>>,
