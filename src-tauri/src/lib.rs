@@ -39,6 +39,7 @@ pub fn run() {
             commands::redis::hash_update_field,
             commands::redis::zset_update_score,
             commands::redis::zset_update_member,
+            commands::redis::add_list,
         ])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();
