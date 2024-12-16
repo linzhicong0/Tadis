@@ -8,13 +8,15 @@ import { RedisTreeItem } from '@/models/redisTreeItem'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import RedisItemDetail from '../components/redis-item/redis-item-detail';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
+import AddItemDialog from '../components/add-item/add-item-dialog';
 
 
 export default function Database() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedItemName, setSelectedItemName] = useState<string>('');
     const [redisData, setRedisData] = useState<RedisTreeItem[]>([]);
+    const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
+
     useEffect(() => {
         redisCommands.getAllKeysAsTree().then((keys) => {
             console.log("keys are: ", keys);
@@ -83,7 +85,7 @@ export default function Database() {
                         <button className="bg-gray-200 dark:bg-gray-800 rounded-md p-0.5" onClick={handleRefresh}>
                             <RotateCw className="p-1 text-gray-700 dark:text-gray-300" />
                         </button>
-                        <button className="bg-gray-200 dark:bg-gray-800 rounded-md p-0.5">
+                        <button className="bg-gray-200 dark:bg-gray-800 rounded-md p-0.5" onClick={() => setIsAddItemDialogOpen(true)}>
                             <Plus className="p-0.5 text-gray-700 dark:text-gray-300" />
                         </button>
                     </div>
@@ -119,6 +121,8 @@ export default function Database() {
                     <RedisItemDetail redisKey={selectedItemName} />
                 )
             }
+
+            <AddItemDialog isOpen={isAddItemDialogOpen} onClose={() => setIsAddItemDialogOpen(false)} />  
         </div>
     )
 }
