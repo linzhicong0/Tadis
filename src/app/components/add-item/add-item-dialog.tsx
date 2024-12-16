@@ -216,93 +216,96 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
 
     return (
         <CustomDialog isOpen={isOpen} onClose={handleClose} title="Add Item">
-            <div className="space-y-4">
-                {/* Key Input */}
-                <div className="space-y-2">
-                    <Label>Key</Label>
-                    <Input
-                        value={formData.key}
-                        onChange={(e) => setFormData({ ...formData, key: e.target.value })}
-                        placeholder="Enter key"
-                    />
-                </div>
+            <div className="flex flex-col max-h-[80vh]">
+                <ScrollArea className="h-[calc(80vh-8rem)] max-h-[500px]">
+                    <div className="space-y-4 mr-4">
+                        {/* Key Input */}
+                        <div className="space-y-2">
+                            <Label>Key</Label>
+                            <Input
+                                value={formData.key}
+                                onChange={(e) => setFormData({ ...formData, key: e.target.value })}
+                                placeholder="Enter key"
+                            />
+                        </div>
 
-                {/* Database Index */}
-                <div className="space-y-2">
-                    <Label>Database Index</Label>
-                    <Select
-                        value={formData.dbIndex.toString()}
-                        onValueChange={(value) => setFormData({ ...formData, dbIndex: parseInt(value) })}
-                    >
-                        <SelectTrigger>
-                            <SelectValue>
-                                {formData.dbIndex}
-                            </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                {[...Array(16)].map((_, i) => (
-                                    <SelectItem key={i} value={i.toString()}>{i}</SelectItem>
-                                ))}
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
+                        {/* Database Index */}
+                        <div className="space-y-2">
+                            <Label>Database Index</Label>
+                            <Select
+                                value={formData.dbIndex.toString()}
+                                onValueChange={(value) => setFormData({ ...formData, dbIndex: parseInt(value) })}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue>
+                                        {formData.dbIndex}
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        {[...Array(16)].map((_, i) => (
+                                            <SelectItem key={i} value={i.toString()}>{i}</SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                {/* Data Type */}
-                <div className="space-y-2">
-                    <Label>Data Type</Label>
-                    <Select
-                        value={formData.dataType}
-                        onValueChange={(value) => {
-                            handleTypeChange(value);
-                        }}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select data type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectItem value="STRING">STRING</SelectItem>
-                                <SelectItem value="LIST">LIST</SelectItem>
-                                <SelectItem value="SET">SET</SelectItem>
-                                <SelectItem value="HASH">HASH</SelectItem>
-                                <SelectItem value="ZSET">ZSET</SelectItem>
-                                <SelectItem value="STREAM">STREAM</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
+                        {/* Data Type */}
+                        <div className="space-y-2">
+                            <Label>Data Type</Label>
+                            <Select
+                                value={formData.dataType}
+                                onValueChange={(value) => {
+                                    handleTypeChange(value);
+                                }}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select data type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="STRING">STRING</SelectItem>
+                                        <SelectItem value="LIST">LIST</SelectItem>
+                                        <SelectItem value="SET">SET</SelectItem>
+                                        <SelectItem value="HASH">HASH</SelectItem>
+                                        <SelectItem value="ZSET">ZSET</SelectItem>
+                                        <SelectItem value="STREAM">STREAM</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                {/* TTL */}
-                <div className="space-y-2">
-                    <Label>TTL (seconds)</Label>
-                    <Input
-                        type="number"
-                        value={formData.ttl}
-                        onChange={(e) => setFormData({ ...formData, ttl: e.target.value })}
-                    />
-                </div>
+                        {/* TTL */}
+                        <div className="space-y-2">
+                            <Label>TTL (seconds)</Label>
+                            <Input
+                                type="number"
+                                value={formData.ttl}
+                                onChange={(e) => setFormData({ ...formData, ttl: e.target.value })}
+                            />
+                        </div>
 
-                {/* ID */}
-                {formData.dataType === 'STREAM' && (
-                    <div className="space-y-2">
-                        <Label>ID</Label>
-                        <Input
-                            value={formData.id}
-                            onChange={(e) => setFormData({ ...formData, id: e.target.value })}
-                        />
+                        {/* ID */}
+                        {formData.dataType === 'STREAM' && (
+                            <div className="space-y-2">
+                                <Label>ID</Label>
+                                <Input
+                                    value={formData.id}
+                                    onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                                />
+                            </div>
+                        )}
+
+                        {/* Value */}
+                        <div className="space-y-2">
+                            <Label>Value</Label>
+                            <ScrollArea className="h-48">
+                                {showTypeInput(formData.dataType)}
+                            </ScrollArea>
+                        </div>
                     </div>
-                )}
-
-                {/* Value */}
-                <div className="space-y-2">
-                    <Label>Value</Label>
-                    <ScrollArea className="h-48">
-                        {showTypeInput(formData.dataType)}
-                    </ScrollArea>
-                </div>
-
+                </ScrollArea>
                 {/* Action Buttons */}
                 <div className="flex justify-end gap-3 pt-4">
                     <Button
@@ -322,6 +325,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                     </Button>
                 </div>
             </div>
+
         </CustomDialog>
     );
 }
