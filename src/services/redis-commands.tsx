@@ -65,8 +65,8 @@ export const redisCommands = {
         return invoke<void>(ZSET_ADD_ITEMS_COMMAND_NAME, { key, items, replace });
     },
 
-    streamAddItems: async (key: string, id: string, items: [string, string][]): Promise<void> => {
-        return invoke<void>(STREAM_ADD_ITEMS_COMMAND_NAME, { key, id, items });
+    streamAddItems: async (key: string, id: string, items: [string, string][], ttl: number | null): Promise<void> => {
+        return invoke<void>(STREAM_ADD_ITEMS_COMMAND_NAME, { key, id, items, ttl });
     },
 
     deleteKey: async (key: string): Promise<void> => {
