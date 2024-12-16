@@ -52,8 +52,8 @@ export const redisCommands = {
         return invoke<void>(LIST_ADD_ITEMS_COMMAND_NAME, { key, items, direction });
     },
 
-    setAddItems: async (key: string, items: string[]): Promise<void> => {
-        return invoke<void>(SET_ADD_ITEMS_COMMAND_NAME, { key, items });
+    setAddItems: async (key: string, items: string[], ttl: number | null): Promise<void> => {
+        return invoke<void>(SET_ADD_ITEMS_COMMAND_NAME, { key, items, ttl });
     },
 
     hashAddItems: async (key: string, items: [string, string][]): Promise<void> => {

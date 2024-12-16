@@ -313,6 +313,7 @@ pub fn set_add_items(
     state: State<'_, Mutex<AppState>>,
     key: String,
     items: Vec<String>,
+    ttl: Option<i64>,
 ) -> Result<(), String> {
     let mut state = state
         .lock()
@@ -323,8 +324,14 @@ pub fn set_add_items(
         .get_mut(&selected)
         .ok_or(format!("No client selected"))?;
 
-    client
-        .sadd(&key, items)
+    let mut pipe = redis::pipe();
+    pipe.sadd(&key, items);
+    if let Some(ttl) = ttl {
+        if ttl > 0 {
+            pipe.expire(&key, ttl);
+        }
+    }
+    pipe.query(client)
         .map_err(|e| format!("Failed to add items: {}", e))?;
 
     Ok(())
