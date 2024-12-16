@@ -9,6 +9,7 @@ import { UserIcon, KeyIcon } from "lucide-react";
 import { connectionCommands } from "@/services/connection-commands";
 import CustomAlertDialog from "../components/custom-alert-dialog";
 import { LoadingDialog } from "@/components/ui/loading-dialog";
+import { toast } from "sonner";
 
 interface Connection {
     id: string;
@@ -175,9 +176,9 @@ export default function Connection() {
             username: connection.username,
             password: connection.password
         }).then(() => {
-            setSuccessMessage('Connected to Redis!');
+            toast.success('Connected to Redis!');
         }).catch((error) => {
-            setError(`Failed to connect to Redis: ${error}`);
+            toast.error(`Failed to connect to Redis: ${error}`);
         });
     };
 
