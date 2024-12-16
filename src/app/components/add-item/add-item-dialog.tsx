@@ -30,6 +30,7 @@ const initialFormData = {
     hashItems: [{ field: '', value: '' }],
     setItems: [{ value: '' }],
     zsetItems: [{ value: '', score: 0 }],
+    id: '*',
     streamItems: [{ field: '', value: '' }]
 };
 
@@ -66,6 +67,9 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                 case 'ZSET':
                     result = redisCommands.addZsetItems(validatedData.key, formData.zsetItems.map(item => [item.score, item.value]), parseInt(formData.ttl));
                     break;
+                case 'STREAM':
+                    result = redisCommands.streamAddItems(validatedData.key, formData.id, formData.streamItems.map(item => [item.field, item.value]), parseInt(formData.ttl));
+                    break;
             }
 
             result.then(() => {
@@ -94,7 +98,8 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
             hashItems: [{ field: '', value: '' }],
             setItems: [{ value: '' }],
             zsetItems: [{ value: '', score: 0 }],
-            streamItems: [{ field: '', value: '' }]
+            streamItems: [{ field: '', value: '' }],
+            id: '*'
         });
     }
 
@@ -278,6 +283,17 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                         onChange={(e) => setFormData({ ...formData, ttl: e.target.value })}
                     />
                 </div>
+
+                {/* ID */}
+                {formData.dataType === 'STREAM' && (
+                    <div className="space-y-2">
+                        <Label>ID</Label>
+                        <Input
+                            value={formData.id}
+                            onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                        />
+                    </div>
+                )}
 
                 {/* Value */}
                 <div className="space-y-2">

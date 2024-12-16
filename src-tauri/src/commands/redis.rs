@@ -632,6 +632,7 @@ pub fn stream_add_items(
     key: String,
     id: Option<String>,
     items: Vec<(String, String)>,
+    ttl: Option<i64>,
 ) -> Result<(), String> {
     let mut state = state
         .lock()
@@ -643,8 +644,14 @@ pub fn stream_add_items(
         .ok_or(format!("No client selected"))?;
 
     let id = id.unwrap_or("*".to_string());
-    client
-        .xadd(&key, id, &items)
+    let mut pipe = redis::pipe();
+    pipe.xadd(&key, id, &items);
+    if let Some(ttl) = ttl {
+        if ttl > 0 {
+            pipe.expire(&key, ttl);
+        }
+    }
+    pipe.query(client)
         .map_err(|e| format!("Failed to add items: {}", e))?;
 
     Ok(())
