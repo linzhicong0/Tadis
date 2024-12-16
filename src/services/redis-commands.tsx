@@ -56,8 +56,8 @@ export const redisCommands = {
         return invoke<void>(SET_ADD_ITEMS_COMMAND_NAME, { key, items, ttl });
     },
 
-    hashAddItems: async (key: string, items: [string, string][]): Promise<void> => {
-        return invoke<void>(HASH_ADD_ITEMS_COMMAND_NAME, { key, items });
+    hashAddItems: async (key: string, items: [string, string][], ttl: number | null): Promise<void> => {
+        return invoke<void>(HASH_ADD_ITEMS_COMMAND_NAME, { key, items, ttl });
     },
 
     zsetAddItems: async (key: string, items: [number, string][], replace: boolean): Promise<void> => {
