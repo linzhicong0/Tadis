@@ -175,6 +175,7 @@ pub fn add_list(
     state: State<'_, Mutex<AppState>>,
     key: String,
     items: Vec<String>,
+    ttl: Option<i64>,
 ) -> Result<(), String> {
     let mut state = state
         .lock()
@@ -185,7 +186,15 @@ pub fn add_list(
         .get_mut(&selected)
         .ok_or(format!("No client selected"))?;
 
-    client.rpush(&key, items).map_err(|e| format!("Failed to add items: {}", e))?;
+    let mut pipe = redis::pipe();
+    pipe.rpush(&key, items);
+    if let Some(ttl) = ttl {
+        if ttl > 0 {
+            pipe.expire(&key, ttl);
+        }
+    }
+
+    pipe.query(client).map_err(|e| format!("Failed to add list: {}", e))?;
     Ok(())
 }
 
