@@ -40,8 +40,8 @@ export const redisCommands = {
         return invoke<RedisDetailItem>(GET_KEY_DETAIL_COMMAND_NAME, { key });
     },
 
-    saveString: async (key: string, value: string): Promise<void> => {
-        return invoke<void>(SAVE_STRING_COMMAND_NAME, { key, value });
+    saveString: async (key: string, value: string, ttl: number | null): Promise<void> => {
+        return invoke<void>(SAVE_STRING_COMMAND_NAME, { key, value, ttl });
     },
 
     updateTTL: async (key: string, ttl: number): Promise<void> => {

@@ -64,7 +64,6 @@ pub fn search_keys_as_tree(
     Ok(result)
 }
 
-
 #[command]
 pub fn get_key_detail(state: State<'_, Mutex<AppState>>, key: String) -> Result<RedisItem, String> {
     let mut state = state
@@ -169,7 +168,6 @@ pub fn delete_key(state: State<'_, Mutex<AppState>>, key: String) -> Result<(), 
     Ok(())
 }
 
-
 #[command]
 pub fn add_list(
     state: State<'_, Mutex<AppState>>,
@@ -194,18 +192,17 @@ pub fn add_list(
         }
     }
 
-    pipe.query(client).map_err(|e| format!("Failed to add list: {}", e))?;
+    pipe.query(client)
+        .map_err(|e| format!("Failed to add list: {}", e))?;
     Ok(())
 }
-
-
-
 
 #[command]
 pub fn save_string(
     state: State<'_, Mutex<AppState>>,
     key: String,
     value: String,
+    ttl: Option<i64>,
 ) -> Result<(), String> {
     let mut state = state
         .lock()
@@ -216,8 +213,15 @@ pub fn save_string(
         .get_mut(&selected)
         .ok_or(format!("No client selected"))?;
 
-    client
-        .set(&key, value)
+    let mut pipe = redis::pipe();
+    pipe.set(&key, value);
+    if let Some(ttl) = ttl {
+        if ttl > 0 {
+            pipe.expire(&key, ttl);
+        }
+    }
+
+    pipe.query(client)
         .map_err(|e| format!("Failed to save string: {}", e))?;
 
     Ok(())
@@ -576,8 +580,6 @@ pub fn zset_update_member(
 
     Ok(())
 }
-
-
 
 #[command]
 pub fn stream_add_items(
