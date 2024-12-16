@@ -51,6 +51,9 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
 
             let result: Promise<void> = Promise.resolve();
             switch (formData.dataType) {
+                case 'STRING':
+                    result = redisCommands.saveString(validatedData.key, formData.value, parseInt(formData.ttl));
+                    break;
                 case 'LIST':
                     result = redisCommands.addList(validatedData.key, formData.listItems.map(item => item.value), parseInt(formData.ttl));
                     break;
