@@ -41,7 +41,7 @@ export default function AddSetDialog({ isOpen, onClose, redisKey, onConfirm }: A
 
     const handleConfirm = () => {
         const nonEmptyItems = items.filter(item => item.trim() !== '');
-        redisCommands.setAddItems(redisKey, nonEmptyItems).then(() => {
+        redisCommands.setAddItems(redisKey, nonEmptyItems, null).then(() => {
             reset();
             onConfirm?.(nonEmptyItems);
             onClose?.();
@@ -61,49 +61,50 @@ export default function AddSetDialog({ isOpen, onClose, redisKey, onConfirm }: A
 
     return (
         <CustomDialog isOpen={isOpen} onClose={handleCancel} title={"Set Add Item(s)"}>
-            <div className="space-y-2 py-2">
-                <div className="space-y-2">
-                    <Label>Key</Label>
-                    <Input value={redisKey} disabled />
+            <ScrollArea className="h-[calc(80vh-8rem)] max-h-[300px]">
+                <div className="flex flex-col space-y-2 py-2 mr-4">
+                    <div className="space-y-2">
+                        <Label>Key</Label>
+                        <Input value={redisKey} disabled />
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label>Item(s)</Label>
+                        <ScrollArea className="h-44">
+                            <div className="space-y-2 mr-3 ml-1 mt-1">
+                                {items.map((item, index) => (
+                                    <div key={index} className="flex gap-1">
+                                        <Input
+                                            ref={index === items.length - 1 ? lastInputRef : null}
+                                            value={item}
+                                            onChange={(e) => handleItemChange(index, e.target.value)}
+                                            placeholder="new item"
+                                        />
+                                        <Button
+                                            ref={buttonRef}
+                                            className="redis-item-table-text-color hover:text-red-500"
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleRemoveItem(index)}
+                                        >
+                                            <Trash2 strokeWidth={1.5} className="h-4 w-4" />
+                                        </Button>
+                                    </div>
+                                ))}
+
+                                <Button
+                                    variant="secondary"
+                                    className="w-full"
+                                    onClick={handleAddItem}
+                                >
+                                    <Plus className="h-4 w-4 mr-2" />
+                                    Add Item
+                                </Button>
+                            </div>
+                            </ScrollArea>
+                    </div>
                 </div>
-
-                <div className="space-y-2">
-                    <Label>Item(s)</Label>
-                    <ScrollArea className="h-48">
-                        <div className="space-y-2 mr-3 ml-1 mt-1">
-                            {items.map((item, index) => (
-                                <div key={index} className="flex gap-1">
-                                    <Input
-                                        ref={index === items.length - 1 ? lastInputRef : null}
-                                        value={item}
-                                        onChange={(e) => handleItemChange(index, e.target.value)}
-                                        placeholder="new item"
-                                    />
-                                    <Button
-                                        ref={buttonRef}
-                                        className="redis-item-table-text-color hover:text-red-500"
-                                        variant="ghost"
-                                        size="sm"
-                                        onClick={() => handleRemoveItem(index)}
-                                    >
-                                        <Trash2 strokeWidth={1.5} className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            ))}
-
-                            <Button
-                                variant="secondary"
-                                className="w-full"
-                                onClick={handleAddItem}
-                            >
-                                <Plus className="h-4 w-4 mr-2" />
-                                Add Item
-                            </Button>
-                        </div>
-
-                    </ScrollArea>
-                </div>
-            </div>
+            </ScrollArea>
 
             <div className="flex justify-end gap-3 pt-4">
                 <Button
