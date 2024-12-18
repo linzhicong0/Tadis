@@ -62,6 +62,7 @@ export function DynamicItemList<T>({
                             onChange={(e) => handleItemChange(itemIndex, fieldIndex, e.target.value)}
                             placeholder={field.placeholder}
                             autoComplete="off"
+                            className="custom-input"
                         />
                     ))}
                     <Button

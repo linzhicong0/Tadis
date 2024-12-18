@@ -79,6 +79,7 @@ export default function AddSetDialog({ isOpen, onClose, redisKey, onConfirm }: A
                                             value={item}
                                             onChange={(e) => handleItemChange(index, e.target.value)}
                                             placeholder="new item"
+                                            className="custom-input"
                                         />
                                         <Button
                                             ref={buttonRef}

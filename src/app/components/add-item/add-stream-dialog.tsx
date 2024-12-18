@@ -91,12 +91,14 @@ export default function AddStreamDialog({ isOpen, onClose, redisKey, onConfirm }
                                             onChange={(e) => handleItemChange(index, e.target.value, item.value)}
                                             placeholder="field"
                                             autoComplete="off"
+                                            className="custom-input"
                                         />
                                         <Input
                                             value={item.value}
                                             onChange={(e) => handleItemChange(index, item.field, e.target.value)}
                                             placeholder="value"
                                             autoComplete="off"
+                                            className="custom-input"
                                         />
                                         <Button
                                             ref={buttonRef}

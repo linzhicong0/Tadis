@@ -52,13 +52,13 @@ export default function TTLDialog({ isOpen, onClose, redisKey, ttlValue, onConfi
                         <Input
                             value={ttl}
                             onChange={(e) => setTTL(parseInt(e.target.value))}
-                            className="flex-1"
+                            className="custom-input flex-1"
                         />
                         <div className="w-32">
                             <Select onValueChange={(value) => {
                                 setUnit(value);
                             }} defaultValue={unit} value={unit}>
-                                <SelectTrigger className="w-32">
+                                <SelectTrigger className="w-32 custom-input">
                                     <SelectValue placeholder="Seconds" />
                                 </SelectTrigger>
                                 <SelectContent>
