@@ -129,4 +129,8 @@ body {
   .redis-item-table-row-color {
     @apply bg-gray-200/30 dark:bg-gray-700/50;
   }
+
+  .custom-input {
+    @apply border-none dark:bg-zinc-700;
+  }
 }

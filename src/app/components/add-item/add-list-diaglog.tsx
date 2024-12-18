@@ -106,6 +106,7 @@ export default function AddListDialog({ isOpen, onClose, redisKey, onConfirm }: 
                                             value={item}
                                             onChange={(e) => handleItemChange(index, e.target.value)}
                                             placeholder="new item"
+                                            className="custom-input"
                                         />
                                         <Button
                                             className="redis-item-table-text-color hover:text-red-500"

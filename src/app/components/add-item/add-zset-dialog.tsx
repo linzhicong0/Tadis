@@ -68,7 +68,7 @@ export default function AddZSetDialog({ isOpen, onClose, redisKey, onConfirm }: 
                 <div className="space-y-2 py-2 mr-4">
                     <div className="space-y-2">
                         <Label>Key</Label>
-                        <Input value={redisKey} disabled />
+                        <Input className="custom-input" value={redisKey} disabled />
                     </div>
 
                     <div className="space-y-2">
@@ -102,6 +102,7 @@ export default function AddZSetDialog({ isOpen, onClose, redisKey, onConfirm }: 
                                 {items.map((item, index) => (
                                     <div key={index} className="flex gap-1">
                                         <Input
+                                            className="custom-input"
                                             ref={index === items.length - 1 ? lastInputRef : null}
                                             value={item[1]}
                                             onChange={(e) => handleItemChange(index, [item[0], e.target.value])}
@@ -109,6 +110,7 @@ export default function AddZSetDialog({ isOpen, onClose, redisKey, onConfirm }: 
                                             autoComplete="off"
                                         />
                                         <Input
+                                            className="custom-input"
                                             type="number"
                                             value={item[0]}
                                             onChange={(e) => handleItemChange(index, [Number(e.target.value), item[1]])}

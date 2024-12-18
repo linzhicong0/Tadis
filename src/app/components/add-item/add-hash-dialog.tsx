@@ -80,11 +80,13 @@ export default function AddHashDialog({ isOpen, onClose, redisKey, onConfirm }: 
                                             value={item[0]}
                                             onChange={(e) => handleItemChange(index, [e.target.value, item[1]])}
                                             placeholder="key"
+                                            className="custom-input"
                                         />
                                         <Input
                                             value={item[1]}
                                             onChange={(e) => handleItemChange(index, [item[0], e.target.value])}
                                             placeholder="value"
+                                            className="custom-input"
                                         />
                                         <Button
                                             ref={buttonRef}

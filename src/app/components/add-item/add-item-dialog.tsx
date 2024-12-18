@@ -127,7 +127,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
             return <textarea
                 value={formData.value}
                 onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                className="w-full h-32 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                className="custom-input w-full h-32 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-none"
             />
         } else if (dataType === 'HASH') {
             return <DynamicItemList
@@ -226,6 +226,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                                 value={formData.key}
                                 onChange={(e) => setFormData({ ...formData, key: e.target.value })}
                                 placeholder="Enter key"
+                                className="custom-input"
                             />
                         </div>
 
@@ -236,7 +237,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                                 value={formData.dbIndex.toString()}
                                 onValueChange={(value) => setFormData({ ...formData, dbIndex: parseInt(value) })}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="custom-input">
                                     <SelectValue>
                                         {formData.dbIndex}
                                     </SelectValue>
@@ -260,7 +261,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                                     handleTypeChange(value);
                                 }}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="custom-input">
                                     <SelectValue placeholder="Select data type" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -283,6 +284,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                                 type="number"
                                 value={formData.ttl}
                                 onChange={(e) => setFormData({ ...formData, ttl: e.target.value })}
+                                className="custom-input"
                             />
                         </div>
 
@@ -293,6 +295,7 @@ export default function AddItemDialog({ isOpen, onClose }: AddItemDialogProps) {
                                 <Input
                                     value={formData.id}
                                     onChange={(e) => setFormData({ ...formData, id: e.target.value })}
+                                    className="custom-input"
                                 />
                             </div>
                         )}
