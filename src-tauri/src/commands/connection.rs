@@ -1,10 +1,12 @@
 use std::{sync::Mutex, time::Duration};
 
-use crate::{models::connection_config::ConnectionConfig, AppState};
+use madis_database::{models::ConnectionConfig, queries::get_all_connection_configurations};
 use redis::Client;
 use serde_json::json;
 use tauri::State;
 use tauri_plugin_store::StoreExt;
+
+use crate::AppState;
 
 const CONNECTIONS_KEY: &str = "connections";
 const CONFIG_FILE_NAME: &str = "connections_config.json";
@@ -44,26 +46,14 @@ pub fn save_connection_config(
 }
 
 #[tauri::command]
-pub fn load_connection_config(
+pub async fn load_connection_config(
     app_handle: tauri::AppHandle,
 ) -> Result<Vec<ConnectionConfig>, String> {
-    let store = app_handle
-        .store(CONFIG_FILE_NAME)
-        .expect("Failed to get store");
-
-    let connections = match store.get(CONNECTIONS_KEY) {
-        Some(v) => v.as_object().ok_or("Invalid config format")?.clone(),
-        None => return Err("No connections found".to_string()),
-    };
-    let connections_vec = connections
-        .values()
-        .map(|v| {
-            serde_json::from_value::<crate::models::connection_config::ConnectionConfig>(v.clone())
-        })
-        .collect::<Result<Vec<_>, _>>()
+    let configs = get_all_connection_configurations(&app_handle)
+        .await
         .map_err(|e| e.to_string())?;
 
-    Ok(connections_vec)
+    Ok(configs)
 }
 
 #[tauri::command]
