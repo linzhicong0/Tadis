@@ -11,6 +11,8 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_log::Builder::default().level(log::LevelFilter::Info).build())
+        .plugin(madis_database::plugin::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             commands::connection::delete_connection_config,
             commands::connection::save_connection_config,
@@ -53,18 +55,11 @@ pub fn run() {
             apply_blur(&window, Some((18, 18, 18, 125)))
                 .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
 
-            if cfg!(debug_assertions) {
-                app.handle().plugin(
-                    tauri_plugin_log::Builder::default()
-                        .level(log::LevelFilter::Info)
-                        .build(),
-                )?;
-            }
-
             app.manage(Mutex::new(AppState {
                 connected_clients: HashMap::new(),
                 selected_client: String::new(),
             }));
+
             Ok(())
         })
         .run(tauri::generate_context!())
@@ -75,3 +70,4 @@ pub struct AppState {
     pub connected_clients: HashMap<String, Connection>,
     pub selected_client: String,
 }
+
