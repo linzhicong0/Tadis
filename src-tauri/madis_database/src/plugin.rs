@@ -13,8 +13,6 @@ use tauri::{
     AppHandle, Manager, Runtime,
 };
 
-use crate::queries::get_connection_configurations;
-
 #[derive(Default)]
 pub struct Builder {}
 
@@ -55,12 +53,6 @@ impl Builder {
                 info!("Database connected.");
 
                 app.manage(Mutex::new(pool));
-
-                {
-                    tauri::async_runtime::block_on(async move {
-                        let _ = get_connection_configurations(app).await;
-                    });
-                }
 
                 Ok(())
             })
