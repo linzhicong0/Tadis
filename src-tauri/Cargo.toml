@@ -24,16 +24,16 @@ tauri-build = { version = "2.0.1", features = [] }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
-tauri = { version = "2.0.6", features = ["macos-private-api"] }
-tauri-plugin-log = "2.0.0-rc"
+tauri = { version = "2.1.1", features = ["macos-private-api"] }
+tauri-plugin-log = "2.0.0"
 tauri-plugin-store = "2"
+tauri-plugin-clipboard-manager = "2.0.2"
 redis = "0.27.5"
 window-vibrancy = "0.5.2"
-tauri-plugin-clipboard-manager = "2.0.2"
 madis_database = { workspace = true }
 
 
 [workspace.dependencies]
 madis_database = { path = "madis_database" }
-tauri = "2.0.6"
+tauri = "2.1.1"
 log = "0.4"
