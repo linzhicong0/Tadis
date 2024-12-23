@@ -67,7 +67,7 @@ export default function Database() {
                             <input
                                 type="text"
                                 placeholder="search"
-                                className="pl-8 bg-gray-200 dark:bg-gray-800 text-gray-600 h-8 rounded-lg"
+                                className="pl-8 bg-gray-300 dark:bg-gray-700 dark:text-gray-300 h-8 rounded-lg"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 onBlur={() => {
