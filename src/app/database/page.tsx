@@ -9,6 +9,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import RedisItemDetail from '../components/redis-item/redis-item-detail';
 import { toast } from 'sonner';
 import AddItemDialog from '../components/add-item/add-item-dialog';
+import { Button } from '@/components/ui/button';
 
 
 export default function Database() {
@@ -81,13 +82,12 @@ export default function Database() {
                             />
                         </div>
 
-
-                        <button className="bg-gray-200 dark:bg-gray-800 rounded-md p-0.5" onClick={handleRefresh}>
-                            <RotateCw className="p-1 text-gray-700 dark:text-gray-300" />
-                        </button>
-                        <button className="bg-gray-200 dark:bg-gray-800 rounded-md p-0.5" onClick={() => setIsAddItemDialogOpen(true)}>
-                            <Plus className="p-0.5 text-gray-700 dark:text-gray-300" />
-                        </button>
+                        <Button className="w-8 h-8" variant="secondary" onClick={handleRefresh}>
+                            <RotateCw strokeWidth={1.5} />
+                        </Button>
+                        <Button className="w-8 h-8" variant="secondary" onClick={() => setIsAddItemDialogOpen(true)}>
+                            <Plus strokeWidth={1.5} />
+                        </Button>
                     </div>
 
                     {/* Keys List Header */}
@@ -122,7 +122,7 @@ export default function Database() {
                 )
             }
 
-            <AddItemDialog isOpen={isAddItemDialogOpen} onClose={() => setIsAddItemDialogOpen(false)} />  
+            <AddItemDialog isOpen={isAddItemDialogOpen} onClose={() => setIsAddItemDialogOpen(false)} />
         </div>
     )
 }
