@@ -6,6 +6,12 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@supports (-webkit-backdrop-filter: none) {
+  .no-select {
+    -webkit-user-select: none; /* For Safari */
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100% 0;
@@ -132,5 +138,10 @@ body {
 
   .custom-input {
     @apply border-none dark:bg-zinc-700;
+  }
+
+  .custom-select-none {
+    -webkit-user-select: none;
+    @apply select-none;
   }
 }
