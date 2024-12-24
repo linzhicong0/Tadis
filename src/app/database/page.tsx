@@ -82,11 +82,11 @@ export default function Database() {
                             />
                         </div>
 
-                        <Button className="w-8 h-8" variant="secondary" onClick={handleRefresh}>
-                            <RotateCw strokeWidth={1.5} />
+                        <Button className="w-8 h-8 tadis-button" variant="secondary" onClick={handleRefresh}>
+                            <RotateCw strokeWidth={2.0} />
                         </Button>
-                        <Button className="w-8 h-8" variant="secondary" onClick={() => setIsAddItemDialogOpen(true)}>
-                            <Plus strokeWidth={1.5} />
+                        <Button className="w-8 h-8 tadis-button" variant="secondary" onClick={() => setIsAddItemDialogOpen(true)}>
+                            <Plus strokeWidth={2.0} />
                         </Button>
                     </div>
 

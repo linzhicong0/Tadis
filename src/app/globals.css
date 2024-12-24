@@ -133,5 +133,8 @@ body {
   .custom-input {
     @apply border-none dark:bg-zinc-700;
   }
+  .tadis-button {
+    @apply dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500;
+  }
 
 }
