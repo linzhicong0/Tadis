@@ -115,7 +115,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     <ToolTip tooltipContent="Refresh">
                         <Button
                             variant="secondary"
-                            className="w-8 h-8"
+                            className="w-8 h-8 tadis-button"
                             onClick={() => handleRefresh()}
                         >
                             <RotateCw strokeWidth={1.5} />
@@ -124,7 +124,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     <ToolTip tooltipContent="TTL">
                         <Button
                             variant="secondary"
-                            className="w-8 h-8"
+                            className="w-8 h-8 tadis-button"
                             onClick={() => {
                                 setTTLValue(redisItem?.ttl.toString() || "-1");
                                 setIsTTLDialogOpen(true);
@@ -138,7 +138,7 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                     {
                         !('StringValue' in redisItem!.value) && (
                             <ToolTip tooltipContent="Add">
-                                <Button variant="secondary" className="w-8 h-8" onClick={() => setIsAddItemDialogOpen(true)}>
+                                <Button variant="secondary" className="w-8 h-8 tadis-button" onClick={() => setIsAddItemDialogOpen(true)}>
                                     <Plus strokeWidth={1.5} />
                                 </Button>
                             </ToolTip>
@@ -150,12 +150,12 @@ export default function RedisItemDetail({ redisKey }: RedisItemDetailProps) {
                         'StringValue' in redisItem!.value && (
                             <>
                                 <ToolTip tooltipContent="Copy">
-                                    <Button variant="secondary" className="w-8 h-8" onClick={() => handleStringCopy('StringValue' in redisItem!.value ? redisItem!.value.StringValue : '')}>
-                                        <Copy strokeWidth={1.5} />
+                                    <Button variant="secondary" className="w-8 h-8 tadis-button" onClick={() => handleStringCopy('StringValue' in redisItem!.value ? redisItem!.value.StringValue : '')}>
+                                        <Copy strokeWidth={2.0} />
                                     </Button>
                                 </ToolTip>
                                 <ToolTip tooltipContent="Save">
-                                    <Button variant="secondary" onClick={handleSave} className="w-8 h-8">
+                                    <Button variant="secondary" onClick={handleSave} className="w-8 h-8 tadis-button">
                                         <Save strokeWidth={1.5} />
                                     </Button>
                                 </ToolTip>
