@@ -1,6 +1,6 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "madis",
+  "productName": "tadis",
   "version": "0.1.0",
   "identifier": "com.tauri.dev",
   "build": {
@@ -13,7 +13,7 @@
     "macOSPrivateApi": true,
     "windows": [
       {
-        "title": "madis",
+        "title": "tadis",
         "width": 800,
         "height": 600,
         "resizable": true,

@@ -1,7 +1,7 @@
 use std::{sync::Mutex, time::Duration};
 
 use log::info;
-use madis_database::{
+use tadis_database::{
     models::ConnectionConfig,
     queries::{
         connection_name_exists, create_connection_configuration, delete_connection_configuration,

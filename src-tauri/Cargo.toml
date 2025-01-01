@@ -1,5 +1,5 @@
 [workspace]
-members = ["madis_database"]
+members = ["tadis_database"]
 
 [package]
 name = "app"
@@ -30,10 +30,10 @@ tauri-plugin-store = "2"
 tauri-plugin-clipboard-manager = "2.0.2"
 redis = "0.27.5"
 window-vibrancy = "0.5.2"
-madis_database = { workspace = true }
+tadis_database = { workspace = true }
 
 
 [workspace.dependencies]
-madis_database = { path = "madis_database" }
+tadis_database = { path = "tadis_database" }
 tauri = "2.1.1"
 log = "0.4"

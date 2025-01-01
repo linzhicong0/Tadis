@@ -22,7 +22,7 @@ impl Builder {
     }
 
     pub fn build<R: Runtime>(self) -> TauriPlugin<R> {
-        plugin::Builder::<R>::new("madis_database")
+        plugin::Builder::<R>::new("tadis_database")
             .setup(|app, _| {
                 info!("Building database plugin");
                 let app_data_dir = app.path().app_data_dir().unwrap();

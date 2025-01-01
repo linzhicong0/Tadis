@@ -7,7 +7,7 @@ use tauri::{command, State};
 use crate::models::redis::{ListDirection, RedisItem, RedisItemValue, RedisTreeItem};
 use crate::AppState;
 
-const LIST_DELETED_VALUE_PLACEHOLDER: &str = "__MADIS_DELETED_VALUE_PLACEHOLDER__";
+const LIST_DELETED_VALUE_PLACEHOLDER: &str = "__TADIS_DELETED_VALUE_PLACEHOLDER__";
 
 #[command]
 pub fn get_all_keys_as_tree(
