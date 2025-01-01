@@ -12,7 +12,7 @@ pub fn run() {
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_log::Builder::default().level(log::LevelFilter::Info).build())
-        .plugin(madis_database::plugin::Builder::new().build())
+        .plugin(tadis_database::plugin::Builder::new().build())
         .invoke_handler(tauri::generate_handler![
             commands::connection::delete_connection_config,
             commands::connection::save_connection_config,

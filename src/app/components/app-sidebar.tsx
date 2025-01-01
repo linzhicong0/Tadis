@@ -40,7 +40,7 @@ export function AppSidebar() {
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel className="-mt-2 dark:text-gray-200">
-                        Madis
+                        Tadis
                     </SidebarGroupLabel>
                     <SidebarSeparator className="mb-2 dark:bg-gray-500"/>
                     <SidebarGroupContent>
