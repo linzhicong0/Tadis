@@ -1,11 +1,13 @@
-import type { Metadata } from "next";
+'use client';
 import localFont from "next/font/local";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./components/app-sidebar";
 import WindowTitleBar from "./components/window-titlebar";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider as NextThemeProvider } from "next-themes";
+import { ThemeProvider} from "./components/theme-provider";
+import { useEffect } from "react";
+import { useTheme } from "next-themes";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -18,25 +20,27 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata: Metadata = {
-  title: 'Tadis',
-  description: 'A redis client build with tauri',
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { theme, setTheme } = useTheme();
+
+  useEffect(() => {
+    setTheme('dark');
+    console.log("theme changed to: ", theme);
+  }, [setTheme]);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased select-none`}
       >
-        <NextThemeProvider
+        <ThemeProvider
           attribute="class"
           defaultTheme="system"
-          enableSystem
+          enableSystem={true}
           disableTransitionOnChange
         >
           <SidebarProvider>
@@ -47,7 +51,7 @@ export default function RootLayout({
             </main>
             <Toaster position="bottom-center" />
           </SidebarProvider>
-        </NextThemeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
