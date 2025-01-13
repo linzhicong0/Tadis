@@ -144,7 +144,7 @@ export default function Database() {
     const monitoringSection = () => (
         <div className="basis-2/3 grid grid-cols-2 gap-6">
             {/* Commands Card */}
-            <Card className="w-full">
+            <Card>
                 <CardHeader>
                     <CardTitle>Commands</CardTitle>
                 </CardHeader>
@@ -156,7 +156,7 @@ export default function Database() {
             </Card>
 
             {/* Clients Card */}
-            <Card className="w-full">
+            <Card>
                 <CardHeader>
                     <CardTitle>Clients</CardTitle>
                 </CardHeader>
@@ -168,7 +168,7 @@ export default function Database() {
             </Card>
 
             {/* Memory Card */}
-            <Card className="w-full">
+            <Card>
                 <CardHeader>
                     <CardTitle>Memory</CardTitle>
                 </CardHeader>
@@ -180,7 +180,7 @@ export default function Database() {
             </Card>
 
             {/* Network Card */}
-            <Card className="w-full">
+            <Card>
                 <CardHeader>
                     <CardTitle>Network</CardTitle>
                 </CardHeader>
