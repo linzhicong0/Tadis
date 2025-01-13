@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, RotateCw, Search } from 'lucide-react'
+import { Plus, RotateCw, Search, Clock, Users, Key, Database as DatabaseIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { redisCommands } from '@/services/redis-commands'
 import TreeView from '@/app/components/treeview';
@@ -12,6 +12,7 @@ import AddItemDialog from '../components/add-item/add-item-dialog';
 import { Button } from '@/components/ui/button';
 import TabContent from '../components/tabs/tab-content';
 import Tabs from '../components/tabs/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 
 export default function Database() {
@@ -130,6 +131,77 @@ export default function Database() {
         );
     }
 
+    const server = () => {
+        return (
+            <div className='flex flex-col w-full h-full p-6 gap-6'>
+                {/* Server Statistics Card - 1/3 height */}
+                <div className="flex-none h-40">
+                    <Card className="w-full h-full">
+                        <CardHeader>
+                            <CardTitle>Server Statistics</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-4 gap-6">
+                                <div className="flex items-center space-x-4">
+                                    <Clock className="h-5 w-5 text-muted-foreground"/>
+                                    <div>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">58 days</p>
+                                        <p className="text-sm font-medium text-muted-foreground">Uptime</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center space-x-4">
+                                    <Users className="h-5 w-5 text-muted-foreground"/>
+                                    <div>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">14 Clients</p>
+                                        <p className="text-sm font-medium text-muted-foreground">Connected Clients</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center space-x-4">
+                                    <Key className="h-5 w-5 text-muted-foreground"/>
+                                    <div>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">18 Keys</p>
+                                        <p className="text-sm font-medium text-muted-foreground">Total Keys</p>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center space-x-4">
+                                    <DatabaseIcon className="h-5 w-5 text-muted-foreground"/>
+                                    <div>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">2.14 MB</p>
+                                        <p className="text-sm font-medium text-muted-foreground">Memory Usage</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                {/* Remaining 2/3 space for new components */}
+                <div className="basis-2/3 grid grid-cols-2 gap-6">
+                    <Card className="w-full">
+                        <CardHeader>
+                            <CardTitle>New Component 1</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {/* Add your new component content here */}
+                        </CardContent>
+                    </Card>
+
+                    <Card className="w-full">
+                        <CardHeader>
+                            <CardTitle>New Component 2</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {/* Add your new component content here */}
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="h-[calc(100vh-2rem)] ">
             <Tabs className="bg-gray-200/50 dark:bg-gray-800/50">
@@ -137,7 +209,7 @@ export default function Database() {
                     {database()}
                 </TabContent>
                 <TabContent id="server" className='h-full'>
-                    <div className='bg-yellow-500/50 h-full'>Server Info</div>
+                    {server()}
                 </TabContent>
             </Tabs>
         </div >
