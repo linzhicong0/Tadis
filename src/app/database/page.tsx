@@ -13,6 +13,8 @@ import { Button } from '@/components/ui/button';
 import TabContent from '../components/tabs/tab-content';
 import Tabs from '../components/tabs/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
+import RedisLineChart from '../components/redis-line-chart';
 
 
 export default function Database() {
@@ -20,6 +22,14 @@ export default function Database() {
     const [selectedItemName, setSelectedItemName] = useState<string>('');
     const [redisData, setRedisData] = useState<RedisTreeItem[]>([]);
     const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
+
+    const mockTimeSeriesData = Array.from({ length: 5 }, (_, i) => ({
+        time: new Date(Date.now() - i * 5000).toLocaleTimeString(),
+        commands: Math.floor(Math.random() * 100),
+        clients: Math.floor(Math.random() * 100),
+        memory: Math.floor(Math.random() * 100),
+        network: Math.floor(Math.random() * 100),
+    })).reverse();
 
     useEffect(() => {
         redisCommands.getAllKeysAsTree().then((keys) => {
@@ -131,6 +141,58 @@ export default function Database() {
         );
     }
 
+    const monitoringSection = () => (
+        <div className="basis-2/3 grid grid-cols-2 gap-6">
+            {/* Commands Card */}
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle>Commands</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[200px] w-full">
+                        <RedisLineChart data={mockTimeSeriesData} dataKey="commands" lineColor="#ff4d4f" />
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Clients Card */}
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle>Clients</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[200px] w-full">
+                        <RedisLineChart data={mockTimeSeriesData} dataKey="clients" lineColor="#ff9c40" />
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Memory Card */}
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle>Memory</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[200px] w-full">
+                        <RedisLineChart data={mockTimeSeriesData} dataKey="memory" lineColor="#7c4dff" />
+                    </div>
+                </CardContent>
+            </Card>
+
+            {/* Network Card */}
+            <Card className="w-full">
+                <CardHeader>
+                    <CardTitle>Network</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[200px] w-full">
+                        <RedisLineChart data={mockTimeSeriesData} dataKey="network" lineColor="#40c4ff" />
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
+    );
+
     const server = () => {
         return (
             <div className='flex flex-col w-full h-full p-6 gap-6'>
@@ -178,26 +240,8 @@ export default function Database() {
                     </Card>
                 </div>
 
-                {/* Remaining 2/3 space for new components */}
-                <div className="basis-2/3 grid grid-cols-2 gap-6">
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle>New Component 1</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {/* Add your new component content here */}
-                        </CardContent>
-                    </Card>
-
-                    <Card className="w-full">
-                        <CardHeader>
-                            <CardTitle>New Component 2</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {/* Add your new component content here */}
-                        </CardContent>
-                    </Card>
-                </div>
+                {/* Replace the old cards with the new monitoring section */}
+                {monitoringSection()}
             </div>
         )
     }
