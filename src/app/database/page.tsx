@@ -29,6 +29,44 @@ export default function Database() {
     const [memorySeriesData, setMemorySeriesData] = useState<{ time: string; memory: number; }[]>([]);
     const [networkSeriesData, setNetworkSeriesData] = useState<{ time: string; input: number; output: number; }[]>([]);
 
+    const lineProperties = {
+        commands: [
+            {
+                dataKey: "commands",
+                name: 'commands/sec',
+                color: '#ff4d4f'
+            }
+        ],
+        clients: [
+            {
+                dataKey: "clients",
+                name: "connected clients",
+                color: "#ff9c40"
+
+            }
+        ],
+        memory: [
+            {
+                dataKey: "memory",
+                name: "memory usage (MB)",
+                color: "#7c4dff"
+
+            }
+        ],
+        network: [
+            {
+                dataKey: "input",
+                name: "input",
+                color: "#40c4ff"
+            },
+            {
+                dataKey: "output",
+                name: "output",
+                color: "#0fac7c"
+            }
+        ]
+    }
+
     useEffect(() => {
         redisCommands.getAllKeysAsTree().then((keys) => {
             console.log("keys are: ", keys);
@@ -82,9 +120,9 @@ export default function Database() {
     const refreshServerStatistics = () => {
         redisCommands.getServerStatistics().then((statistics) => {
             setServerStatistics(statistics);
-            
+
             const currentTime = new Date().toLocaleTimeString();
-            
+
             setCommandSeriesData(prevData => {
                 return [...prevData, {
                     time: currentTime,
@@ -197,7 +235,7 @@ export default function Database() {
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px] w-full">
-                        <RedisLineChart data={commandSeriesData} legendName="commands/sec" dataKey="commands" lineColor="#ff4d4f" />
+                        <RedisLineChart data={commandSeriesData} lines={lineProperties.commands} />
                     </div>
                 </CardContent>
             </Card>
@@ -209,11 +247,9 @@ export default function Database() {
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px] w-full">
-                        <RedisLineChart 
-                            data={clientSeriesData} 
-                            legendName="connected clients"
-                            dataKey="clients" 
-                            lineColor="#ff9c40" 
+                        <RedisLineChart
+                            data={clientSeriesData}
+                            lines={lineProperties.clients}
                         />
                     </div>
                 </CardContent>
@@ -226,11 +262,9 @@ export default function Database() {
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px] w-full">
-                        <RedisLineChart 
-                            data={memorySeriesData} 
-                            legendName="memory usage (MB)"
-                            dataKey="memory" 
-                            lineColor="#7c4dff" 
+                        <RedisLineChart
+                            data={memorySeriesData}
+                            lines={lineProperties.memory}
                         />
                     </div>
                 </CardContent>
@@ -243,11 +277,7 @@ export default function Database() {
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px] w-full">
-                        <RedisLineChart 
-                            data={networkSeriesData} 
-                            legendName="network traffic (KB/s)"
-                            dataKey="input" 
-                            lineColor="#40c4ff"
+                        <RedisLineChart data={networkSeriesData} lines={lineProperties.network}
                         />
                     </div>
                 </CardContent>
