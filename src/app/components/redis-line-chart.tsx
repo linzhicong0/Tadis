@@ -10,10 +10,11 @@ interface RedisLineChartProps {
     data: any[];
     dataKey: string;
     lineColor: string;
+    legendName?: string;
 }
 
 
-export default function RedisLineChart({ data, dataKey, lineColor }: RedisLineChartProps) {
+export default function RedisLineChart({ data, dataKey, lineColor, legendName }: RedisLineChartProps) {
     return (
         <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
@@ -30,6 +31,7 @@ export default function RedisLineChart({ data, dataKey, lineColor }: RedisLineCh
                     tick={{ fill: '#9ca3af' }}
                 />
                 <Line
+                    name={legendName}
                     type="basis"
                     dataKey={dataKey}
                     stroke={lineColor}

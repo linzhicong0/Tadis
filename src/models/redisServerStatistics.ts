@@ -36,6 +36,8 @@ export interface Stats {
     totalConnectionsReceived: number;
     totalCommandsProcessed: number;
     instantaneousOpsPerSec: number;
+    instantaneousInputKbps: number;
+    instantaneousOutputKbps: number;
     totalNetInputBytes: number;
     totalNetOutputBytes: number;
     keyspaceHits: number;

@@ -24,19 +24,24 @@ export default function Database() {
     const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
     const [serverStatistics, setServerStatistics] = useState<RedisServerStatistics | null>(null);
 
-    const mockTimeSeriesData = Array.from({ length: 5 }, (_, i) => ({
-        time: new Date(Date.now() - i * 5000).toLocaleTimeString(),
-        commands: Math.floor(Math.random() * 100),
-        clients: Math.floor(Math.random() * 100),
-        memory: Math.floor(Math.random() * 100),
-        network: Math.floor(Math.random() * 100),
-    })).reverse();
+    const [commandSeriesData, setCommandSeriesData] = useState<{ time: string; commands: number; }[]>([]);
+    const [clientSeriesData, setClientSeriesData] = useState<{ time: string; clients: number; }[]>([]);
+    const [memorySeriesData, setMemorySeriesData] = useState<{ time: string; memory: number; }[]>([]);
+    const [networkSeriesData, setNetworkSeriesData] = useState<{ time: string; input: number; output: number; }[]>([]);
 
     useEffect(() => {
         redisCommands.getAllKeysAsTree().then((keys) => {
             console.log("keys are: ", keys);
             setRedisData(keys)
         })
+
+        refreshServerStatistics();
+
+        // Set up interval for statistics refresh
+        const intervalId = setInterval(refreshServerStatistics, 5000);
+
+        // Cleanup interval on component unmount
+        return () => clearInterval(intervalId);
     }, [])
 
     const handleDelete = (key: string) => {
@@ -71,10 +76,43 @@ export default function Database() {
     }
 
     const handleStatisticsRefresh = () => {
+        refreshServerStatistics();
+    }
+
+    const refreshServerStatistics = () => {
         redisCommands.getServerStatistics().then((statistics) => {
-            console.log("statistics are: ", statistics);
             setServerStatistics(statistics);
-            toast.success('Statistics refreshed');
+            
+            const currentTime = new Date().toLocaleTimeString();
+            
+            setCommandSeriesData(prevData => {
+                return [...prevData, {
+                    time: currentTime,
+                    commands: statistics.stats.instantaneousOpsPerSec
+                }];
+            });
+
+            setClientSeriesData(prevData => {
+                return [...prevData, {
+                    time: currentTime,
+                    clients: statistics.clients.connectedClients
+                }];
+            });
+
+            setMemorySeriesData(prevData => {
+                return [...prevData, {
+                    time: currentTime,
+                    memory: Math.round(statistics.memory.usedMemory / (1024 * 1024))
+                }];
+            });
+
+            setNetworkSeriesData(prevData => {
+                return [...prevData, {
+                    time: currentTime,
+                    input: statistics.stats.instantaneousInputKbps,
+                    output: statistics.stats.instantaneousOutputKbps
+                }];
+            });
         })
     }
 
@@ -159,7 +197,7 @@ export default function Database() {
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px] w-full">
-                        <RedisLineChart data={mockTimeSeriesData} dataKey="commands" lineColor="#ff4d4f" />
+                        <RedisLineChart data={commandSeriesData} legendName="commands/sec" dataKey="commands" lineColor="#ff4d4f" />
                     </div>
                 </CardContent>
             </Card>
@@ -171,7 +209,12 @@ export default function Database() {
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px] w-full">
-                        <RedisLineChart data={mockTimeSeriesData} dataKey="clients" lineColor="#ff9c40" />
+                        <RedisLineChart 
+                            data={clientSeriesData} 
+                            legendName="connected clients"
+                            dataKey="clients" 
+                            lineColor="#ff9c40" 
+                        />
                     </div>
                 </CardContent>
             </Card>
@@ -183,7 +226,12 @@ export default function Database() {
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px] w-full">
-                        <RedisLineChart data={mockTimeSeriesData} dataKey="memory" lineColor="#7c4dff" />
+                        <RedisLineChart 
+                            data={memorySeriesData} 
+                            legendName="memory usage (MB)"
+                            dataKey="memory" 
+                            lineColor="#7c4dff" 
+                        />
                     </div>
                 </CardContent>
             </Card>
@@ -195,7 +243,12 @@ export default function Database() {
                 </CardHeader>
                 <CardContent>
                     <div className="h-[200px] w-full">
-                        <RedisLineChart data={mockTimeSeriesData} dataKey="network" lineColor="#40c4ff" />
+                        <RedisLineChart 
+                            data={networkSeriesData} 
+                            legendName="network traffic (KB/s)"
+                            dataKey="input" 
+                            lineColor="#40c4ff"
+                        />
                     </div>
                 </CardContent>
             </Card>
