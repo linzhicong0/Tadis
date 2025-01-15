@@ -43,6 +43,7 @@ pub fn run() {
             commands::redis::zset_update_member,
             commands::redis::add_list,
             commands::redis::add_zset_items,
+            commands::redis::get_server_statistics,
         ])
         .setup(|app| {
             let window = app.get_webview_window("main").unwrap();

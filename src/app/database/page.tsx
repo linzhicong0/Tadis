@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, RotateCw, Search, Clock, Users, Key, Database as DatabaseIcon } from 'lucide-react'
+import { Plus, RotateCw, Search, Clock, Users, Key, Database as DatabaseIcon, Split } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { redisCommands } from '@/services/redis-commands'
 import TreeView from '@/app/components/treeview';
@@ -13,8 +13,8 @@ import { Button } from '@/components/ui/button';
 import TabContent from '../components/tabs/tab-content';
 import Tabs from '../components/tabs/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Legend } from 'recharts';
 import RedisLineChart from '../components/redis-line-chart';
+import { RedisServerStatistics } from '@/models/redisServerStatistics';
 
 
 export default function Database() {
@@ -22,6 +22,7 @@ export default function Database() {
     const [selectedItemName, setSelectedItemName] = useState<string>('');
     const [redisData, setRedisData] = useState<RedisTreeItem[]>([]);
     const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
+    const [serverStatistics, setServerStatistics] = useState<RedisServerStatistics | null>(null);
 
     const mockTimeSeriesData = Array.from({ length: 5 }, (_, i) => ({
         time: new Date(Date.now() - i * 5000).toLocaleTimeString(),
@@ -66,6 +67,14 @@ export default function Database() {
         redisCommands.searchKeysAsTree(searchTerm).then((keys) => {
             setRedisData(keys)
             toast.success('Refreshed.');
+        })
+    }
+
+    const handleStatisticsRefresh = () => {
+        redisCommands.getServerStatistics().then((statistics) => {
+            console.log("statistics are: ", statistics);
+            setServerStatistics(statistics);
+            toast.success('Statistics refreshed');
         })
     }
 
@@ -194,44 +203,54 @@ export default function Database() {
     );
 
     const server = () => {
+        const totalKeys = serverStatistics?.keyspace.reduce((sum, space) => sum + space.keys, 0) || 0;
+
         return (
             <div className='flex flex-col w-full h-full p-6 gap-6'>
                 {/* Server Statistics Card - 1/3 height */}
-                <div className="flex-none h-40">
+                <div className="h-40">
                     <Card className="w-full h-full">
-                        <CardHeader>
+                        <CardHeader className="flex flex-row relatvie pb-1">
                             <CardTitle>Server Statistics</CardTitle>
+                            <Button
+                                className='-translate-y-4'
+                                variant="ghost"
+                                size="icon"
+                                onClick={handleStatisticsRefresh}
+                            >
+                                <RotateCw className="h-4 w-4" />
+                            </Button>
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-4 gap-6">
                                 <div className="flex items-center space-x-4">
-                                    <Clock className="h-5 w-5 text-muted-foreground"/>
+                                    <Clock className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">58 days</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{serverStatistics?.server.uptimeInDays} days</p>
                                         <p className="text-sm font-medium text-muted-foreground">Uptime</p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center space-x-4">
-                                    <Users className="h-5 w-5 text-muted-foreground"/>
+                                    <Users className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">14 Clients</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{serverStatistics?.clients.connectedClients} Clients</p>
                                         <p className="text-sm font-medium text-muted-foreground">Connected Clients</p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center space-x-4">
-                                    <Key className="h-5 w-5 text-muted-foreground"/>
+                                    <Key className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">18 Keys</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{totalKeys} Keys</p>
                                         <p className="text-sm font-medium text-muted-foreground">Total Keys</p>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center space-x-4">
-                                    <DatabaseIcon className="h-5 w-5 text-muted-foreground"/>
+                                    <DatabaseIcon className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">2.14 MB</p>
+                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{serverStatistics?.memory.usedMemoryHuman}</p>
                                         <p className="text-sm font-medium text-muted-foreground">Memory Usage</p>
                                     </div>
                                 </div>

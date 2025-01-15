@@ -4,7 +4,9 @@ use std::sync::Mutex;
 use redis::Commands;
 use tauri::{command, State};
 
-use crate::models::redis::{ListDirection, RedisItem, RedisItemValue, RedisTreeItem};
+use crate::models::redis::{
+    ListDirection, RedisItem, RedisItemValue, RedisServerStatistics, RedisTreeItem,
+};
 use crate::AppState;
 
 const LIST_DELETED_VALUE_PLACEHOLDER: &str = "__TADIS_DELETED_VALUE_PLACEHOLDER__";
@@ -698,6 +700,26 @@ pub fn update_ttl(state: State<'_, Mutex<AppState>>, key: String, ttl: i64) -> R
     }
 
     Ok(())
+}
+
+#[command]
+pub fn get_server_statistics(
+    state: State<'_, Mutex<AppState>>,
+) -> Result<RedisServerStatistics, String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    let info: String = redis::cmd("INFO")
+        .query(client)
+        .map_err(|e| format!("Failed to get server info: {}", e))?;
+
+    Ok(RedisServerStatistics::from(info))
 }
 
 fn convert_keys_to_tree(client: &mut redis::Connection, keys: Vec<String>) -> Vec<RedisTreeItem> {
