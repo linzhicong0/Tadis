@@ -1,6 +1,6 @@
 'use client'
 
-import { Plus, RotateCw, Search, Clock, Users, Key, Database as DatabaseIcon, Split } from 'lucide-react'
+import { Plus, RotateCw, Search, Clock, Users, Key, Database as DatabaseIcon, Split, Info } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { redisCommands } from '@/services/redis-commands'
 import TreeView from '@/app/components/treeview';
@@ -15,6 +15,12 @@ import Tabs from '../components/tabs/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import RedisLineChart from '../components/redis-line-chart';
 import { RedisServerStatistics } from '@/models/redisServerStatistics';
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import ConnectedClientsTable from '../components/connected-clients-table';
 
 
 export default function Database() {
@@ -317,7 +323,21 @@ export default function Database() {
                                 <div className="flex items-center space-x-4">
                                     <Users className="h-5 w-5 text-muted-foreground" />
                                     <div>
-                                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">{serverStatistics?.clients.connectedClients} Clients</p>
+                                        <div className="flex flex-row">
+                                            <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                                {serverStatistics?.clients.connectedClients} Clients
+                                            </p>
+                                            <HoverCard>
+                                                <HoverCardTrigger asChild>
+                                                    <Button variant="link" size="icon">
+                                                        <Info className="h-4 w-4" />
+                                                    </Button>
+                                                </HoverCardTrigger>
+                                                <HoverCardContent className="w-[600px] bg-white dark:bg-gray-800">
+                                                    <ConnectedClientsTable />
+                                                </HoverCardContent>
+                                            </HoverCard>
+                                        </div>
                                         <p className="text-sm font-medium text-muted-foreground">Connected Clients</p>
                                     </div>
                                 </div>

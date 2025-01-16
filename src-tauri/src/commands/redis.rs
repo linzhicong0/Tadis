@@ -5,7 +5,7 @@ use redis::Commands;
 use tauri::{command, State};
 
 use crate::models::redis::{
-    ListDirection, RedisItem, RedisItemValue, RedisServerStatistics, RedisTreeItem,
+    ListDirection, RedisItem, RedisItemValue, RedisServerStatistics, RedisTreeItem, RedisClientInfo,
 };
 use crate::AppState;
 
@@ -722,6 +722,52 @@ pub fn get_server_statistics(
     Ok(RedisServerStatistics::from(info))
 }
 
+#[command]
+pub fn get_client_list(state: State<'_, Mutex<AppState>>) -> Result<Vec<RedisClientInfo>, String> {
+    let mut state = state
+        .lock()
+        .map_err(|e| format!("Failed to lock state: {}", e))?;
+    let selected = state.selected_client.clone();
+    let client = state
+        .connected_clients
+        .get_mut(&selected)
+        .ok_or(format!("No client selected"))?;
+
+    let info: String = redis::cmd("CLIENT")
+        .arg("LIST")
+        .query(client)
+        .map_err(|e| format!("Failed to get client list: {}", e))?;
+
+    let clients = info
+        .lines()
+        .filter_map(|line| {
+            let properties: HashMap<_, _> = line
+                .split(' ')
+                .filter_map(|prop| {
+                    let mut parts = prop.split('=');
+                    Some((parts.next()?, parts.next().unwrap_or("").to_string()))
+                })
+                .collect();
+
+            // Extract IP from addr field (removes port number)
+            let ip = properties.get("addr")?
+                .split(':')
+                .next()?
+                .to_string();
+
+            Some(RedisClientInfo {
+                id: properties.get("id")?.to_string(),
+                ip,
+                db: properties.get("db")?.to_string(),
+                connected_time: format_time_duration(properties.get("age")?.parse().ok()?),
+                idle_time: format_time_duration(properties.get("idle")?.parse().ok()?),
+            })
+        })
+        .collect();
+
+    Ok(clients)
+}
+
 fn convert_keys_to_tree(client: &mut redis::Connection, keys: Vec<String>) -> Vec<RedisTreeItem> {
     let mut root_items: Vec<RedisTreeItem> = Vec::new();
 
@@ -831,4 +877,51 @@ fn get_zset(client: &mut redis::Connection, key: String) -> Result<Vec<(String, 
         .map_err(|e| format!("Failed to get zset: {}", e))?;
     println!("zset value: {:?}", value);
     Ok(value)
+}
+
+fn format_time_duration(total_seconds: u64) -> String {
+    let seconds = total_seconds % 60;
+    let total_minutes = total_seconds / 60;
+    let minutes = total_minutes % 60;
+    let total_hours = total_minutes / 60;
+    let hours = total_hours % 24;
+    let total_days = total_hours / 24;
+    
+    if total_days == 0 {
+        return format!("{:02}:{:02}:{:02}", hours, minutes, seconds);
+    }
+
+    let days = total_days % 30;
+    let total_months = total_days / 30;
+    
+    if total_months == 0 {
+        return format!("{}d {:02}:{:02}:{:02}", days, hours, minutes, seconds);
+    }
+
+    let months = total_months % 12;
+    let years = total_months / 12;
+    
+    if years == 0 {
+        format!("{} month{} {} day{} {:02}:{:02}:{:02}", 
+            months, 
+            if months > 1 { "s" } else { "" },
+            days,
+            if days > 1 { "s" } else { "" },
+            hours, 
+            minutes, 
+            seconds
+        )
+    } else {
+        format!("{} year{} {} month{} {} day{} {:02}:{:02}:{:02}", 
+            years,
+            if years > 1 { "s" } else { "" },
+            months,
+            if months > 1 { "s" } else { "" },
+            days,
+            if days > 1 { "s" } else { "" },
+            hours, 
+            minutes, 
+            seconds
+        )
+    }
 }

@@ -34,6 +34,7 @@ export default function RedisLineChart({ data, lines }: RedisLineChartProps) {
 
                 {lines.map((line) => (
                     <Line
+                        key={line.dataKey}
                         name={line.name}
                         type="basis"
                         dataKey={line.dataKey}

@@ -142,6 +142,16 @@ pub struct KeyspaceStats {
     pub avg_ttl: u64,
 }
 
+#[derive(Debug, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct RedisClientInfo {
+    pub id: String,
+    pub ip: String,
+    pub db: String,
+    pub connected_time: String,
+    pub idle_time: String,
+}
+
 impl From<String> for RedisServerStatistics {
     fn from(info: String) -> Self {
         let mut server = ServerStats {
