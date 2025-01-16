@@ -56,12 +56,12 @@ export default function Database() {
         network: [
             {
                 dataKey: "input",
-                name: "input",
+                name: "in (kb/s)",
                 color: "#40c4ff"
             },
             {
                 dataKey: "output",
-                name: "output",
+                name: "out (kb/s)",
                 color: "#0fac7c"
             }
         ]
