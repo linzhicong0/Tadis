@@ -299,7 +299,7 @@ export default function Database() {
                 {/* Server Statistics Card - 1/3 height */}
                 <div className="h-40">
                     <Card className="w-full h-full">
-                        <CardHeader className="flex flex-row relatvie pb-1">
+                        <CardHeader className="flex flex-row relatvie pb-1 gap-1">
                             <CardTitle>Server Statistics</CardTitle>
                             <Button
                                 className='-translate-y-4'
