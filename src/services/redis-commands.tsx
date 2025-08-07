@@ -1,6 +1,8 @@
 import { invoke } from '@tauri-apps/api/core';
 import { RedisTreeItem } from '@/models/redisTreeItem';
 import { RedisDetailItem } from '@/types/redisItem';
+import { RedisServerStatistics } from '@/models/redisServerStatistics';
+import { RedisClientInfo } from '@/models/redisClientInfo';
 
 const GET_ALL_KEYS_AS_TREE_COMMAND_NAME = 'get_all_keys_as_tree';
 const SEARCH_KEYS_AS_TREE_COMMAND_NAME = 'search_keys_as_tree';
@@ -26,6 +28,8 @@ const ZSET_UPDATE_SCORE_COMMAND_NAME = 'zset_update_score';
 const ZSET_UPDATE_MEMBER_COMMAND_NAME = 'zset_update_member';
 const ADD_LIST_COMMAND_NAME = 'add_list';
 const ADD_ZSET_ITEMS_COMMAND_NAME = 'add_zset_items';
+const GET_SERVER_STATISTICS_COMMAND_NAME = 'get_server_statistics';
+const GET_CLIENT_LIST_COMMAND_NAME = 'get_client_list';
 
 export const redisCommands = {
 
@@ -123,6 +127,14 @@ export const redisCommands = {
 
     addZsetItems: async (key: string, items: [number, string][], ttl: number | null): Promise<void> => {
         return invoke<void>(ADD_ZSET_ITEMS_COMMAND_NAME, { key, items, ttl });
+    },
+
+    getServerStatistics: async (): Promise<RedisServerStatistics> => {
+        return invoke<RedisServerStatistics>(GET_SERVER_STATISTICS_COMMAND_NAME);
+    },
+
+    getClientList: async (): Promise<RedisClientInfo[]> => {
+        return invoke<RedisClientInfo[]>(GET_CLIENT_LIST_COMMAND_NAME);
     },
 };
 
