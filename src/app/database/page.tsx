@@ -329,15 +329,45 @@ export default function Database() {
                                     <Label htmlFor="auto-refresh">Auto-refresh</Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <Input
-                                        id="refresh-interval"
-                                        min="1"
-                                        max="60"
-                                        value={refreshInterval}
-                                        onChange={(e) => setRefreshInterval(Number(e.target.value))}
-                                        className="w-16 h-8"
-                                    />
-                                    <Label htmlFor="refresh-interval">seconds</Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="refresh-interval"
+                                            type="text"
+                                            value={refreshInterval.toString()}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                // Allow empty input or numbers only
+                                                if (value === '' || /^\d+$/.test(value)) {
+                                                    if (value === '') {
+                                                        // Allow empty state temporarily, don't set to 1 immediately
+                                                        setRefreshInterval(0); // Use 0 as temporary placeholder
+                                                    } else {
+                                                        const num = parseInt(value, 10);
+                                                        if (num > 0) {
+                                                            setRefreshInterval(num);
+                                                        }
+                                                    }
+                                                }
+                                            }}
+                                            onBlur={(e) => {
+                                                // Only set default when user leaves the field and it's empty or 0
+                                                if (e.target.value === '' || refreshInterval === 0) {
+                                                    setRefreshInterval(1);
+                                                }
+                                            }}
+                                            className="w-20 h-8 text-center pr-8 focus:ring-2 focus:ring-gray-400 focus:border-gray-400 dark:focus:ring-gray-500 dark:focus:border-gray-500 transition-all"
+                                            placeholder="5"
+                                        />
+                                        <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs text-gray-500 dark:text-gray-400 pointer-events-none">
+                                            s
+                                        </span>
+                                    </div>
+                                    <Label 
+                                        htmlFor="refresh-interval"
+                                        className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                                    >
+                                        interval
+                                    </Label>
                                 </div>
                             </div>
 
