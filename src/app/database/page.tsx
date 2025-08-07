@@ -21,6 +21,9 @@ import {
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import ConnectedClientsTable from '../components/connected-clients-table';
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 
 
 export default function Database() {
@@ -34,6 +37,9 @@ export default function Database() {
     const [clientSeriesData, setClientSeriesData] = useState<{ time: string; clients: number; }[]>([]);
     const [memorySeriesData, setMemorySeriesData] = useState<{ time: string; memory: number; }[]>([]);
     const [networkSeriesData, setNetworkSeriesData] = useState<{ time: string; input: number; output: number; }[]>([]);
+
+    const [autoRefresh, setAutoRefresh] = useState(true);
+    const [refreshInterval, setRefreshInterval] = useState(5);
 
     const lineProperties = {
         commands: [
@@ -81,12 +87,17 @@ export default function Database() {
 
         refreshServerStatistics();
 
-        // Set up interval for statistics refresh
-        const intervalId = setInterval(refreshServerStatistics, 5000);
+        // Only set up interval if autoRefresh is enabled
+        let intervalId: NodeJS.Timeout | null = null;
+        if (autoRefresh) {
+            intervalId = setInterval(refreshServerStatistics, refreshInterval * 1000);
+        }
 
-        // Cleanup interval on component unmount
-        return () => clearInterval(intervalId);
-    }, [])
+        // Cleanup interval on component unmount or when autoRefresh/refreshInterval changes
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [autoRefresh, refreshInterval])
 
     const handleDelete = (key: string) => {
         redisCommands.deleteKey(key).then(() => {
@@ -296,10 +307,9 @@ export default function Database() {
 
         return (
             <div className='flex flex-col w-full h-full p-6 gap-6'>
-                {/* Server Statistics Card - 1/3 height */}
                 <div className="h-40">
                     <Card className="w-full h-full">
-                        <CardHeader className="flex flex-row relatvie pb-1 gap-1">
+                        <CardHeader className="flex flex-row relative pb-1 gap-1">
                             <CardTitle>Server Statistics</CardTitle>
                             <Button
                                 className='-translate-y-4'
@@ -309,6 +319,28 @@ export default function Database() {
                             >
                                 <RotateCw className="h-4 w-4" />
                             </Button>
+                            <div className="flex items-center gap-4 ml-4 -translate-y-4">
+                                <div className="flex items-center space-x-2">
+                                    <Switch
+                                        id="auto-refresh"
+                                        checked={autoRefresh}
+                                        onCheckedChange={setAutoRefresh}
+                                    />
+                                    <Label htmlFor="auto-refresh">Auto-refresh</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Input
+                                        id="refresh-interval"
+                                        min="1"
+                                        max="60"
+                                        value={refreshInterval}
+                                        onChange={(e) => setRefreshInterval(Number(e.target.value))}
+                                        className="w-16 h-8"
+                                    />
+                                    <Label htmlFor="refresh-interval">seconds</Label>
+                                </div>
+                            </div>
+
                         </CardHeader>
                         <CardContent>
                             <div className="grid grid-cols-4 gap-6">
