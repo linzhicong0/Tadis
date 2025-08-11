@@ -169,6 +169,16 @@ export default function Connection() {
     };
 
     const handleConnectToRedis = (connection: Connection) => {
+        // Store the original status before attempting connection
+        const originalStatus = connection.status;
+        
+        // Update status to connecting
+        setConnections(prev => prev.map(conn => 
+            conn.id === connection.id 
+                ? { ...conn, status: 'Connecting' }
+                : conn
+        ));
+
         connectionCommands.connectToRedis({
             name: connection.name,
             host: connection.address.split(':')[0],
@@ -176,8 +186,20 @@ export default function Connection() {
             username: connection.username,
             password: connection.password
         }).then(() => {
+            // Update status to connected on success
+            setConnections(prev => prev.map(conn => 
+                conn.id === connection.id 
+                    ? { ...conn, status: 'Connected' }
+                    : conn
+            ));
             toast.success('Connected to Redis!');
         }).catch((error) => {
+            // Update status to error on failure, but preserve 'Connected' status if it was already connected
+            setConnections(prev => prev.map(conn => 
+                conn.id === connection.id 
+                    ? { ...conn, status: originalStatus === 'Connected' ? 'Connected' : 'Error' }
+                    : conn
+            ));
             toast.error(`Failed to connect to Redis: ${error}`);
         });
     };
